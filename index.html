@@ -1,52 +1,159 @@
-“Create a single-page HTML mental self-check tool in Hindi.
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Mental Climate Protocol</title>
 
-There should be TWO sections only:
+  <style>
+    body {
+      margin: 0;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+      background: linear-gradient(180deg, #020617, #020024);
+      color: #ffffff;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
 
-Question Section
+    .container {
+      width: 92%;
+      max-width: 480px;
+      text-align: center;
+    }
 
-Result Section
+    h1 {
+      font-size: 28px;
+      color: #facc15;
+      margin-bottom: 10px;
+    }
 
-On page load, show ONLY the Question Section.
-Result Section must be hidden.
+    p {
+      color: #cbd5f5;
+      font-size: 16px;
+      margin-bottom: 20px;
+    }
 
-User can select multiple options.
-Each option adds +1 score.
+    .option {
+      background: #1e3a8a;
+      padding: 14px;
+      border-radius: 12px;
+      margin-bottom: 12px;
+      font-size: 17px;
+      cursor: pointer;
+    }
 
-On clicking ‘माइंड क्लाइमेट स्कैन करें’ button:
+    .option input {
+      margin-right: 8px;
+      transform: scale(1.2);
+    }
 
-Hide Question Section
+    button {
+      width: 100%;
+      padding: 16px;
+      margin-top: 18px;
+      font-size: 18px;
+      border-radius: 14px;
+      border: none;
+      cursor: pointer;
+      background: #2563eb;
+      color: white;
+    }
 
-Show Result Section
+    .result {
+      display: none;
+    }
 
-Calculate total score
+    .status {
+      font-size: 22px;
+      margin-bottom: 12px;
+    }
 
-Result logic:
+    .green { color: #4ade80; }
+    .yellow { color: #facc15; }
+    .red { color: #f87171; }
 
-score ≤ 1 → 🟢 माइंड क्लाइमेट: साफ
+    .disclaimer {
+      font-size: 13px;
+      color: #94a3b8;
+      margin-top: 20px;
+    }
+  </style>
+</head>
 
-score 2–3 → 🟡 माइंड क्लाइमेट: अस्थिर
+<body>
+  <div class="container">
 
-score ≥ 4 → 🔴 माइंड क्लाइमेट: प्रदूषित
+    <!-- QUESTION SECTION -->
+    <div id="questionSection">
+      <h1>आज आपके मन में क्या चल रहा है?</h1>
+      <p>कोई सही-गलत नहीं। ईमानदारी से चुनें।</p>
 
-Result should appear ONLY once on Result Section.
+      <label class="option">
+        <input type="checkbox" /> आज नकारात्मक कंटेंट ज़्यादा देखा
+      </label>
 
-Add a ‘फिर से जाँच करें’ button that reloads the page.
+      <label class="option">
+        <input type="checkbox" /> आज खुद की तुलना दूसरों से की
+      </label>
 
-Use clean mobile-friendly HTML, CSS, and JavaScript.
-No external libraries.”
+      <label class="option">
+        <input type="checkbox" /> दिमाग बार-बार सोच में उलझा रहा
+      </label>
 
-इतना करने से क्या होगा
+      <label class="option">
+        <input type="checkbox" /> मन बेचैन या भारी महसूस हुआ
+      </label>
 
-✅ Duplicate text खत्म
-✅ साफ flow (Question → Result)
-✅ Mobile पर smooth
-✅ MIT App की झंझट खत्म
-✅ GitHub Pages ready
+      <button onclick="scanMind()">माइंड क्लाइमेट स्कैन करें</button>
+    </div>
 
-अगला Step
+    <!-- RESULT SECTION -->
+    <div id="resultSection" class="result">
+      <div id="resultText"></div>
 
-आप यह prompt paste कर दो
-➡️ जैसे ही कहोगे, मैं आपको final single-file HTML code दे दूँगा
-(बस index.html में paste करना होगा)
+      <button onclick="location.reload()">फिर से जाँच करें</button>
 
-आप सही direction में हो 👍
+      <div class="disclaimer">
+        यह कोई मेडिकल सलाह नहीं है। यह आत्म-निरीक्षण का एक सरल टूल है।
+      </div>
+    </div>
+
+  </div>
+
+  <script>
+    function scanMind() {
+      const checkboxes = document.querySelectorAll('input[type="checkbox"]');
+      let score = 0;
+
+      checkboxes.forEach(cb => {
+        if (cb.checked) score++;
+      });
+
+      let resultHTML = "";
+
+      if (score <= 1) {
+        resultHTML = `
+          <div class="status green">🟢 माइंड क्लाइमेट: साफ</div>
+          <p>आपका मन स्थिर है। आप आगे बढ़ सकते हैं।</p>
+        `;
+      } else if (score <= 3) {
+        resultHTML = `
+          <div class="status yellow">🟡 माइंड क्लाइमेट: अस्थिर</div>
+          <p>अभी थोड़ा ठहरना बेहतर होगा।</p>
+        `;
+      } else {
+        resultHTML = `
+          <div class="status red">🔴 माइंड क्लाइमेट: प्रदूषित</div>
+          <p>इस समय निर्णय लेना जोखिम भरा हो सकता है।</p>
+        `;
+      }
+
+      document.getElementById("resultText").innerHTML = resultHTML;
+      document.getElementById("questionSection").style.display = "none";
+      document.getElementById("resultSection").style.display = "block";
+    }
+  </script>
+</body>
+</html>
