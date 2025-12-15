@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mental Climate Protocol</title>
+
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: linear-gradient(180deg, #0a0f2c, #000814);
+      color: #f5d77a;
+      text-align: center;
+    }
+
+    header {
+      background: #3f51b5;
+      color: white;
+      padding: 15px;
+      font-size: 20px;
+    }
+
+    .container {
+      padding: 25px;
+    }
+
+    .question {
+      font-size: 22px;
+      margin-bottom: 10px;
+    }
+
+    .note {
+      font-size: 14px;
+      color: #cccccc;
+      margin-bottom: 20px;
+    }
+
+    .option {
+      display: block;
+      width: 100%;
+      max-width: 400px;
+      margin: 10px auto;
+      padding: 12px;
+      background: #1c2a6a;
+      border: none;
+      border-radius: 6px;
+      color: white;
+      font-size: 16px;
+      cursor: pointer;
+    }
+
+    .option:hover {
+      background: #2e3ea8;
+    }
+
+    .scan-btn {
+      margin-top: 25px;
+      background: #3f51b5;
+      font-size: 18px;
+    }
+
+    .hidden {
+      display: none;
+    }
+
+    .result {
+      font-size: 22px;
+      margin-top: 20px;
+    }
+
+    .message {
+      font-size: 18px;
+      margin-top: 10px;
+      color: #e0e0e0;
+    }
+  </style>
+</head>
+
+<body>
+
+<header>Input Signals</header>
+
+<div class="container" id="screen-input">
+  <div class="question">आज आपके मन में क्या चल रहा है?</div>
+  <div class="note">यहाँ कोई सही-गलत नहीं है। बस ईमानदारी से चुनें।</div>
+
+  <button class="option" onclick="addScore(2)">आज मैंने नकारात्मक कंटेंट ज़्यादा देखा</button>
+  <button class="option" onclick="addScore(2)">आज मैंने खुद की तुलना दूसरों से की</button>
+  <button class="option" onclick="addScore(2)">आज दिमाग बार-बार सोच में उलझा रहा</button>
+
+  <button class="option scan-btn" onclick="startScan()">माइंड क्लाइमेट स्कैन करें</button>
+</div>
+
+<div class="container hidden" id="screen-processing">
+  <div class="question">आपके मन के मौसम की जाँच हो रही है…</div>
+</div>
+
+<div class="container hidden" id="screen-result">
+  <div class="result" id="statusText"></div>
+  <div class="message" id="messageText"></div>
+</div>
+
+<script>
+  let pollutionScore = 0;
+
+  function addScore(value) {
+    pollutionScore += value;
+  }
+
+  function startScan() {
+    document.getElementById("screen-input").classList.add("hidden");
+    document.getElementById("screen-processing").classList.remove("hidden");
+
+    setTimeout(showResult, 3000);
+  }
+
+  function showResult() {
+    document.getElementById("screen-processing").classList.add("hidden");
+    document.getElementById("screen-result").classList.remove("hidden");
+
+    if (pollutionScore <= 2) {
+      document.getElementById("statusText").innerHTML = "🟢 माइंड क्लाइमेट: साफ";
+      document.getElementById("messageText").innerHTML = "आपका मन स्थिर है। आप आगे बढ़ सकते हैं।";
+    } 
+    else if (pollutionScore <= 4) {
+      document.getElementById("statusText").innerHTML = "🟡 माइंड क्लाइमेट: अस्थिर";
+      document.getElementById("messageText").innerHTML = "अभी थोड़ा ठहरना बेहतर होगा।";
+    } 
+    else {
+      document.getElementById("statusText").innerHTML = "🔴 माइंड क्लाइमेट: प्रदूषित";
+      document.getElementById("messageText").innerHTML = "इस समय कोई निर्णय लेना जोखिम भरा हो सकता है।";
+    }
+  }
+</script>
+
+</body>
+</html>
