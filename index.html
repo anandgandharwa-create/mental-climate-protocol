@@ -1,4 +1,3 @@
-<h2 style="color:red">TEST VERSION 2</h2>
 <!DOCTYPE html>
 <html lang="hi">
 <head>
@@ -9,90 +8,136 @@
 <style>
 body{
   margin:0;
-  font-family: sans-serif;
-  background: linear-gradient(180deg,#020617,#020024);
+  font-family: system-ui, sans-serif;
+  background: radial-gradient(circle at top,#0b1a3a,#02040f);
   color:#fff;
-  text-align:center;
+  min-height:100vh;
+  display:flex;
+  justify-content:center;
+  align-items:center;
 }
 
 .container{
-  padding:40px 20px;
+  width:90%;
+  max-width:420px;
+  text-align:center;
 }
 
-h1{ color:#facc15; }
+h1{
+  color:#f5c542;
+  font-size:26px;
+}
 
 .option{
-  background:#1e40af;
+  display:block;
+  background:#1e3a8a;
   padding:14px;
+  border-radius:12px;
   margin:12px 0;
-  border-radius:10px;
-  cursor:pointer;
+  font-size:16px;
+  text-align:left;
 }
 
-.option.selected{
-  background:#0ea5e9;
+.option input{
+  transform:scale(1.3);
+  margin-right:10px;
 }
 
 button{
-  margin-top:20px;
-  padding:14px;
   width:100%;
+  padding:14px;
   border:none;
-  border-radius:10px;
-  font-size:18px;
+  border-radius:14px;
   background:#2563eb;
-  color:white;
+  color:#fff;
+  font-size:18px;
+  margin-top:20px;
 }
 
-#result{
+.result{
   display:none;
+}
+
+.status{
+  font-size:22px;
+  margin-bottom:10px;
+}
+
+.note{
+  opacity:.7;
+  font-size:13px;
+  margin-top:15px;
 }
 </style>
 </head>
 
 <body>
 
-<div class="container" id="question">
+<div class="container">
+
+<!-- QUESTION SECTION -->
+<div id="question">
   <h1>आज आपके मन में क्या चल रहा है?</h1>
   <p>कोई सही-गलत नहीं। ईमानदारी से चुनें।</p>
 
-  <div class="option">आज नकारात्मक कंटेंट ज्यादा देखा</div>
-  <div class="option">आज खुद की तुलना दूसरों से की</div>
-  <div class="option">दिमाग बार-बार सोच में उलझा</div>
-  <div class="option">मन बेचैन या थका हुआ लगा</div>
+  <label class="option">
+    <input type="checkbox"> आज नकारात्मक कंटेंट ज़्यादा देखा
+  </label>
+
+  <label class="option">
+    <input type="checkbox"> आज खुद की तुलना दूसरों से की
+  </label>
+
+  <label class="option">
+    <input type="checkbox"> दिमाग बार-बार सोच में उलझा
+  </label>
+
+  <label class="option">
+    <input type="checkbox"> मन बेचैन या भारी लग रहा है
+  </label>
 
   <button onclick="scan()">माइंड क्लाइमेट स्कैन करें</button>
 </div>
 
-<div class="container" id="result"></div>
+<!-- RESULT SECTION -->
+<div id="result" class="result">
+  <div id="status" class="status"></div>
+  <div id="message"></div>
+
+  <button onclick="location.reload()">फिर से जाँच करें</button>
+
+  <div class="note">
+    यह कोई मेडिकल सलाह नहीं है। यह आत्म-निरीक्षण का एक सरल टूल है।
+  </div>
+</div>
+
+</div>
 
 <script>
-let options = document.querySelectorAll('.option');
-
-options.forEach(opt=>{
-  opt.onclick = ()=> opt.classList.toggle('selected');
-});
-
 function scan(){
-  let score = document.querySelectorAll('.selected').length;
+  const checks = document.querySelectorAll('input[type="checkbox"]:checked');
+  const score = checks.length;
 
-  let html = "";
+  document.getElementById('question').style.display='none';
+  document.getElementById('result').style.display='block';
+
+  let status='', msg='';
 
   if(score <= 1){
-    html = "🟢 <b>माइंड क्लाइमेट: साफ</b><br><br>आपका मन स्थिर है। आप आगे बढ़ सकते हैं।";
+    status = "🟢 माइंड क्लाइमेट: साफ";
+    msg = "आपका मन स्थिर है। आप आगे बढ़ सकते हैं।";
   }
   else if(score <= 3){
-    html = "🟡 <b>माइंड क्लाइमेट: अस्थिर</b><br><br>अभी थोड़ा ठहरना बेहतर होगा।";
+    status = "🟡 माइंड क्लाइमेट: अस्थिर";
+    msg = "अभी थोड़ा ठहरना बेहतर होगा।";
   }
   else{
-    html = "🔴 <b>माइंड क्लाइमेट: प्रदूषित</b><br><br>इस समय निर्णय लेना जोखिम भरा हो सकता है।";
+    status = "🔴 माइंड क्लाइमेट: प्रदूषित";
+    msg = "इस समय निर्णय लेना जोखिम भरा हो सकता है।";
   }
 
-  document.getElementById("question").style.display="none";
-  document.getElementById("result").style.display="block";
-  document.getElementById("result").innerHTML = html +
-  `<br><br><button onclick="location.reload()">फिर से जाँच करें</button>
-   <p style="opacity:.6;font-size:14px">यह कोई मेडिकल सलाह नहीं है। यह आत्म-निरीक्षण का एक सरल टूल है।</p>`;
+  document.getElementById('status').innerText = status;
+  document.getElementById('message').innerText = msg;
 }
 </script>
 
