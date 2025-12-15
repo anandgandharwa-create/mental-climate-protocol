@@ -1,171 +1,52 @@
-<!DOCTYPE html>
-<html lang="hi">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Mental Climate Protocol</title>
+“Create a single-page HTML mental self-check tool in Hindi.
 
-<style>
-body{
-  margin:0;
-  font-family: sans-serif;
-  background: linear-gradient(180deg,#020617,#020617,#020617);
-  color:white;
-  text-align:center;
-}
+There should be TWO sections only:
 
-h1{
-  color:#facc15;
-  margin-top:40px;
-}
+Question Section
 
-p{opacity:0.8}
+Result Section
 
-button{
-  width:90%;
-  max-width:400px;
-  margin:10px auto;
-  padding:14px;
-  font-size:16px;
-  border:none;
-  border-radius:10px;
-  background:#1e3a8a;
-  color:white;
-  display:block;
-}
+On page load, show ONLY the Question Section.
+Result Section must be hidden.
 
-.scan{
-  background:#2563eb;
-  font-size:18px;
-  margin-top:20px;
-}
+User can select multiple options.
+Each option adds +1 score.
 
-.result{
-  margin-top:30px;
-  font-size:18px;
-  opacity:0;
-  transform: translateY(10px);
-  transition: all 0.5s ease;
-}
-.result.show{
-  opacity:1;
-  transform: translateY(0);
-}
-</style>
-</head>
+On clicking ‘माइंड क्लाइमेट स्कैन करें’ button:
 
-<body>
+Hide Question Section
 
-<h1>आज आपके मन में क्या चल रहा है?</h1>
-<p>कोई सही–गलत नहीं। ईमानदारी से चुनें।</p>
+Show Result Section
 
-<button onclick="add(2,this)">आज नकारात्मक कंटेंट ज़्यादा देखा</button>
-<button onclick="add(2,this)">आज खुद की तुलना दूसरों से की</button>
-<button onclick="add(2,this)">दिमाग बार-बार सोच में उलझा रहा</button>
+Calculate total score
 
-<button class="scan" onclick="scan()">माइंड क्लाइमेट स्कैन करें</button>
+Result logic:
 
-<div id="result" class="result"></div>
+score ≤ 1 → 🟢 माइंड क्लाइमेट: साफ
 
-<p style="font-size:12px;opacity:0.6;margin-top:30px">
-यह कोई मेडिकल सलाह नहीं है। यह आत्म-निरीक्षण का टूल है।
-</p>
+score 2–3 → 🟡 माइंड क्लाइमेट: अस्थिर
 
-<script>
-let score = 0;
+score ≥ 4 → 🔴 माइंड क्लाइमेट: प्रदूषित
 
-function add(val,btn){
-  btn.style.background = "#0ea5e9";
-  score += val;
-}
+Result should appear ONLY once on Result Section.
 
-function scan(){
-  let text = "";
+Add a ‘फिर से जाँच करें’ button that reloads the page.
 
-  if(score <= 2){
-    text = "🟢 माइंड क्लाइमेट: साफ<br>आपका मन स्थिर है। आप आगे बढ़ सकते हैं।";
-  }
-  else if(score <= 4){
-    text = "🟡 माइंड क्लाइमेट: अस्थिर<br>अभी थोड़ा ठहरना बेहतर होगा।";
-  }
-  else{
-    text = "🔴 माइंड क्लाइमेट: प्रदूषित<br>इस समय निर्णय लेना जोखिम भरा हो सकता है।";
-  }
+Use clean mobile-friendly HTML, CSS, and JavaScript.
+No external libraries.”
 
-  const r = document.getElementById("result");
-  r.innerHTML = text;
-  r.classList.add("show");
-  r.scrollIntoView({behavior:"smooth"});
+इतना करने से क्या होगा
 
-  if(navigator.vibrate){
-    navigator.vibrate(100);
-  }
+✅ Duplicate text खत्म
+✅ साफ flow (Question → Result)
+✅ Mobile पर smooth
+✅ MIT App की झंझट खत्म
+✅ GitHub Pages ready
 
-  score = 0;
-}
-</script>
+अगला Step
 
-</body>
-</html>
-</style>
-</head>
+आप यह prompt paste कर दो
+➡️ जैसे ही कहोगे, मैं आपको final single-file HTML code दे दूँगा
+(बस index.html में paste करना होगा)
 
-<body>
-<div class="container" id="screen1">
-  <h1>आज आपके मन में क्या चल रहा है?</h1>
-  <p>कोई सही-गलत नहीं। ईमानदारी से चुनें।</p>
-
-  <button class="option" onclick="score+=2">आज नकारात्मक कंटेंट ज़्यादा देखा</button>
-  <button class="option" onclick="score+=2">आज खुद की तुलना दूसरों से की</button>
-  <button class="option" onclick="score+=2">दिमाग बार-बार सोच में उलझा</button>
-
-  <button class="scan" onclick="scan()">माइंड क्लाइमेट स्कैन करें</button>
-</div>
-
-<div class="container hidden" id="screen2">
-  <h1>Processing…</h1>
-  <p>आपके मन के मौसम की जाँच हो रही है…</p>
-</div>
-
-<div class="container hidden" id="screen3">
-  <div id="result"></div>
-</div>
-
-<script>
-let score = 0;
-
-function scan(){
-  document.getElementById("screen1").classList.add("hidden");
-  document.getElementById("screen2").classList.remove("hidden");
-
-  setTimeout(showResult, 3000);
-}
-
-function showResult(){
-  document.getElementById("screen2").classList.add("hidden");
-  document.getElementById("screen3").classList.remove("hidden");
-
-  let result = document.getElementById("result");
-
-  if(score <= 2){
-    result.innerHTML = `
-      <div class="status green">🟢 माइंड क्लाइमेट: साफ</div>
-      <p>आपका मन स्थिर है। आप आगे बढ़ सकते हैं।</p>
-    `;
-  }
-  else if(score <= 4){
-    result.innerHTML = `
-      <div class="status yellow">🟡 माइंड क्लाइमेट: अस्थिर</div>
-      <p>अभी थोड़ा ठहरना बेहतर होगा।</p>
-    `;
-  }
-  else{
-    result.innerHTML = `
-      <div class="status red">🔴 माइंड क्लाइमेट: प्रदूषित</div>
-      <p>इस समय निर्णय लेना जोखिम भरा हो सकता है।</p>
-    `;
-  }
-}
-</script>
-</body>
-</html>
+आप सही direction में हो 👍
