@@ -2,38 +2,111 @@
 <html lang="hi">
 <head>
 <meta charset="UTF-8">
-<title>Mental Climate Protocol</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mental Climate Protocol</title>
+
 <style>
 body{
   margin:0;
-  font-family: Arial, sans-serif;
-  background: radial-gradient(circle at top, #0a1a3a, #020617);
-  color:#fff;
+  font-family: sans-serif;
+  background: linear-gradient(180deg,#020617,#020617,#020617);
+  color:white;
   text-align:center;
 }
-.container{
-  max-width:500px;
-  margin:auto;
-  padding:40px 20px;
+
+h1{
+  color:#facc15;
+  margin-top:40px;
 }
-h1{color:#ffd966;}
+
+p{opacity:0.8}
+
 button{
-  width:100%;
-  padding:15px;
-  margin:10px 0;
+  width:90%;
+  max-width:400px;
+  margin:10px auto;
+  padding:14px;
   font-size:16px;
-  border-radius:8px;
   border:none;
-  cursor:pointer;
+  border-radius:10px;
+  background:#1e3a8a;
+  color:white;
+  display:block;
 }
-.option{background:#1e3a8a;color:#fff;}
-.scan{background:#2563eb;color:#fff;font-size:18px;}
-.hidden{display:none;}
-.status{font-size:20px;margin-top:20px;}
-.green{color:#4ade80;}
-.yellow{color:#fde047;}
-.red{color:#f87171;}
+
+.scan{
+  background:#2563eb;
+  font-size:18px;
+  margin-top:20px;
+}
+
+.result{
+  margin-top:30px;
+  font-size:18px;
+  opacity:0;
+  transform: translateY(10px);
+  transition: all 0.5s ease;
+}
+.result.show{
+  opacity:1;
+  transform: translateY(0);
+}
+</style>
+</head>
+
+<body>
+
+<h1>आज आपके मन में क्या चल रहा है?</h1>
+<p>कोई सही–गलत नहीं। ईमानदारी से चुनें।</p>
+
+<button onclick="add(2,this)">आज नकारात्मक कंटेंट ज़्यादा देखा</button>
+<button onclick="add(2,this)">आज खुद की तुलना दूसरों से की</button>
+<button onclick="add(2,this)">दिमाग बार-बार सोच में उलझा रहा</button>
+
+<button class="scan" onclick="scan()">माइंड क्लाइमेट स्कैन करें</button>
+
+<div id="result" class="result"></div>
+
+<p style="font-size:12px;opacity:0.6;margin-top:30px">
+यह कोई मेडिकल सलाह नहीं है। यह आत्म-निरीक्षण का टूल है।
+</p>
+
+<script>
+let score = 0;
+
+function add(val,btn){
+  btn.style.background = "#0ea5e9";
+  score += val;
+}
+
+function scan(){
+  let text = "";
+
+  if(score <= 2){
+    text = "🟢 माइंड क्लाइमेट: साफ<br>आपका मन स्थिर है। आप आगे बढ़ सकते हैं।";
+  }
+  else if(score <= 4){
+    text = "🟡 माइंड क्लाइमेट: अस्थिर<br>अभी थोड़ा ठहरना बेहतर होगा।";
+  }
+  else{
+    text = "🔴 माइंड क्लाइमेट: प्रदूषित<br>इस समय निर्णय लेना जोखिम भरा हो सकता है।";
+  }
+
+  const r = document.getElementById("result");
+  r.innerHTML = text;
+  r.classList.add("show");
+  r.scrollIntoView({behavior:"smooth"});
+
+  if(navigator.vibrate){
+    navigator.vibrate(100);
+  }
+
+  score = 0;
+}
+</script>
+
+</body>
+</html>
 </style>
 </head>
 
