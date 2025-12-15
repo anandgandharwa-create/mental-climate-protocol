@@ -112,34 +112,52 @@ button{
 </div>
 
 </div>
-
 <script>
-function scan(){
-  const checks = document.querySelectorAll('input[type="checkbox"]:checked');
-  const score = checks.length;
+function scanMindClimate() {
+  const options = document.querySelectorAll('.option');
+  let score = 0;
 
-  document.getElementById('question').style.display='none';
-  document.getElementById('result').style.display='block';
+  options.forEach(opt => {
+    if (opt.classList.contains('selected')) {
+      score++;
+    }
+  });
 
-  let status='', msg='';
+  document.getElementById('questionSection').style.display = 'none';
+  document.getElementById('resultSection').style.display = 'block';
 
-  if(score <= 1){
-    status = "🟢 माइंड क्लाइमेट: साफ";
-    msg = "आपका मन स्थिर है। आप आगे बढ़ सकते हैं।";
+  const resultTitle = document.getElementById('resultTitle');
+  const resultText = document.getElementById('resultText');
+
+  if (score <= 1) {
+    resultTitle.innerHTML = "🟢 माइंड क्लाइमेट: साफ";
+    resultTitle.style.color = "#4cd964";
+    resultText.innerHTML = "आपका मन स्थिर है। आप आगे बढ़ सकते हैं।";
+  } 
+  else if (score <= 3) {
+    resultTitle.innerHTML = "🟡 माइंड क्लाइमेट: अस्थिर";
+    resultTitle.style.color = "#ffcc00";
+    resultText.innerHTML = "अभी थोड़ा ठहरना बेहतर होगा।";
+  } 
+  else {
+    resultTitle.innerHTML = "🔴 माइंड क्लाइमेट: प्रदूषित";
+    resultTitle.style.color = "#ff3b30";
+    resultText.innerHTML = "इस समय निर्णय लेना जोखिम भरा हो सकता है।";
   }
-  else if(score <= 3){
-    status = "🟡 माइंड क्लाइमेट: अस्थिर";
-    msg = "अभी थोड़ा ठहरना बेहतर होगा।";
-  }
-  else{
-    status = "🔴 माइंड क्लाइमेट: प्रदूषित";
-    msg = "इस समय निर्णय लेना जोखिम भरा हो सकता है।";
-  }
+}
 
-  document.getElementById('status').innerText = status;
-  document.getElementById('message').innerText = msg;
+function toggleOption(el) {
+  el.classList.toggle('selected');
+}
+
+function restart() {
+  location.reload();
 }
 </script>
+
+
+
+
 
 </body>
 </html>
