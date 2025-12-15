@@ -3,117 +3,113 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
 <title>Mental Climate Protocol</title>
 
 <style>
-  body {
-    margin: 0;
-    font-family: system-ui, sans-serif;
-    background: linear-gradient(180deg, #050b2c, #020617);
-    color: #fff;
-    min-height: 100vh;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
+body {
+  margin: 0;
+  font-family: system-ui, sans-serif;
+  background: radial-gradient(circle at top, #0b1a3a, #020617);
+  color: #fff;
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
 
-  .container {
-    width: 92%;
-    max-width: 420px;
-    text-align: center;
-  }
+.container {
+  width: 92%;
+  max-width: 420px;
+  text-align: center;
+}
 
-  h1 {
-    color: #ffd166;
-    font-size: 26px;
-    margin-bottom: 10px;
-  }
+h1 {
+  color: #ffd54f;
+  font-size: 26px;
+}
 
-  .subtitle {
-    opacity: 0.8;
-    margin-bottom: 20px;
-  }
+.subtitle {
+  opacity: 0.8;
+  margin-bottom: 20px;
+}
 
-  .option {
-    display: block;
-    width: 100%;
-    padding: 14px;
-    margin-bottom: 12px;
-    border-radius: 12px;
-    background: #1e3a8a;
-    cursor: pointer;
-    font-size: 16px;
-  }
+.option {
+  background: #1e3a8a;
+  padding: 14px;
+  border-radius: 12px;
+  margin: 10px 0;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
 
-  .option input {
-    margin-right: 8px;
-  }
+input[type="checkbox"] {
+  transform: scale(1.3);
+}
 
-  button {
-    width: 100%;
-    padding: 16px;
-    font-size: 18px;
-    border: none;
-    border-radius: 14px;
-    background: #2563eb;
-    color: #fff;
-    cursor: pointer;
-    margin-top: 10px;
-  }
+button {
+  width: 100%;
+  padding: 15px;
+  border-radius: 14px;
+  border: none;
+  background: #2563eb;
+  color: white;
+  font-size: 18px;
+  margin-top: 20px;
+}
 
-  .result-title {
-    font-size: 24px;
-    margin-bottom: 10px;
-  }
+#result {
+  display: none;
+}
 
-  .green { color: #22c55e; }
-  .yellow { color: #facc15; }
-  .red { color: #ef4444; }
+.result-title {
+  font-size: 24px;
+  margin-bottom: 10px;
+}
 
-  .disclaimer {
-    font-size: 13px;
-    opacity: 0.7;
-    margin-top: 20px;
-  }
+.green { color: #22c55e; }
+.yellow { color: #facc15; }
+.red { color: #ef4444; }
 
-  #resultSection {
-    display: none;
-  }
+.disclaimer {
+  font-size: 12px;
+  opacity: 0.6;
+  margin-top: 20px;
+}
 </style>
 </head>
 
 <body>
+
 <div class="container">
 
   <!-- QUESTION SECTION -->
-  <div id="questionSection">
+  <div id="question">
     <h1>आज आपके मन में क्या चल रहा है?</h1>
-    <div class="subtitle">कोई सही-गलत नहीं। ईमानदारी से चुनें।</div>
+    <div class="subtitle">कोई सही-गलत नहीं। ईमानदारी से चुनें</div>
 
     <label class="option">
-      <input type="checkbox"> आज नकारात्मक कंटेंट ज़्यादा देखा
+      <input type="checkbox" class="q"> आज नकारात्मक कंटेंट ज़्यादा देखा
     </label>
 
     <label class="option">
-      <input type="checkbox"> आज खुद की तुलना दूसरों से की
+      <input type="checkbox" class="q"> आज खुद की तुलना दूसरों से की
     </label>
 
     <label class="option">
-      <input type="checkbox"> दिमाग बार-बार सोच में उलझा रहा
+      <input type="checkbox" class="q"> दिमाग बार-बार सोच में उलझा रहा
     </label>
 
     <label class="option">
-      <input type="checkbox"> मन में बेचैनी या भारीपन रहा
+      <input type="checkbox" class="q"> मन में बेचैनी या घबराहट रही
     </label>
 
-    <button onclick="scanMind()">माइंड क्लाइमेट स्कैन करें</button>
+    <button onclick="scan()">माइंड क्लाइमेट स्कैन करें</button>
   </div>
 
   <!-- RESULT SECTION -->
-  <div id="resultSection">
-    <div id="resultTitle" class="result-title"></div>
-    <div id="resultMessage"></div>
+  <div id="result">
+    <div id="resultText"></div>
 
     <button onclick="location.reload()">फिर से जाँच करें</button>
 
@@ -125,37 +121,37 @@
 </div>
 
 <script>
-function scanMind() {
-  const checks = document.querySelectorAll('input[type="checkbox"]');
+function scan() {
   let score = 0;
-
-  checks.forEach(c => {
-    if (c.checked) score++;
+  document.querySelectorAll('.q').forEach(cb => {
+    if (cb.checked) score++;
   });
 
-  const q = document.getElementById('questionSection');
-  const r = document.getElementById('resultSection');
-  const title = document.getElementById('resultTitle');
-  const msg = document.getElementById('resultMessage');
+  document.getElementById('question').style.display = 'none';
+  document.getElementById('result').style.display = 'block';
 
-  q.style.display = "none";
-  r.style.display = "block";
+  let text = '';
 
   if (score <= 1) {
-    title.innerHTML = "🟢 माइंड क्लाइमेट: साफ";
-    title.className = "result-title green";
-    msg.innerText = "आपका मन स्थिर है। आप आगे बढ़ सकते हैं।";
+    text = `
+      <div class="result-title green">🟢 माइंड क्लाइमेट: साफ</div>
+      <p>आपका मन स्थिर है। आप आगे बढ़ सकते हैं।</p>
+    `;
   } 
   else if (score <= 3) {
-    title.innerHTML = "🟡 माइंड क्लाइमेट: अस्थिर";
-    title.className = "result-title yellow";
-    msg.innerText = "अभी थोड़ा ठहरना बेहतर होगा।";
+    text = `
+      <div class="result-title yellow">🟡 माइंड क्लाइमेट: अस्थिर</div>
+      <p>अभी थोड़ा ठहरना बेहतर होगा।</p>
+    `;
   } 
   else {
-    title.innerHTML = "🔴 माइंड क्लाइमेट: प्रदूषित";
-    title.className = "result-title red";
-    msg.innerText = "इस समय निर्णय लेना जोखिम भरा हो सकता है।";
+    text = `
+      <div class="result-title red">🔴 माइंड क्लाइमेट: प्रदूषित</div>
+      <p>इस समय निर्णय लेना जोखिम भरा हो सकता है।</p>
+    `;
   }
+
+  document.getElementById('resultText').innerHTML = text;
 }
 </script>
 
