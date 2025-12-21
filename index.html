@@ -18,28 +18,23 @@ body{
     max-width:520px;
     margin:40px auto;
     background: linear-gradient(180deg, #111, #0a0a0a);
-    border-radius:16px;
+    border-radius:18px;
     padding:28px;
-    box-shadow: 0 20px 50px rgba(0,0,0,0.8);
+    box-shadow:0 20px 50px rgba(0,0,0,0.8);
     border:1px solid rgba(255,255,255,0.08);
 }
 
 h1{
     text-align:center;
-    margin-bottom:25px;
+    margin-bottom:22px;
     font-size:26px;
-    letter-spacing:0.5px;
-}
-
-h1 span{
-    font-size:28px;
 }
 
 .question{
-    margin-bottom:18px;
+    margin-bottom:16px;
     padding:14px;
-    background: rgba(255,255,255,0.03);
-    border-radius:10px;
+    background:rgba(255,255,255,0.04);
+    border-radius:12px;
 }
 
 .question label{
@@ -48,31 +43,33 @@ h1 span{
     font-size:15px;
 }
 
-input[type="radio"]{
-    accent-color:#ff4d4d;
-}
-
 .option{
     margin-right:15px;
     font-size:14px;
 }
 
+input[type="radio"]{
+    accent-color:#ff4d4d;
+}
+
 button{
     width:100%;
     padding:14px;
-    margin-top:10px;
-    background: linear-gradient(90deg,#ff4d4d,#ff1a1a);
+    margin-top:12px;
+    background:linear-gradient(90deg,#ff4d4d,#ff1a1a);
     color:#fff;
-    font-size:17px;
+    font-size:16px;
     border:none;
-    border-radius:12px;
+    border-radius:14px;
     cursor:pointer;
     font-weight:600;
     box-shadow:0 10px 30px rgba(255,0,0,0.3);
 }
 
-button:hover{
-    opacity:0.9;
+button.secondary{
+    margin-top:10px;
+    background:#222;
+    box-shadow:none;
 }
 
 .result{
@@ -80,7 +77,6 @@ button:hover{
     padding:18px;
     border-radius:14px;
     display:none;
-    font-size:15px;
 }
 
 .clear{background:#0f2e1d;}
@@ -91,7 +87,20 @@ button:hover{
 .score{
     font-size:20px;
     font-weight:700;
-    margin-bottom:10px;
+    margin-bottom:8px;
+}
+
+.tip{
+    margin-top:10px;
+    font-size:14px;
+    opacity:0.9;
+}
+
+.history{
+    margin-top:20px;
+    font-size:13px;
+    opacity:0.8;
+    text-align:center;
 }
 </style>
 </head>
@@ -99,7 +108,7 @@ button:hover{
 <body>
 
 <div class="container">
-<h1><span>🧠</span> Mind Noise Calculator</h1>
+<h1>🧠 Mind Noise Calculator</h1>
 
 <div class="question">
 <label>1. क्या आपके दिमाग़ में एक साथ बहुत-सी बातें चल रही हैं?</label>
@@ -135,12 +144,15 @@ button:hover{
 
 <div id="result" class="result"></div>
 
+<button id="shareBtn" class="secondary" style="display:none" onclick="copyResult()">📤 Result Copy करें</button>
+
+<div id="history" class="history"></div>
+
 </div>
 
 <script>
 function calculate(){
     let score = 0;
-
     for(let i=1;i<=5;i++){
         let q = document.querySelector('input[name="q'+i+'"]:checked');
         if(!q){
@@ -151,30 +163,64 @@ function calculate(){
     }
 
     let result = document.getElementById("result");
-    result.className = "result";
+    result.className="result";
 
-    let message = "";
+    let message="", tip="";
 
-    if(score <= 20){
+    if(score<=20){
         result.classList.add("clear");
-        message = "🟢 दिमाग़ काफ़ी शांत और स्पष्ट है।";
-    }else if(score <= 50){
+        message="🟢 दिमाग़ काफ़ी शांत है।";
+        tip="आज इसी स्पष्टता में एक ज़रूरी काम पूरा करें।";
+    }else if(score<=50){
         result.classList.add("distracted");
-        message = "🟡 ध्यान थोड़ा भटका हुआ है। आराम करें।";
-    }else if(score <= 80){
+        message="🟡 ध्यान थोड़ा भटका है।";
+        tip="10 मिनट आंख बंद करके गहरी साँस लें।";
+    }else if(score<=80){
         result.classList.add("noisy");
-        message = "🟠 दिमाग़ में काफ़ी शोर है। ब्रेक ज़रूरी है।";
+        message="🟠 दिमाग़ में काफ़ी शोर है।";
+        tip="अभी मोबाइल से दूरी बनाइए।";
     }else{
         result.classList.add("overloaded");
-        message = "🔴 अत्यधिक मानसिक शोर। अभी कोई बड़ा निर्णय न लें।";
+        message="🔴 अत्यधिक मानसिक शोर।";
+        tip="अभी कोई बड़ा निर्णय न लें, विश्राम करें।";
     }
 
-    result.innerHTML = `
+    result.innerHTML=`
         <div class="score">Mind Noise Score: ${score}/100</div>
         ${message}
+        <div class="tip">👉 सुझाव: ${tip}</div>
     `;
     result.style.display="block";
+    document.getElementById("shareBtn").style.display="block";
+
+    saveHistory(score);
+    showHistory();
 }
+
+function copyResult(){
+    let text=document.querySelector(".score").innerText;
+    navigator.clipboard.writeText("मेरा Mind Noise Score है: "+text);
+    alert("Result copy हो गया 🙏");
+}
+
+function saveHistory(score){
+    let data=JSON.parse(localStorage.getItem("mncHistory"))||[];
+    let today=new Date().toLocaleDateString();
+    data.push({date:today,score:score});
+    if(data.length>5) data.shift();
+    localStorage.setItem("mncHistory",JSON.stringify(data));
+}
+
+function showHistory(){
+    let data=JSON.parse(localStorage.getItem("mncHistory"))||[];
+    let h="पिछले स्कोर: ";
+    data.forEach(d=>{
+        h+=`[${d.date}: ${d.score}] `;
+    });
+    document.getElementById("history").innerText=h;
+}
+
+showHistory();
 </script>
 
 </body>
