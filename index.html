@@ -2,7 +2,7 @@
 <html lang="hi">
 <head>
 <meta charset="UTF-8">
-<title>Decision Signal Spin</title>
+<title>Decision Signal</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <style>
@@ -14,13 +14,7 @@ body {
     text-align: center;
 }
 
-h1 {
-    margin: 20px 0;
-}
-
-.container {
-    padding: 10px;
-}
+h1 { margin: 20px 0; }
 
 button {
     width: 80%;
@@ -81,24 +75,23 @@ button {
 
 <h1>Decision Signal</h1>
 
-<div class="container" id="screen1">
+<!-- SCREEN 1 -->
+<div id="screen1">
     <p>अपनी मानसिक स्थिति चुनें</p>
-
     <button class="green" onclick="selectChoice('SHANT')">मेरा मन शांत है</button>
     <button class="yellow" onclick="selectChoice('ASHANT')">मेरा मन अशांत है</button>
     <button class="red" onclick="selectChoice('STRESS')">मैं तनाव में हूँ</button>
 </div>
 
-<div class="container" id="screen2" style="display:none;">
+<!-- SCREEN 2 -->
+<div id="screen2" style="display:none;">
     <div id="wheel-container">
         <div id="pointer"></div>
         <div id="wheel"></div>
     </div>
 
     <button class="blue" id="spinBtn" onclick="startSpin()">SPIN</button>
-
     <div id="result"></div>
-
     <button class="blue" onclick="goBack()">Back</button>
 </div>
 
@@ -107,23 +100,32 @@ let userChoice = "";
 let angle = 0;
 let spinCount = 0;
 let stopAt = 0;
-let spinning = false;
+
+// 🔒 Decision Lock (persistent)
+let decisionLocked = localStorage.getItem("decisionLock") === "YES";
 
 function selectChoice(choice) {
     userChoice = choice;
+    decisionLocked = false;
+    localStorage.removeItem("decisionLock");
+
     document.getElementById("screen1").style.display = "none";
     document.getElementById("screen2").style.display = "block";
     document.getElementById("result").innerText = "";
+    document.getElementById("spinBtn").disabled = false;
+
     angle = 0;
     document.getElementById("wheel").style.transform = "rotate(0deg)";
 }
 
 function startSpin() {
-    if (spinning) return;
+    if (decisionLocked) return;
 
-    spinning = true;
+    decisionLocked = true;
+    localStorage.setItem("decisionLock", "YES");
+
     spinCount = 0;
-    stopAt = Math.floor(Math.random() * 20) + 20; // 20–40
+    stopAt = Math.floor(Math.random() * 20) + 20;
     document.getElementById("spinBtn").disabled = true;
 
     let interval = setInterval(() => {
@@ -133,28 +135,25 @@ function startSpin() {
 
         if (spinCount >= stopAt) {
             clearInterval(interval);
-            spinning = false;
-            document.getElementById("spinBtn").disabled = false;
             showResult();
         }
     }, 50);
 }
 
 function showResult() {
-    let resultText = "";
-
     if (userChoice === "SHANT") {
-        resultText = "🟢 निर्णय लिया जा सकता है";
+        document.getElementById("result").innerText = "🟢 निर्णय लिया जा सकता है";
     } else if (userChoice === "ASHANT") {
-        resultText = "🟡 थोड़ा रुकें";
+        document.getElementById("result").innerText = "🟡 थोड़ा रुकें";
     } else {
-        resultText = "🔴 अभी निर्णय न लें";
+        document.getElementById("result").innerText = "🔴 अभी निर्णय न लें";
     }
-
-    document.getElementById("result").innerText = resultText;
 }
 
 function goBack() {
+    decisionLocked = false;
+    localStorage.removeItem("decisionLock");
+
     document.getElementById("screen2").style.display = "none";
     document.getElementById("screen1").style.display = "block";
 }
