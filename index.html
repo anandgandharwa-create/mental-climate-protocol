@@ -2,162 +2,126 @@
 <html lang="hi">
 <head>
 <meta charset="UTF-8">
-<title>Decision Signal</title>
+<title>Mind Noise Calculator (MNC)</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
 <style>
-body {
-    margin: 0;
-    font-family: Arial, sans-serif;
-    background: #0b0f1a;
-    color: #fff;
-    text-align: center;
+body{
+    font-family: sans-serif;
+    background:#f4f6f8;
+    padding:20px;
 }
-
-h1 { margin: 20px 0; }
-
-button {
-    width: 80%;
-    padding: 15px;
-    margin: 10px auto;
-    font-size: 18px;
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
+.container{
+    max-width:500px;
+    margin:auto;
+    background:#ffffff;
+    padding:20px;
+    border-radius:10px;
+    box-shadow:0 0 10px rgba(0,0,0,0.1);
 }
-
-.green { background: #2ecc71; color: #000; }
-.yellow { background: #f1c40f; color: #000; }
-.red { background: #e74c3c; color: #fff; }
-.blue { background: #3498db; color: #fff; }
-
-#wheel-container {
-    margin: 20px auto;
-    width: 260px;
-    height: 260px;
-    position: relative;
+h1{
+    text-align:center;
 }
-
-#wheel {
-    width: 100%;
-    height: 100%;
-    border-radius: 50%;
-    border: 8px solid #fff;
-    background: conic-gradient(
-        #2ecc71 0deg 120deg,
-        #f1c40f 120deg 240deg,
-        #e74c3c 240deg 360deg
-    );
-    transform: rotate(0deg);
+.question{
+    margin:15px 0;
 }
-
-#pointer {
-    width: 0;
-    height: 0;
-    border-left: 15px solid transparent;
-    border-right: 15px solid transparent;
-    border-bottom: 25px solid #fff;
-    position: absolute;
-    top: -25px;
-    left: 50%;
-    transform: translateX(-50%);
+button{
+    width:100%;
+    padding:12px;
+    background:#222;
+    color:#fff;
+    border:none;
+    border-radius:6px;
+    font-size:16px;
+    cursor:pointer;
 }
-
-#result {
-    margin-top: 20px;
-    font-size: 22px;
-    font-weight: bold;
+button:hover{
+    background:#444;
 }
+.result{
+    margin-top:20px;
+    padding:15px;
+    border-radius:8px;
+    display:none;
+}
+.clear{background:#d4edda;}
+.distracted{background:#fff3cd;}
+.noisy{background:#f8d7da;}
+.overloaded{background:#f5c6cb;}
 </style>
 </head>
 
 <body>
+<div class="container">
+<h1>🧠 Mind Noise Calculator</h1>
 
-<h1>Decision Signal</h1>
-
-<!-- SCREEN 1 -->
-<div id="screen1">
-    <p>अपनी मानसिक स्थिति चुनें</p>
-    <button class="green" onclick="selectChoice('SHANT')">मेरा मन शांत है</button>
-    <button class="yellow" onclick="selectChoice('ASHANT')">मेरा मन अशांत है</button>
-    <button class="red" onclick="selectChoice('STRESS')">मैं तनाव में हूँ</button>
+<div class="question">
+<label>1. क्या आपके दिमाग़ में एक साथ बहुत-सी बातें चल रही हैं?</label><br>
+<input type="radio" name="q1" value="20"> हाँ
+<input type="radio" name="q1" value="0"> नहीं
 </div>
 
-<!-- SCREEN 2 -->
-<div id="screen2" style="display:none;">
-    <div id="wheel-container">
-        <div id="pointer"></div>
-        <div id="wheel"></div>
-    </div>
+<div class="question">
+<label>2. क्या आप बार-बार बिना कारण मोबाइल चेक कर रहे हैं?</label><br>
+<input type="radio" name="q2" value="20"> हाँ
+<input type="radio" name="q2" value="0"> नहीं
+</div>
 
-    <button class="blue" id="spinBtn" onclick="startSpin()">SPIN</button>
-    <div id="result"></div>
-    <button class="blue" onclick="goBack()">Back</button>
+<div class="question">
+<label>3. क्या किसी बात को लेकर मन बेचैन है?</label><br>
+<input type="radio" name="q3" value="20"> हाँ
+<input type="radio" name="q3" value="0"> नहीं
+</div>
+
+<div class="question">
+<label>4. क्या ध्यान टिक नहीं पा रहा?</label><br>
+<input type="radio" name="q4" value="20"> हाँ
+<input type="radio" name="q4" value="0"> नहीं
+</div>
+
+<div class="question">
+<label>5. क्या आपको मानसिक थकान महसूस हो रही है?</label><br>
+<input type="radio" name="q5" value="20"> हाँ
+<input type="radio" name="q5" value="0"> नहीं
+</div>
+
+<button onclick="calculate()">स्कोर देखें</button>
+
+<div id="result" class="result"></div>
 </div>
 
 <script>
-let userChoice = "";
-let angle = 0;
-let spinCount = 0;
-let stopAt = 0;
-
-// 🔒 Decision Lock (persistent)
-let decisionLocked = localStorage.getItem("decisionLock") === "YES";
-
-function selectChoice(choice) {
-    userChoice = choice;
-    decisionLocked = false;
-    localStorage.removeItem("decisionLock");
-
-    document.getElementById("screen1").style.display = "none";
-    document.getElementById("screen2").style.display = "block";
-    document.getElementById("result").innerText = "";
-    document.getElementById("spinBtn").disabled = false;
-
-    angle = 0;
-    document.getElementById("wheel").style.transform = "rotate(0deg)";
-}
-
-function startSpin() {
-    if (decisionLocked) return;
-
-    decisionLocked = true;
-    localStorage.setItem("decisionLock", "YES");
-
-    spinCount = 0;
-    stopAt = Math.floor(Math.random() * 20) + 20;
-    document.getElementById("spinBtn").disabled = true;
-
-    let interval = setInterval(() => {
-        angle += 20;
-        spinCount++;
-        document.getElementById("wheel").style.transform = `rotate(${angle}deg)`;
-
-        if (spinCount >= stopAt) {
-            clearInterval(interval);
-            showResult();
+function calculate(){
+    let score = 0;
+    for(let i=1;i<=5;i++){
+        let q = document.querySelector('input[name="q'+i+'"]:checked');
+        if(!q){
+            alert("कृपया सभी प्रश्नों का उत्तर दें");
+            return;
         }
-    }, 50);
-}
-
-function showResult() {
-    if (userChoice === "SHANT") {
-        document.getElementById("result").innerText = "🟢 निर्णय लिया जा सकता है";
-    } else if (userChoice === "ASHANT") {
-        document.getElementById("result").innerText = "🟡 थोड़ा रुकें";
-    } else {
-        document.getElementById("result").innerText = "🔴 अभी निर्णय न लें";
+        score += parseInt(q.value);
     }
-}
 
-function goBack() {
-    decisionLocked = false;
-    localStorage.removeItem("decisionLock");
+    let resultDiv = document.getElementById("result");
+    let message = "";
+    resultDiv.className = "result";
 
-    document.getElementById("screen2").style.display = "none";
-    document.getElementById("screen1").style.display = "block";
+    if(score <= 20){
+        message = "🟢 आपका Mind Noise कम है। दिमाग़ काफ़ी स्पष्ट है।";
+        resultDiv.classList.add("clear");
+    } else if(score <= 50){
+        message = "🟡 थोड़ा ध्यान भटक रहा है। आराम की ज़रूरत है।";
+        resultDiv.classList.add("distracted");
+    } else if(score <= 80){
+        message = "🟠 दिमाग़ में काफ़ी शोर है। ब्रेक लें।";
+        resultDiv.classList.add("noisy");
+    } else {
+        message = "🔴 अत्यधिक मानसिक शोर। अभी कुछ भी निर्णय न लें।";
+        resultDiv.classList.add("overloaded");
+    }
+
+    resultDiv.innerHTML = "<strong>Mind Noise Score: " + score + "/100</strong><br><br>" + message;
+    resultDiv.style.display = "block";
 }
 </script>
-
 </body>
 </html>
