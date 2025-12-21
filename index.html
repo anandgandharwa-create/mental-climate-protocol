@@ -7,151 +7,147 @@
 
 <style>
 body{
-    margin:0;
-    font-family:system-ui,sans-serif;
-    background:radial-gradient(circle at top,#1b1b1b,#000);
-    color:#f1f1f1;
+ margin:0;
+ font-family:system-ui,sans-serif;
+ background:radial-gradient(circle at top,#1b1b1b,#000);
+ color:#f1f1f1;
 }
 .container{
-    max-width:520px;
-    margin:40px auto;
-    background:linear-gradient(180deg,#111,#0a0a0a);
-    border-radius:18px;
-    padding:28px;
-    box-shadow:0 20px 50px rgba(0,0,0,0.8);
-    border:1px solid rgba(255,255,255,0.08);
+ max-width:520px;
+ margin:40px auto;
+ background:linear-gradient(180deg,#111,#0a0a0a);
+ border-radius:18px;
+ padding:28px;
+ box-shadow:0 20px 50px rgba(0,0,0,.85);
 }
-h1{
-    text-align:center;
-    margin-bottom:22px;
-    font-size:26px;
-}
+h1{text-align:center;margin-bottom:18px;}
 .page{display:none;}
 .page.active{display:block;}
 
 .question{
-    margin-bottom:16px;
-    padding:14px;
-    background:rgba(255,255,255,0.04);
-    border-radius:12px;
+ margin-bottom:14px;
+ padding:14px;
+ background:rgba(255,255,255,.04);
+ border-radius:12px;
 }
-.question label{
-    display:block;
-    margin-bottom:8px;
-}
-.option{margin-right:15px;}
-
-input[type="radio"]{accent-color:#ff4d4d;}
 
 button{
-    width:100%;
-    padding:14px;
-    margin-top:12px;
-    border:none;
-    border-radius:14px;
-    font-size:16px;
-    font-weight:600;
-    cursor:pointer;
+ width:100%;
+ padding:14px;
+ margin-top:12px;
+ border:none;
+ border-radius:14px;
+ font-size:16px;
+ font-weight:600;
+ cursor:pointer;
 }
-.primary{
-    background:linear-gradient(90deg,#ff4d4d,#ff1a1a);
-    color:#fff;
-}
-.secondary{
-    background:#222;
-    color:#fff;
-}
+.primary{background:linear-gradient(90deg,#ff4d4d,#ff1a1a);color:#fff;}
+.secondary{background:#222;color:#fff;}
 
 .result{
-    margin-top:20px;
-    padding:18px;
-    border-radius:14px;
+ margin-top:18px;
+ padding:16px;
+ border-radius:14px;
 }
 .clear{background:#0f2e1d;}
 .distracted{background:#332a00;}
 .noisy{background:#3a1f1f;}
 .overloaded{background:#4a1515;}
 
-.score{
-    font-size:20px;
-    font-weight:700;
-    margin-bottom:10px;
+.score{font-size:20px;font-weight:700;margin-bottom:6px;}
+.sub{font-size:14px;opacity:.85;}
+
+.breatheBox{
+ margin:20px auto;
+ width:140px;
+ height:140px;
+ border-radius:50%;
+ background:radial-gradient(circle,#ff4d4d,#b30000);
+ display:flex;
+ align-items:center;
+ justify-content:center;
+ font-size:18px;
+ font-weight:600;
+ animation:pulse 4s infinite;
+}
+@keyframes pulse{
+ 0%{transform:scale(.8);opacity:.6;}
+ 50%{transform:scale(1);opacity:1;}
+ 100%{transform:scale(.8);opacity:.6;}
 }
 
 .action{
-    margin:15px 0;
-    padding:14px;
-    background:rgba(255,255,255,0.05);
-    border-radius:12px;
-    font-size:15px;
+ margin:14px 0;
+ padding:14px;
+ background:rgba(255,255,255,.05);
+ border-radius:12px;
 }
-.progress{
-    text-align:center;
-    opacity:0.7;
-    font-size:13px;
-    margin-bottom:10px;
+
+.streak{
+ text-align:center;
+ margin-top:10px;
+ font-size:14px;
+ opacity:.85;
 }
 </style>
 </head>
 
 <body>
-
 <div class="container">
 
 <!-- PAGE 1 -->
 <div class="page active" id="page1">
 <h1>🧠 Mind Noise Calculator</h1>
 
-<div class="question">
-<label>1. क्या आपके दिमाग़ में एक साथ बहुत-सी बातें चल रही हैं?</label>
-<span class="option"><input type="radio" name="q1" value="20"> हाँ</span>
-<span class="option"><input type="radio" name="q1" value="0"> नहीं</span>
+<div class="question">1. क्या आपके दिमाग़ में बहुत-सी बातें चल रही हैं?<br>
+<input type="radio" name="q1" value="20"> हाँ
+<input type="radio" name="q1" value="0"> नहीं
 </div>
-
-<div class="question">
-<label>2. क्या आप बार-बार बिना कारण मोबाइल चेक कर रहे हैं?</label>
-<span class="option"><input type="radio" name="q2" value="20"> हाँ</span>
-<span class="option"><input type="radio" name="q2" value="0"> नहीं</span>
+<div class="question">2. क्या आप बार-बार मोबाइल चेक कर रहे हैं?<br>
+<input type="radio" name="q2" value="20"> हाँ
+<input type="radio" name="q2" value="0"> नहीं
 </div>
-
-<div class="question">
-<label>3. क्या किसी बात को लेकर मन बेचैन है?</label>
-<span class="option"><input type="radio" name="q3" value="20"> हाँ</span>
-<span class="option"><input type="radio" name="q3" value="0"> नहीं</span>
+<div class="question">3. क्या मन बेचैन है?<br>
+<input type="radio" name="q3" value="20"> हाँ
+<input type="radio" name="q3" value="0"> नहीं
 </div>
-
-<div class="question">
-<label>4. क्या ध्यान टिक नहीं पा रहा?</label>
-<span class="option"><input type="radio" name="q4" value="20"> हाँ</span>
-<span class="option"><input type="radio" name="q4" value="0"> नहीं</span>
+<div class="question">4. क्या ध्यान नहीं टिक रहा?<br>
+<input type="radio" name="q4" value="20"> हाँ
+<input type="radio" name="q4" value="0"> नहीं
 </div>
-
-<div class="question">
-<label>5. क्या आपको मानसिक थकान महसूस हो रही है?</label>
-<span class="option"><input type="radio" name="q5" value="20"> हाँ</span>
-<span class="option"><input type="radio" name="q5" value="0"> नहीं</span>
+<div class="question">5. क्या मानसिक थकान है?<br>
+<input type="radio" name="q5" value="20"> हाँ
+<input type="radio" name="q5" value="0"> नहीं
 </div>
 
 <button class="primary" onclick="calculate()">स्कोर देखें</button>
 <div id="result"></div>
-
-<button id="nextBtn" class="secondary" style="display:none" onclick="goNext()">➡️ Reduce Mind Noise</button>
+<button id="nextBtn" class="secondary" style="display:none" onclick="goNext()">Next ➜</button>
 </div>
 
-<!-- PAGE 2 -->
+<!-- PAGE 2 : HIGH NOISE -->
 <div class="page" id="page2">
-<div class="progress">Step 2 of 2</div>
 <h1>🌿 Reduce Mind Noise</h1>
 
-<div class="action">1️⃣ अभी 60 सेकंड के लिए आँखें बंद करें और केवल साँस पर ध्यान दें।</div>
-<div class="action">2️⃣ जिस बात ने दिमाग़ भर रखा है, उसे मन में कहें – “अभी नहीं।”</div>
-<div class="action">3️⃣ मोबाइल को कम-से-कम 30 मिनट दूर रखें।</div>
-<div class="action">4️⃣ अपने शरीर में जहाँ तनाव है, वहाँ साँस भेजें।</div>
-<div class="action">5️⃣ एक सरल काम चुनें और वही करें।</div>
+<div class="breatheBox" id="breatheText">साँस लें</div>
+<div class="action">60 सेकंड इस श्वास-प्रश्वास के साथ रहें</div>
 
-<button class="secondary" onclick="goBack()">⬅️ Back</button>
-<button class="primary" onclick="finish()">✔️ Done</button>
+<button class="secondary" onclick="goBack()">⬅ Back</button>
+<button class="primary" onclick="finish()">✔ Done</button>
 </div>
+
+<!-- PAGE 3 : POSITIVE -->
+<div class="page" id="page3">
+<h1>✨ Mind is Clear</h1>
+
+<div class="action">🌸 आज आपका मानसिक वातावरण संतुलित है</div>
+<div class="action">🧠 इस अवस्था में सही निर्णय लें</div>
+
+<button class="secondary" onclick="goBack()">⬅ Back</button>
+<button class="primary" onclick="finish()">✔ Continue</button>
+</div>
+
+<div class="streak" id="streak"></div>
 
 </div>
 
@@ -159,38 +155,71 @@ button{
 let lastScore=0;
 
 function calculate(){
-    let score=0;
-    for(let i=1;i<=5;i++){
-        let q=document.querySelector('input[name="q'+i+'"]:checked');
-        if(!q){alert("कृपया सभी प्रश्नों का उत्तर दें");return;}
-        score+=parseInt(q.value);
-    }
-    lastScore=score;
-    let r=document.getElementById("result");
-    r.className="result";
-    let msg="";
-    if(score<=20){r.classList.add("clear");msg="🟢 दिमाग़ शांत है।";}
-    else if(score<=50){r.classList.add("distracted");msg="🟡 थोड़ा शोर है।";}
-    else if(score<=80){r.classList.add("noisy");msg="🟠 काफ़ी शोर है।";}
-    else{r.classList.add("overloaded");msg="🔴 अत्यधिक मानसिक शोर।";}
-    r.innerHTML=`<div class="score">Mind Noise Score: ${score}/100</div>${msg}`;
-    document.getElementById("nextBtn").style.display="block";
+ let score=0;
+ for(let i=1;i<=5;i++){
+  let q=document.querySelector('input[name="q'+i+'"]:checked');
+  if(!q){alert("सभी प्रश्न भरें");return;}
+  score+=parseInt(q.value);
+ }
+ lastScore=score;
+ let r=document.getElementById("result");
+ r.className="result";
+ if(score<20){r.classList.add("clear");r.innerHTML="<div class='score'>"+score+"/100</div>मन शांत है";}
+ else if(score<50){r.classList.add("distracted");r.innerHTML="<div class='score'>"+score+"/100</div>थोड़ा शोर";}
+ else if(score<80){r.classList.add("noisy");r.innerHTML="<div class='score'>"+score+"/100</div>काफ़ी शोर";}
+ else{r.classList.add("overloaded");r.innerHTML="<div class='score'>"+score+"/100</div>अत्यधिक शोर";}
+ document.getElementById("nextBtn").style.display="block";
 }
 
 function goNext(){
-    document.getElementById("page1").classList.remove("active");
-    document.getElementById("page2").classList.add("active");
+ document.getElementById("page1").classList.remove("active");
+ if(lastScore<60){
+  document.getElementById("page3").classList.add("active");
+ }else{
+  document.getElementById("page2").classList.add("active");
+  startBreathing();
+ }
 }
 
 function goBack(){
-    document.getElementById("page2").classList.remove("active");
-    document.getElementById("page1").classList.add("active");
+ document.querySelectorAll(".page").forEach(p=>p.classList.remove("active"));
+ document.getElementById("page1").classList.add("active");
+}
+
+function startBreathing(){
+ let t=document.getElementById("breatheText");
+ let inhale=true;
+ setInterval(()=>{
+  t.innerText=inhale?"साँस छोड़ें":"साँस लें";
+  inhale=!inhale;
+ },2000);
 }
 
 function finish(){
-    alert("बहुत अच्छा 👍\nआज के लिए Mind Noise कम करने की प्रक्रिया पूरी हुई।");
-    goBack();
+ updateStreak();
+ alert("बहुत अच्छा 🙏\nआज का अभ्यास पूरा हुआ।");
+ goBack();
 }
+
+function updateStreak(){
+ let today=new Date().toDateString();
+ let data=JSON.parse(localStorage.getItem("mncStreak"))||{count:0,last:""};
+ if(data.last!==today){
+  data.count++;
+  data.last=today;
+ }
+ localStorage.setItem("mncStreak",JSON.stringify(data));
+ showStreak();
+}
+
+function showStreak(){
+ let data=JSON.parse(localStorage.getItem("mncStreak"));
+ if(data){
+  document.getElementById("streak").innerText=
+  "🔥 Daily Mind Care Streak: "+data.count+" दिन";
+ }
+}
+showStreak();
 </script>
 
 </body>
