@@ -2,276 +2,136 @@
 <html lang="hi">
 <head>
 <meta charset="UTF-8">
-<title>Decision Lock Tool</title>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
+<title>Mind OS</title>
 <style>
 body{
-  margin:0;
-  font-family:system-ui,sans-serif;
-  background:#020617;
-  color:#e5e7eb;
+    margin:0;
+    font-family: Arial, sans-serif;
+    background:#050b2e;
+    color:#fff;
+    text-align:center;
 }
-.container{max-width:460px;margin:auto;padding:20px}
-h1{text-align:center}
-.hidden{display:none}
-
-.toggle{
-  text-align:right;
-  margin-bottom:10px;
+.page{
+    display:none;
+    padding:40px 20px;
 }
-.toggle button{
-  padding:6px 12px;
-  border:none;
-  border-radius:10px;
-  background:#334155;
-  color:#fff;
-  cursor:pointer;
+.active{
+    display:block;
 }
-
-.card{
-  background:#0f172a;
-  border-radius:14px;
-  padding:16px;
-  margin-bottom:14px;
+button{
+    padding:15px 35px;
+    font-size:18px;
+    border:none;
+    border-radius:30px;
+    background:linear-gradient(45deg,#00f2ff,#00ff9c);
+    color:#000;
+    cursor:pointer;
+    margin-top:30px;
 }
-.question{margin-bottom:10px}
-.options button{
-  width:48%;
-  margin:1%;
-  padding:10px;
-  border:none;
-  border-radius:10px;
-  background:#334155;
-  color:#fff;
-  cursor:pointer;
+h1{
+    font-size:32px;
+    margin-bottom:15px;
 }
-.options button.active{background:#22c55e;color:#022c22}
-
-.nav{display:flex;justify-content:space-between;margin-top:20px}
-.nav button{
-  padding:10px 18px;
-  border:none;
-  border-radius:12px;
-  background:#2563eb;
-  color:#fff;
-  cursor:pointer;
+p{
+    font-size:18px;
+    opacity:0.9;
 }
 
-.wheel-box{text-align:center}
-#wheel{
-  width:260px;height:260px;border-radius:50%;
-  margin:20px auto;
-  background:conic-gradient(
-    #16a34a 0deg 120deg,
-    #ca8a04 120deg 240deg,
-    #dc2626 240deg 360deg
-  );
-  transition:transform 4s cubic-bezier(.17,.67,.83,.67);
+/* Wheel */
+.wheel-container{
+    position:relative;
+    width:300px;
+    height:300px;
+    margin:40px auto;
+}
+.wheel{
+    width:100%;
+    height:100%;
+    border-radius:50%;
+    background:conic-gradient(
+        #ff4d4d 0deg 120deg,
+        #ffd633 120deg 240deg,
+        #4dff88 240deg 360deg
+    );
+    transition:transform 4s ease-out;
 }
 .pointer{
-  width:0;height:0;
-  border-left:10px solid transparent;
-  border-right:10px solid transparent;
-  border-bottom:20px solid #fff;
-  margin:0 auto;
+    position:absolute;
+    top:-15px;
+    left:50%;
+    transform:translateX(-50%);
+    width:0;
+    height:0;
+    border-left:15px solid transparent;
+    border-right:15px solid transparent;
+    border-bottom:25px solid #fff;
 }
-
-.spin-btn{
-  width:100%;
-  padding:15px;
-  font-size:18px;
-  border:none;
-  border-radius:14px;
-  background:linear-gradient(90deg,#22c55e,#38bdf8,#a855f7);
-  color:#020617;
-  font-weight:600;
-  cursor:pointer;
-}
-
-#result{
-  margin-top:20px;
-  padding:16px;
-  border-radius:14px;
-  background:#020617;
-  text-align:center;
-}
-
-.cause{
-  background:#0f172a;
-  border-radius:14px;
-  padding:16px;
-  line-height:1.6;
+.result{
+    margin-top:25px;
+    font-size:20px;
 }
 </style>
 </head>
 
 <body>
-<div class="container">
-
-<div class="toggle">
-  <button onclick="toggleLang()">🌐 हिन्दी / English</button>
-</div>
 
 <!-- PAGE 1 -->
-<div id="page1">
-<h1 id="title">Decision Lock</h1>
-<div id="qbox"></div>
-<div class="nav">
-<span></span>
-<button onclick="next1()" id="nextBtn">Next ▶</button>
-</div>
+<div class="page active" id="page1">
+    <h1>🧠 Mind OS</h1>
+    <p>
+        यह कोई app नहीं है।  
+        यह आपके मन का Operating System है।
+    </p>
+    <p>
+        आगे बढ़िए और अपने वर्तमान  
+        मानसिक निर्णय को spin करके जानिए।
+    </p>
+    <button onclick="goNext()">Next ➜</button>
 </div>
 
 <!-- PAGE 2 -->
-<div id="page2" class="hidden">
-<h1 id="spinTitle">Decision Spin</h1>
-<div class="wheel-box">
-<div class="pointer"></div>
-<div id="wheel"></div>
-<button class="spin-btn" onclick="spin()" id="spinBtn">🔒 LOCK DECISION</button>
-</div>
-<div id="result"></div>
-<div class="nav">
-<button onclick="back1()">◀ Back</button>
-<button onclick="next2()">Next ▶</button>
-</div>
-</div>
+<div class="page" id="page2">
+    <h1>🎯 Mind Spin</h1>
 
-<!-- PAGE 3 -->
-<div id="page3" class="hidden">
-<h1 id="causeTitle">Decision Cause</h1>
-<div class="cause" id="causeText"></div>
-<div class="nav">
-<button onclick="back2()">◀ Back</button>
-<span></span>
-</div>
-</div>
+    <div class="wheel-container">
+        <div class="pointer"></div>
+        <div class="wheel" id="wheel"></div>
+    </div>
 
+    <button onclick="spinWheel()">SPIN</button>
+
+    <div class="result" id="result"></div>
 </div>
 
 <script>
-let lang="hi";
+let spun=false;
 
-const data={
-hi:{
-title:"Decision Lock",
-spinTitle:"Decision Spin",
-causeTitle:"Decision का कारण",
-next:"Next ▶",
-spin:"🔒 LOCK DECISION",
-questions:[
-"क्या आप अभी थके हुए हैं?",
-"क्या आप भावनात्मक स्थिति में हैं?",
-"क्या यह बड़ा जीवन निर्णय है?",
-"क्या समय का दबाव है?",
-"क्या डर शामिल है?",
-"क्या किसी और की उम्मीद जुड़ी है?",
-"क्या यह निर्णय बदला नहीं जा सकता?"
-],
-yes:"हाँ",no:"नहीं",
-green:"🟢 निर्णय लेना सुरक्षित है",
-yellow:"🟡 24 घंटे रुकना बेहतर होगा",
-red:"🔴 अभी निर्णय न लें",
-why:"यह निर्णय क्यों आया?"
-},
-en:{
-title:"Decision Lock",
-spinTitle:"Decision Spin",
-causeTitle:"Decision Cause",
-next:"Next ▶",
-spin:"🔒 LOCK DECISION",
-questions:[
-"Are you feeling tired right now?",
-"Are you emotionally disturbed?",
-"Is this a major life decision?",
-"Is there time pressure?",
-"Is fear involved?",
-"Are others' expectations involved?",
-"Is this decision irreversible?"
-],
-yes:"Yes",no:"No",
-green:"🟢 Safe to decide now",
-yellow:"🟡 Better to wait 24 hours",
-red:"🔴 Do not decide now",
-why:"Why this decision?"
-}
-};
-
-let answers=Array(7).fill(null);
-
-function render(){
-  document.getElementById("title").innerText=data[lang].title;
-  document.getElementById("spinTitle").innerText=data[lang].spinTitle;
-  document.getElementById("causeTitle").innerText=data[lang].causeTitle;
-  document.getElementById("nextBtn").innerText=data[lang].next;
-  document.getElementById("spinBtn").innerText=data[lang].spin;
-  const qbox=document.getElementById("qbox");
-  qbox.innerHTML="";
-  data[lang].questions.forEach((q,i)=>{
-    qbox.innerHTML+=`
-    <div class="card">
-      <div class="question">${i+1}️⃣ ${q}</div>
-      <div class="options">
-        <button onclick="ans(${i},1,this)">${data[lang].yes}</button>
-        <button onclick="ans(${i},0,this)">${data[lang].no}</button>
-      </div>
-    </div>`;
-  });
-}
-render();
-
-function toggleLang(){
-  lang = lang==="hi" ? "en" : "hi";
-  render();
+function goNext(){
+    document.getElementById("page1").classList.remove("active");
+    document.getElementById("page2").classList.add("active");
 }
 
-function ans(i,v,btn){
-  answers[i]=v;
-  btn.parentElement.querySelectorAll("button")
-    .forEach(b=>b.classList.remove("active"));
-  btn.classList.add("active");
-}
+function spinWheel(){
+    if(spun) return;
+    spun=true;
 
-function next1(){
-  if(answers.includes(null)){alert("Please answer all questions");return;}
-  page1.classList.add("hidden");page2.classList.remove("hidden");
-}
-function back1(){page2.classList.add("hidden");page1.classList.remove("hidden")}
-function next2(){page2.classList.add("hidden");page3.classList.remove("hidden")}
-function back2(){page3.classList.add("hidden");page2.classList.remove("hidden")}
+    const wheel=document.getElementById("wheel");
+    const result=document.getElementById("result");
 
-/* SOUND */
-const audioCtx=new (window.AudioContext||window.webkitAudioContext)();
-function tone(f,d){
-  const o=audioCtx.createOscillator(),g=audioCtx.createGain();
-  o.connect(g);g.connect(audioCtx.destination);
-  o.frequency.value=f;o.start();
-  g.gain.setValueAtTime(0.2,audioCtx.currentTime);
-  g.gain.exponentialRampToValueAtTime(0.001,audioCtx.currentTime+d/1000);
-  o.stop(audioCtx.currentTime+d/1000);
-}
+    // Random but controlled stop
+    const angles=[720+30,720+150,720+270];
+    const texts=[
+        "🔴 Decision Lock: अभी निर्णय टालिए",
+        "🟡 Neutral State: और स्पष्टता चाहिए",
+        "🟢 Positive Flow: निर्णय लेने का सही समय"
+    ];
 
-/* SPIN */
-let angle=0;
-function spin(){
-  navigator.vibrate(100);tone(300,200);
-  const total=answers.reduce((a,b)=>a+b,0);
-  let stop,txt,freq,vib;
-  if(total<=2){stop=60;txt=data[lang].green;freq=700;vib=150;}
-  else if(total<=4){stop=180;txt=data[lang].yellow;freq=400;vib=300;}
-  else{stop=300;txt=data[lang].red;freq=200;vib=600;}
+    const pick=Math.floor(Math.random()*3);
+    wheel.style.transform="rotate("+angles[pick]+"deg)";
 
-  angle=360*4+stop;
-  wheel.style.transform=`rotate(${angle}deg)`;
-
-  setTimeout(()=>{
-    navigator.vibrate(vib);tone(freq,400);
-    result.innerText=txt;
-    let c=`<strong>${data[lang].why}</strong><br><br>`;
-    answers.forEach((v,i)=>{if(v===1)c+="• "+data[lang].questions[i]+"<br>";});
-    causeText.innerHTML=c;
-  },4000);
+    setTimeout(()=>{
+        result.innerText=texts[pick];
+    },4000);
 }
 </script>
 
