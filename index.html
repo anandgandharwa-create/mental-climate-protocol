@@ -3,13 +3,13 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Mind OS</title>
+<title>Mental Pollution Index – Mind OS</title>
 
 <style>
 body{
     margin:0;
     font-family:'Segoe UI',Arial;
-    background:linear-gradient(180deg,#040b2e,#020617);
+    background:linear-gradient(180deg,#050b2e,#020617);
     color:#fff;
 }
 .page{display:none;padding:22px;}
@@ -19,14 +19,7 @@ header{
     text-align:center;
     font-size:26px;
     font-weight:600;
-    padding:20px 10px;
-}
-
-.sub{
-    text-align:center;
-    font-size:18px;
-    opacity:0.85;
-    margin-bottom:20px;
+    padding:18px 10px;
 }
 
 .card{
@@ -38,8 +31,15 @@ header{
     box-shadow:0 12px 30px rgba(0,0,0,0.4);
 }
 
-h2{font-size:22px;margin:0 0 8px;}
 p{font-size:18px;line-height:1.6;opacity:0.9;}
+strong{font-size:19px;}
+
+label{
+    display:block;
+    margin:8px 0;
+    font-size:18px;
+    cursor:pointer;
+}
 
 button{
     width:100%;
@@ -49,22 +49,9 @@ button{
     border-radius:30px;
     background:linear-gradient(45deg,#00f2ff,#00ff9c);
     color:#000;
-    margin-top:14px;
+    margin-top:18px;
     cursor:pointer;
 }
-
-.option label{
-    display:block;
-    margin:8px 0;
-    font-size:18px;
-}
-
-.nav{
-    display:flex;
-    gap:12px;
-    margin-top:20px;
-}
-.nav button{width:50%;font-size:18px;}
 
 /* Wheel */
 .wheel-box{
@@ -95,6 +82,13 @@ button{
     border-bottom:22px solid #fff;
 }
 
+.nav{
+    display:flex;
+    gap:12px;
+    margin-top:20px;
+}
+.nav button{width:50%;}
+
 @media(min-width:768px){
     body{max-width:480px;margin:auto;}
 }
@@ -103,135 +97,127 @@ button{
 
 <body>
 
-<!-- PAGE 1 : DASHBOARD -->
-<div class="page active" id="dashboard">
-<header>🧠 Mind OS</header>
-<div class="sub">अपने मन का tool चुनिए</div>
+<!-- PAGE 1 : QUESTIONS -->
+<div class="page active" id="page1">
+<header>🌪 Mental Pollution Index</header>
 
-<div class="card">
-<h2>🎯 Decision Lock</h2>
-<p>यह tool बताता है कि अभी निर्णय लेना सही है या नहीं।</p>
-<button onclick="openTool()">Open Tool</button>
-</div>
+<form id="quiz">
 
-<div class="card">
-<h2>🌪 Mind Noise Index</h2>
-<p>आपके मन में चल रहे विचारों के शोर की जाँच।</p>
-<button onclick="openTool()">Open Tool</button>
-</div>
+<div class="card"><strong>1. क्या मन बार-बार एक ही बात पर अटक जाता है?</strong>
+<label><input type="radio" name="q1" value="3"> हाँ, बहुत ज़्यादा</label>
+<label><input type="radio" name="q1" value="2"> कभी-कभी</label>
+<label><input type="radio" name="q1" value="1"> नहीं</label>
 </div>
 
-<!-- PAGE 2 : QUESTIONS -->
-<div class="page" id="questions">
-<header>Decision Check</header>
-
-<div class="card">
-<p>1. निर्णय सोचते समय मन?</p>
-<div class="option">
-<label><input type="radio" name="q1" value="1"> बहुत भ्रमित</label>
-<label><input type="radio" name="q1" value="2"> थोड़ा असमंजस</label>
-<label><input type="radio" name="q1" value="3"> स्पष्ट</label>
-</div>
+<div class="card"><strong>2. क्या निर्णय सोचते समय डर हावी रहता है?</strong>
+<label><input type="radio" name="q2" value="3"> हाँ</label>
+<label><input type="radio" name="q2" value="2"> थोड़ा</label>
+<label><input type="radio" name="q2" value="1"> नहीं</label>
 </div>
 
-<div class="card">
-<p>2. वर्तमान मनोदशा?</p>
-<div class="option">
-<label><input type="radio" name="q2" value="1"> अशांत</label>
-<label><input type="radio" name="q2" value="2"> सामान्य</label>
-<label><input type="radio" name="q2" value="3"> स्थिर</label>
-</div>
+<div class="card"><strong>3. क्या विचार आपको थका देते हैं?</strong>
+<label><input type="radio" name="q3" value="3"> बहुत</label>
+<label><input type="radio" name="q3" value="2"> कुछ हद तक</label>
+<label><input type="radio" name="q3" value="1"> नहीं</label>
 </div>
 
-<div class="card">
-<p>3. अंतःप्रेरणा पर भरोसा?</p>
-<div class="option">
-<label><input type="radio" name="q3" value="1"> कम</label>
-<label><input type="radio" name="q3" value="2"> मध्यम</label>
-<label><input type="radio" name="q3" value="3"> बहुत अधिक</label>
-</div>
+<div class="card"><strong>4. क्या मन में स्पष्टता की कमी है?</strong>
+<label><input type="radio" name="q4" value="3"> हाँ</label>
+<label><input type="radio" name="q4" value="2"> आंशिक</label>
+<label><input type="radio" name="q4" value="1"> नहीं</label>
 </div>
 
-<button onclick="calculate()">Next ➜ Spin</button>
+<div class="card"><strong>5. क्या निर्णय टालने की आदत है?</strong>
+<label><input type="radio" name="q5" value="3"> हाँ</label>
+<label><input type="radio" name="q5" value="2"> कभी-कभी</label>
+<label><input type="radio" name="q5" value="1"> नहीं</label>
 </div>
 
-<!-- PAGE 3 : SPIN -->
-<div class="page" id="spin">
-<header>Mind Spin</header>
+<div class="card"><strong>6. क्या भावनाएँ तर्क पर हावी हैं?</strong>
+<label><input type="radio" name="q6" value="3"> हाँ</label>
+<label><input type="radio" name="q6" value="2"> थोड़ा</label>
+<label><input type="radio" name="q6" value="1"> नहीं</label>
+</div>
+
+<div class="card"><strong>7. अभी मन की स्थिति?</strong>
+<label><input type="radio" name="q7" value="3"> अशांत</label>
+<label><input type="radio" name="q7" value="2"> सामान्य</label>
+<label><input type="radio" name="q7" value="1"> शांत</label>
+</div>
+
+<button type="button" onclick="calculate()">Next ➜ Spin</button>
+</form>
+</div>
+
+<!-- PAGE 2 : SPIN -->
+<div class="page" id="page2">
+<header>🎯 Decision Spin</header>
 
 <div class="wheel-box">
 <div class="pointer"></div>
 <div class="wheel" id="wheel"></div>
 </div>
 
-<button onclick="showResult()">Reveal Result</button>
+<button onclick="showResult()">Lock Decision</button>
 
 <div class="nav">
-<button onclick="backToQuestions()">⬅ Back</button>
-<button onclick="goDashboard()">🏠 Dashboard</button>
+<button onclick="goBack()">⬅ Back</button>
+<button onclick="location.reload()">🏠 Home</button>
 </div>
 </div>
 
-<!-- PAGE 4 : RESULT -->
-<div class="page" id="result">
-<header>📖 Insight</header>
+<!-- PAGE 3 : RESULT -->
+<div class="page" id="page3">
+<header>🔒 Decision Lock</header>
 
 <div class="card">
 <p id="resultText"></p>
 </div>
 
 <div class="nav">
-<button onclick="backToSpin()">⬅ Back</button>
-<button onclick="goDashboard()">🏠 Dashboard</button>
+<button onclick="goBack2()">⬅ Back</button>
+<button onclick="location.reload()">🔁 Restart</button>
 </div>
 </div>
 
 <script>
-let score=0,zone="red";
-
-function openTool(){
-    document.getElementById("dashboard").classList.remove("active");
-    document.getElementById("questions").classList.add("active");
-}
+let score=0,zone="";
 
 function calculate(){
     score=0;
-    for(let i=1;i<=3;i++){
+    for(let i=1;i<=7;i++){
         let q=document.querySelector('input[name="q'+i+'"]:checked');
-        if(!q){alert("सभी प्रश्नों के उत्तर दें");return;}
+        if(!q){alert("कृपया सभी 7 प्रश्नों के उत्तर दें");return;}
         score+=parseInt(q.value);
     }
-    document.getElementById("questions").classList.remove("active");
-    document.getElementById("spin").classList.add("active");
+    document.getElementById("page1").classList.remove("active");
+    document.getElementById("page2").classList.add("active");
 
     let wheel=document.getElementById("wheel");
-    if(score<=4){zone="red";wheel.style.transform="rotate(750deg)";}
-    else if(score<=6){zone="yellow";wheel.style.transform="rotate(870deg)";}
+    if(score>=16){zone="red";wheel.style.transform="rotate(750deg)";}
+    else if(score>=11){zone="yellow";wheel.style.transform="rotate(870deg)";}
     else{zone="green";wheel.style.transform="rotate(990deg)";}
 }
 
 function showResult(){
-    document.getElementById("spin").classList.remove("active");
-    document.getElementById("result").classList.add("active");
+    document.getElementById("page2").classList.remove("active");
+    document.getElementById("page3").classList.add("active");
 
     let text={
-        red:"इस समय निर्णय लेने से पहले रुकना बेहतर है। मन में अस्थिरता और दबाव है। शांत होकर स्थिति को समझना आवश्यक है।",
-        yellow:"स्थिति पूरी तरह नकारात्मक नहीं है, लेकिन और स्पष्टता से निर्णय अधिक सुरक्षित होगा।",
-        green:"मन स्थिर और स्पष्ट है। इस समय लिया गया निर्णय सकारात्मक परिणाम दे सकता है।"
+        red:"आपके उत्तर बताते हैं कि मन में अत्यधिक मानसिक प्रदूषण है। इस स्थिति में लिया गया निर्णय भ्रम और भावनात्मक दबाव से प्रभावित हो सकता है। अभी रुकना, मन को शांत करना और स्पष्टता लाना आवश्यक है।",
+        yellow:"मानसिक प्रदूषण मध्यम स्तर पर है। कुछ विचार और भावनाएँ अभी निर्णय को प्रभावित कर रही हैं। थोड़ी प्रतीक्षा, जानकारी और आत्ममंथन से बेहतर निर्णय संभव है।",
+        green:"आपके उत्तर दर्शाते हैं कि मन अपेक्षाकृत शांत और स्पष्ट है। मानसिक प्रदूषण कम है, इसलिए इस समय लिया गया निर्णय संतुलित और सकारात्मक परिणाम दे सकता है।"
     };
     document.getElementById("resultText").innerText=text[zone];
 }
 
-function backToQuestions(){
-    document.getElementById("spin").classList.remove("active");
-    document.getElementById("questions").classList.add("active");
+function goBack(){
+    document.getElementById("page2").classList.remove("active");
+    document.getElementById("page1").classList.add("active");
 }
-function backToSpin(){
-    document.getElementById("result").classList.remove("active");
-    document.getElementById("spin").classList.add("active");
-}
-function goDashboard(){
-    location.reload();
+function goBack2(){
+    document.getElementById("page3").classList.remove("active");
+    document.getElementById("page2").classList.add("active");
 }
 </script>
 
