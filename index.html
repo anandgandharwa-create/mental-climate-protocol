@@ -3,25 +3,23 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Mind OS – Dashboard</title>
+<title>Mind OS</title>
 
 <style>
 body{
     margin:0;
-    font-family:'Segoe UI',Arial,sans-serif;
-    background:linear-gradient(180deg,#050b2e,#020617);
+    font-family:'Segoe UI',Arial;
+    background:linear-gradient(180deg,#040b2e,#020617);
     color:#fff;
 }
-
-.page{display:none; padding:22px;}
+.page{display:none;padding:22px;}
 .active{display:block;}
 
 header{
     text-align:center;
-    padding:20px 10px;
     font-size:26px;
     font-weight:600;
-    letter-spacing:1px;
+    padding:20px 10px;
 }
 
 .sub{
@@ -31,7 +29,6 @@ header{
     margin-bottom:20px;
 }
 
-/* Dashboard cards */
 .card{
     background:rgba(255,255,255,0.08);
     backdrop-filter:blur(12px);
@@ -41,52 +38,63 @@ header{
     box-shadow:0 12px 30px rgba(0,0,0,0.4);
 }
 
-.card h2{
-    margin:0 0 8px 0;
-    font-size:22px;
-}
-
-.card p{
-    font-size:17px;
-    opacity:0.9;
-}
+h2{font-size:22px;margin:0 0 8px;}
+p{font-size:18px;line-height:1.6;opacity:0.9;}
 
 button{
     width:100%;
     padding:16px;
-    font-size:18px;
+    font-size:19px;
     border:none;
     border-radius:30px;
     background:linear-gradient(45deg,#00f2ff,#00ff9c);
     color:#000;
+    margin-top:14px;
     cursor:pointer;
-    margin-top:15px;
 }
 
-/* Tool Page */
-.tool-title{
-    font-size:24px;
-    margin-bottom:12px;
-    text-align:center;
-}
-.tool-text{
-    font-size:19px;
-    line-height:1.6;
-    text-align:center;
-    opacity:0.95;
+.option label{
+    display:block;
+    margin:8px 0;
+    font-size:18px;
 }
 
 .nav{
     display:flex;
     gap:12px;
-    margin-top:25px;
+    margin-top:20px;
 }
-.nav button{
-    width:50%;
-    font-size:17px;
+.nav button{width:50%;font-size:18px;}
+
+/* Wheel */
+.wheel-box{
+    position:relative;
+    width:260px;
+    height:260px;
+    margin:25px auto;
+}
+.wheel{
+    width:100%;
+    height:100%;
+    border-radius:50%;
+    background:conic-gradient(
+        #ff4d4d 0deg 120deg,
+        #ffd633 120deg 240deg,
+        #4dff88 240deg 360deg
+    );
+    transition:transform 4s ease-out;
+}
+.pointer{
+    position:absolute;
+    top:-14px;
+    left:50%;
+    transform:translateX(-50%);
+    width:0;height:0;
+    border-left:14px solid transparent;
+    border-right:14px solid transparent;
+    border-bottom:22px solid #fff;
 }
 
-/* Mobile enhancement */
 @media(min-width:768px){
     body{max-width:480px;margin:auto;}
 }
@@ -96,93 +104,134 @@ button{
 <body>
 
 <!-- PAGE 1 : DASHBOARD -->
-<div class="page active" id="page1">
+<div class="page active" id="dashboard">
 <header>🧠 Mind OS</header>
-<div class="sub">अपने मन के tools चुनिए</div>
-
-<div class="card">
-<h2>🔍 Mind Check</h2>
-<p>आपकी वर्तमान मानसिक स्थिति की त्वरित जाँच।</p>
-<button onclick="openTool('Mind Check')">Open Tool</button>
-</div>
+<div class="sub">अपने मन का tool चुनिए</div>
 
 <div class="card">
 <h2>🎯 Decision Lock</h2>
-<p>निर्णय लेने का यह सही समय है या नहीं – स्पष्ट उत्तर।</p>
-<button onclick="openTool('Decision Lock')">Open Tool</button>
+<p>यह tool बताता है कि अभी निर्णय लेना सही है या नहीं।</p>
+<button onclick="openTool()">Open Tool</button>
 </div>
 
 <div class="card">
 <h2>🌪 Mind Noise Index</h2>
-<p>आपके मन में चल रहे शोर का स्तर मापिए।</p>
-<button onclick="openTool('Mind Noise Index')">Open Tool</button>
+<p>आपके मन में चल रहे विचारों के शोर की जाँच।</p>
+<button onclick="openTool()">Open Tool</button>
+</div>
 </div>
 
-</div>
-
-<!-- PAGE 2 : TOOL PAGE -->
-<div class="page" id="page2">
-<div class="tool-title" id="toolName"></div>
+<!-- PAGE 2 : QUESTIONS -->
+<div class="page" id="questions">
+<header>Decision Check</header>
 
 <div class="card">
-<p class="tool-text" id="toolDesc"></p>
+<p>1. निर्णय सोचते समय मन?</p>
+<div class="option">
+<label><input type="radio" name="q1" value="1"> बहुत भ्रमित</label>
+<label><input type="radio" name="q1" value="2"> थोड़ा असमंजस</label>
+<label><input type="radio" name="q1" value="3"> स्पष्ट</label>
+</div>
+</div>
+
+<div class="card">
+<p>2. वर्तमान मनोदशा?</p>
+<div class="option">
+<label><input type="radio" name="q2" value="1"> अशांत</label>
+<label><input type="radio" name="q2" value="2"> सामान्य</label>
+<label><input type="radio" name="q2" value="3"> स्थिर</label>
+</div>
+</div>
+
+<div class="card">
+<p>3. अंतःप्रेरणा पर भरोसा?</p>
+<div class="option">
+<label><input type="radio" name="q3" value="1"> कम</label>
+<label><input type="radio" name="q3" value="2"> मध्यम</label>
+<label><input type="radio" name="q3" value="3"> बहुत अधिक</label>
+</div>
+</div>
+
+<button onclick="calculate()">Next ➜ Spin</button>
+</div>
+
+<!-- PAGE 3 : SPIN -->
+<div class="page" id="spin">
+<header>Mind Spin</header>
+
+<div class="wheel-box">
+<div class="pointer"></div>
+<div class="wheel" id="wheel"></div>
+</div>
+
+<button onclick="showResult()">Reveal Result</button>
+
+<div class="nav">
+<button onclick="backToQuestions()">⬅ Back</button>
+<button onclick="goDashboard()">🏠 Dashboard</button>
+</div>
+</div>
+
+<!-- PAGE 4 : RESULT -->
+<div class="page" id="result">
+<header>📖 Insight</header>
+
+<div class="card">
+<p id="resultText"></p>
 </div>
 
 <div class="nav">
-<button onclick="goBack()">⬅ Back</button>
-<button onclick="goNext()">Next ➜</button>
-</div>
-</div>
-
-<!-- PAGE 3 : RESULT PAGE -->
-<div class="page" id="page3">
-<div class="tool-title">📘 Insight</div>
-
-<div class="card">
-<p class="tool-text">
-Mind OS का उद्देश्य आपको रुककर सोचने, अपने मन को समझने
-और स्पष्टता के साथ अगला कदम उठाने में सहायता करना है।
-यह कोई prediction नहीं, बल्कि self-awareness का मार्ग है।
-</p>
-</div>
-
-<div class="nav">
-<button onclick="goBack2()">⬅ Back</button>
-<button onclick="location.reload()">🏠 Dashboard</button>
+<button onclick="backToSpin()">⬅ Back</button>
+<button onclick="goDashboard()">🏠 Dashboard</button>
 </div>
 </div>
 
 <script>
-let currentTool="";
+let score=0,zone="red";
 
-function openTool(name){
-    currentTool=name;
-    document.getElementById("page1").classList.remove("active");
-    document.getElementById("page2").classList.add("active");
+function openTool(){
+    document.getElementById("dashboard").classList.remove("active");
+    document.getElementById("questions").classList.add("active");
+}
 
-    document.getElementById("toolName").innerText=name;
+function calculate(){
+    score=0;
+    for(let i=1;i<=3;i++){
+        let q=document.querySelector('input[name="q'+i+'"]:checked');
+        if(!q){alert("सभी प्रश्नों के उत्तर दें");return;}
+        score+=parseInt(q.value);
+    }
+    document.getElementById("questions").classList.remove("active");
+    document.getElementById("spin").classList.add("active");
 
-    let desc={
-        "Mind Check":"यह tool आपके मन की स्थिरता, स्पष्टता और भावनात्मक स्थिति को समझने में मदद करता है।",
-        "Decision Lock":"यह tool बताता है कि अभी निर्णय लेना उचित है या कुछ समय रुकना बेहतर होगा।",
-        "Mind Noise Index":"यह tool आपके भीतर चल रहे विचारों और मानसिक शोर की तीव्रता को दर्शाता है।"
+    let wheel=document.getElementById("wheel");
+    if(score<=4){zone="red";wheel.style.transform="rotate(750deg)";}
+    else if(score<=6){zone="yellow";wheel.style.transform="rotate(870deg)";}
+    else{zone="green";wheel.style.transform="rotate(990deg)";}
+}
+
+function showResult(){
+    document.getElementById("spin").classList.remove("active");
+    document.getElementById("result").classList.add("active");
+
+    let text={
+        red:"इस समय निर्णय लेने से पहले रुकना बेहतर है। मन में अस्थिरता और दबाव है। शांत होकर स्थिति को समझना आवश्यक है।",
+        yellow:"स्थिति पूरी तरह नकारात्मक नहीं है, लेकिन और स्पष्टता से निर्णय अधिक सुरक्षित होगा।",
+        green:"मन स्थिर और स्पष्ट है। इस समय लिया गया निर्णय सकारात्मक परिणाम दे सकता है।"
     };
-    document.getElementById("toolDesc").innerText=desc[name];
+    document.getElementById("resultText").innerText=text[zone];
 }
 
-function goNext(){
-    document.getElementById("page2").classList.remove("active");
-    document.getElementById("page3").classList.add("active");
+function backToQuestions(){
+    document.getElementById("spin").classList.remove("active");
+    document.getElementById("questions").classList.add("active");
 }
-
-function goBack(){
-    document.getElementById("page2").classList.remove("active");
-    document.getElementById("page1").classList.add("active");
+function backToSpin(){
+    document.getElementById("result").classList.remove("active");
+    document.getElementById("spin").classList.add("active");
 }
-
-function goBack2(){
-    document.getElementById("page3").classList.remove("active");
-    document.getElementById("page2").classList.add("active");
+function goDashboard(){
+    location.reload();
 }
 </script>
 
