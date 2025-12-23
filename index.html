@@ -3,229 +3,198 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Mental Pollution Index – Decision Lock</title>
+<title>Mind OS – Mental Pollution Index</title>
 
 <style>
 body{
-    margin:0;
-    font-family:'Segoe UI',Arial;
-    background:linear-gradient(180deg,#050b2e,#020617);
-    color:#fff;
+  margin:0;
+  font-family:'Segoe UI',Arial;
+  background:linear-gradient(180deg,#050b2e,#020617);
+  color:#fff;
 }
 .page{display:none;padding:22px;}
 .active{display:block;}
 
+.topbar{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding:16px 18px;
+}
+.brand{font-size:22px;font-weight:600;}
+.toggle{
+  padding:6px 14px;
+  border-radius:20px;
+  background:rgba(255,255,255,0.15);
+  font-size:14px;
+  cursor:pointer;
+}
+
 header{
-    text-align:center;
-    font-size:26px;
-    font-weight:600;
-    padding:18px 10px;
+  text-align:center;
+  font-size:26px;
+  font-weight:600;
+  margin-bottom:10px;
 }
 
 .card{
-    background:rgba(255,255,255,0.08);
-    backdrop-filter:blur(12px);
-    border-radius:18px;
-    padding:22px;
-    margin-bottom:18px;
-    box-shadow:0 12px 30px rgba(0,0,0,0.4);
+  background:rgba(255,255,255,0.08);
+  backdrop-filter:blur(12px);
+  border-radius:18px;
+  padding:22px;
+  margin-bottom:18px;
+  box-shadow:0 12px 30px rgba(0,0,0,0.4);
 }
 
-strong{font-size:19px;}
-label{
-    display:block;
-    margin:8px 0;
-    font-size:18px;
-    cursor:pointer;
-}
-
+label{display:block;margin:8px 0;font-size:18px;}
 button{
-    width:100%;
-    padding:16px;
-    font-size:19px;
-    border:none;
-    border-radius:30px;
-    background:linear-gradient(45deg,#00f2ff,#00ff9c);
-    color:#000;
-    margin-top:18px;
-    cursor:pointer;
+  width:100%;
+  padding:16px;
+  font-size:19px;
+  border:none;
+  border-radius:30px;
+  background:linear-gradient(45deg,#00f2ff,#00ff9c);
+  color:#000;
+  margin-top:18px;
+  cursor:pointer;
 }
+
+/* Meter */
+.meter-bar{height:22px;border-radius:20px;background:#1a1a1a;overflow:hidden;}
+.meter-fill{height:100%;width:0%;transition:width 1.2s ease;border-radius:20px;}
+.meter-text{text-align:center;margin-top:8px;font-size:18px;}
 
 /* Wheel */
-.wheel-box{
-    position:relative;
-    width:260px;
-    height:260px;
-    margin:30px auto;
-}
+.wheel-box{position:relative;width:270px;height:270px;margin:30px auto;}
 .wheel{
-    width:100%;
-    height:100%;
-    border-radius:50%;
-    background:conic-gradient(
-        #ff4d4d 0deg 120deg,
-        #ffd633 120deg 240deg,
-        #4dff88 240deg 360deg
-    );
-    transition:transform 4s cubic-bezier(.17,.67,.14,.93);
+  width:100%;height:100%;border-radius:50%;
+  background:conic-gradient(#ff0000,#ff7a00,#ffd400,#33ff00,#00ffd5,#0066ff,#8a00ff,#ff0000);
+  box-shadow:inset 0 0 25px rgba(255,255,255,.35),0 0 25px rgba(0,255,255,.25);
+  transition:transform 4.5s cubic-bezier(.17,.67,.14,.93);
 }
+.glow{
+  position:absolute;inset:-12px;border-radius:50%;filter:blur(18px);opacity:0;
+  background:conic-gradient(rgba(255,0,0,.9),rgba(255,255,0,.9),rgba(0,255,0,.9),rgba(0,255,255,.9),rgba(0,0,255,.9),rgba(255,0,255,.9),rgba(255,0,0,.9));
+}
+.spin-active .glow{
+  opacity:1;
+  animation:glowPulse 1.2s infinite alternate,glowRotate 2s linear infinite;
+}
+@keyframes glowPulse{from{filter:blur(14px);}to{filter:blur(28px);}}
+@keyframes glowRotate{from{transform:rotate(0);}to{transform:rotate(360deg);}}
+
 .pointer{
-    position:absolute;
-    top:-14px;
-    left:50%;
-    transform:translateX(-50%);
-    width:0;height:0;
-    border-left:14px solid transparent;
-    border-right:14px solid transparent;
-    border-bottom:22px solid #fff;
+  position:absolute;top:-16px;left:50%;transform:translateX(-50%);
+  width:0;height:0;border-left:16px solid transparent;border-right:16px solid transparent;border-bottom:26px solid #fff;
 }
 
-.nav{
-    display:flex;
-    gap:12px;
-    margin-top:20px;
-}
-.nav button{width:50%;}
-
-@media(min-width:768px){
-    body{max-width:480px;margin:auto;}
-}
+@media(min-width:768px){body{max-width:480px;margin:auto;}}
 </style>
 </head>
 
 <body>
 
+<div class="topbar">
+  <div class="brand">Mind OS</div>
+  <div class="toggle" onclick="toggleLang()">🌍 हिंदी / EN</div>
+</div>
+
 <!-- PAGE 1 -->
 <div class="page active" id="page1">
-<header>🌪 Mental Pollution Index</header>
+<header class="hi">🌪 मानसिक प्रदूषण सूचकांक</header>
+<header class="en" hidden>🌪 Mental Pollution Index</header>
 
-<form id="quiz">
-
-<div class="card"><strong>1. क्या मन बार-बार एक ही बात पर अटकता है?</strong>
-<label><input type="radio" name="q1" value="3"> हाँ, बहुत ज़्यादा</label>
-<label><input type="radio" name="q1" value="2"> कभी-कभी</label>
-<label><input type="radio" name="q1" value="1"> नहीं</label>
+<div class="card">
+<label><input type="radio" name="q1" value="3"> <span class="hi">मन बहुत अशांत है</span><span class="en" hidden>Mind is very disturbed</span></label>
+<label><input type="radio" name="q1" value="2"> <span class="hi">मन सामान्य है</span><span class="en" hidden>Mind is neutral</span></label>
+<label><input type="radio" name="q1" value="1"> <span class="hi">मन शांत है</span><span class="en" hidden>Mind is calm</span></label>
 </div>
 
-<div class="card"><strong>2. क्या निर्णय सोचते समय डर हावी रहता है?</strong>
-<label><input type="radio" name="q2" value="3"> हाँ</label>
-<label><input type="radio" name="q2" value="2"> थोड़ा</label>
-<label><input type="radio" name="q2" value="1"> नहीं</label>
-</div>
-
-<div class="card"><strong>3. क्या विचार आपको थका देते हैं?</strong>
-<label><input type="radio" name="q3" value="3"> बहुत</label>
-<label><input type="radio" name="q3" value="2"> कुछ हद तक</label>
-<label><input type="radio" name="q3" value="1"> नहीं</label>
-</div>
-
-<div class="card"><strong>4. क्या स्पष्टता की कमी है?</strong>
-<label><input type="radio" name="q4" value="3"> हाँ</label>
-<label><input type="radio" name="q4" value="2"> आंशिक</label>
-<label><input type="radio" name="q4" value="1"> नहीं</label>
-</div>
-
-<div class="card"><strong>5. क्या निर्णय टालते हैं?</strong>
-<label><input type="radio" name="q5" value="3"> अक्सर</label>
-<label><input type="radio" name="q5" value="2"> कभी-कभी</label>
-<label><input type="radio" name="q5" value="1"> नहीं</label>
-</div>
-
-<div class="card"><strong>6. क्या भावनाएँ तर्क पर हावी हैं?</strong>
-<label><input type="radio" name="q6" value="3"> हाँ</label>
-<label><input type="radio" name="q6" value="2"> थोड़ा</label>
-<label><input type="radio" name="q6" value="1"> नहीं</label>
-</div>
-
-<div class="card"><strong>7. अभी मन की स्थिति?</strong>
-<label><input type="radio" name="q7" value="3"> अशांत</label>
-<label><input type="radio" name="q7" value="2"> सामान्य</label>
-<label><input type="radio" name="q7" value="1"> शांत</label>
-</div>
-
-<button type="button" onclick="goSpin()">Next ➜ Spin</button>
-</form>
+<button onclick="goMeter()"><span class="hi">मीटर देखें ➜</span><span class="en" hidden>Check Meter ➜</span></button>
 </div>
 
 <!-- PAGE 2 -->
 <div class="page" id="page2">
-<header>🎯 Decision Spin</header>
+<header class="hi">📊 मानसिक प्रदूषण मीटर</header>
+<header class="en" hidden>📊 Mental Pollution Meter</header>
 
-<div class="wheel-box">
-<div class="pointer"></div>
-<div class="wheel" id="wheel"></div>
-</div>
+<div class="meter-bar"><div class="meter-fill" id="meterFill"></div></div>
+<div class="meter-text" id="meterText"></div>
 
-<button onclick="spinNow()">SPIN & LOCK</button>
-
-<div class="nav">
-<button onclick="backToQ()">⬅ Back</button>
-<button onclick="location.reload()">🏠 Home</button>
-</div>
+<button onclick="goSpin()"><span class="hi">आगे ➜ स्पिन</span><span class="en" hidden>Next ➜ Spin</span></button>
 </div>
 
 <!-- PAGE 3 -->
 <div class="page" id="page3">
-<header>🔒 Decision Lock</header>
+<header class="hi">🎯 निर्णय स्पिन</header>
+<header class="en" hidden>🎯 Decision Spin</header>
+
+<div class="wheel-box" id="wheelBox">
+  <div class="glow"></div>
+  <div class="pointer"></div>
+  <div class="wheel" id="wheel"></div>
+</div>
+
+<button onclick="spinNow()"><span class="hi">स्पिन करें</span><span class="en" hidden>Spin & Lock</span></button>
+</div>
+
+<!-- PAGE 4 -->
+<div class="page" id="page4">
+<header class="hi">🔒 निर्णय लॉक</header>
+<header class="en" hidden>🔒 Decision Lock</header>
 
 <div class="card">
 <p id="resultText"></p>
 </div>
 
-<div class="nav">
-<button onclick="backToSpin()">⬅ Back</button>
-<button onclick="location.reload()">🔁 Restart</button>
-</div>
+<button onclick="location.reload()"><span class="hi">फिर से शुरू करें</span><span class="en" hidden>Restart</span></button>
 </div>
 
 <script>
-let score=0,zone="",spun=false;
+let lang="hi",score=0,zone="",spun=false;
 
-function goSpin(){
-    score=0;
-    for(let i=1;i<=7;i++){
-        let q=document.querySelector('input[name="q'+i+'"]:checked');
-        if(!q){alert("कृपया सभी 7 प्रश्नों के उत्तर दें");return;}
-        score+=parseInt(q.value);
-    }
-    document.getElementById("page1").classList.remove("active");
-    document.getElementById("page2").classList.add("active");
+function toggleLang(){
+  lang=lang==="hi"?"en":"hi";
+  document.querySelectorAll(".hi").forEach(e=>e.hidden=(lang!=="hi"));
+  document.querySelectorAll(".en").forEach(e=>e.hidden=(lang!=="en"));
 }
 
+function goMeter(){
+  let q=document.querySelector('input[name="q1"]:checked');
+  if(!q){alert(lang==="hi"?"उत्तर चुनें":"Please select an option");return;}
+  score=parseInt(q.value);
+  page1.classList.remove("active");page2.classList.add("active");
+
+  let percent=score===3?85:score===2?55:20;
+  meterFill.style.width=percent+"%";
+
+  if(percent>70){zone="red";meterFill.style.background="linear-gradient(90deg,#ff0000,#ff7a00)";meterText.innerText=lang==="hi"?"उच्च मानसिक प्रदूषण":"High Mental Pollution";}
+  else if(percent>40){zone="yellow";meterFill.style.background="linear-gradient(90deg,#ffd400,#ffb700)";meterText.innerText=lang==="hi"?"मध्यम मानसिक प्रदूषण":"Medium Mental Pollution";}
+  else{zone="green";meterFill.style.background="linear-gradient(90deg,#33ff00,#00ff9c)";meterText.innerText=lang==="hi"?"कम मानसिक प्रदूषण":"Low Mental Pollution";}
+}
+
+function goSpin(){page2.classList.remove("active");page3.classList.add("active");}
+
 function spinNow(){
-    if(spun) return;
-    spun=true;
-
-    let wheel=document.getElementById("wheel");
-    let rotateValue=0;
-
-    if(score>=16){zone="red";rotateValue=360*4+40;}
-    else if(score>=11){zone="yellow";rotateValue=360*4+160;}
-    else{zone="green";rotateValue=360*4+280;}
-
-    wheel.style.transform="rotate("+rotateValue+"deg)";
-
-    setTimeout(showResult,4000); // wait till spin stops
+  if(spun)return;spun=true;
+  wheelBox.classList.add("spin-active");
+  wheel.style.transform="rotate("+(zone==="red"?360*4+30:zone==="yellow"?360*4+150:360*4+270)+"deg)";
+  setTimeout(()=>{wheelBox.classList.remove("spin-active");showResult();},4500);
 }
 
 function showResult(){
-    document.getElementById("page2").classList.remove("active");
-    document.getElementById("page3").classList.add("active");
-
-    let text={
-        red:"आपके उत्तर बताते हैं कि मानसिक प्रदूषण अत्यधिक है। इस अवस्था में निर्णय लेना भ्रम और भावनात्मक दबाव बढ़ा सकता है। अभी रुकना, मन को शांत करना और स्पष्टता लाना आवश्यक है।",
-        yellow:"मानसिक प्रदूषण मध्यम है। कुछ विचार और भावनाएँ अभी निर्णय को प्रभावित कर रही हैं। थोड़ी प्रतीक्षा और आत्ममंथन से निर्णय अधिक सुरक्षित होगा।",
-        green:"आपके उत्तर दर्शाते हैं कि मन अपेक्षाकृत शांत और स्पष्ट है। मानसिक प्रदूषण कम है, इसलिए इस समय लिया गया निर्णय संतुलित और सकारात्मक परिणाम दे सकता है।"
-    };
-    document.getElementById("resultText").innerText=text[zone];
-}
-
-function backToQ(){
-    location.reload();
-}
-function backToSpin(){
-    document.getElementById("page3").classList.remove("active");
-    document.getElementById("page2").classList.add("active");
+  page3.classList.remove("active");page4.classList.add("active");
+  let hi={
+    red:"मानसिक प्रदूषण बहुत अधिक है। अभी निर्णय लेना टालना ही उचित है।",
+    yellow:"स्थिति संतुलित है। थोड़ी प्रतीक्षा निर्णय को बेहतर बनाएगी।",
+    green:"मन शांत और स्पष्ट है। निर्णय लेने का यह सही समय है।"
+  };
+  let en={
+    red:"Mental pollution is high. Avoid taking decisions now.",
+    yellow:"Mind is balanced. Waiting will improve your decision.",
+    green:"Mind is calm and clear. Good time to decide."
+  };
+  resultText.innerText=(lang==="hi"?hi[zone]:en[zone]);
 }
 </script>
 
