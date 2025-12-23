@@ -2,203 +2,187 @@
 <html lang="hi">
 <head>
 <meta charset="UTF-8">
-<title>Mind OS</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mind OS – Dashboard</title>
 
 <style>
 body{
     margin:0;
-    font-family:'Segoe UI',Arial;
-    background:radial-gradient(circle at top,#0a1a4f,#020617);
+    font-family:'Segoe UI',Arial,sans-serif;
+    background:linear-gradient(180deg,#050b2e,#020617);
     color:#fff;
-    text-align:center;
 }
-.page{display:none;padding:30px 20px;}
+
+.page{display:none; padding:22px;}
 .active{display:block;}
 
-.topbar{
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-    padding:15px 25px;
-}
-.brand{
-    font-size:22px;
+header{
+    text-align:center;
+    padding:20px 10px;
+    font-size:26px;
     font-weight:600;
     letter-spacing:1px;
 }
-.toggle{
-    cursor:pointer;
-    padding:6px 14px;
-    border-radius:20px;
-    background:rgba(255,255,255,0.15);
-    font-size:14px;
+
+.sub{
+    text-align:center;
+    font-size:18px;
+    opacity:0.85;
+    margin-bottom:20px;
 }
 
+/* Dashboard cards */
 .card{
-    max-width:560px;
-    margin:25px auto;
     background:rgba(255,255,255,0.08);
     backdrop-filter:blur(12px);
     border-radius:18px;
-    padding:25px;
-    box-shadow:0 20px 40px rgba(0,0,0,0.4);
+    padding:22px;
+    margin-bottom:18px;
+    box-shadow:0 12px 30px rgba(0,0,0,0.4);
 }
 
-h1{margin-bottom:10px;}
-p{opacity:0.9;font-size:17px;}
+.card h2{
+    margin:0 0 8px 0;
+    font-size:22px;
+}
+
+.card p{
+    font-size:17px;
+    opacity:0.9;
+}
 
 button{
-    padding:14px 36px;
-    font-size:16px;
+    width:100%;
+    padding:16px;
+    font-size:18px;
     border:none;
     border-radius:30px;
     background:linear-gradient(45deg,#00f2ff,#00ff9c);
     color:#000;
     cursor:pointer;
+    margin-top:15px;
+}
+
+/* Tool Page */
+.tool-title{
+    font-size:24px;
+    margin-bottom:12px;
+    text-align:center;
+}
+.tool-text{
+    font-size:19px;
+    line-height:1.6;
+    text-align:center;
+    opacity:0.95;
+}
+
+.nav{
+    display:flex;
+    gap:12px;
     margin-top:25px;
 }
+.nav button{
+    width:50%;
+    font-size:17px;
+}
 
-.question{
-    text-align:left;
-    margin:15px 0;
-}
-.question strong{display:block;margin-bottom:8px;}
-label{display:block;margin:6px 0;cursor:pointer;}
-
-.wheel-container{
-    position:relative;
-    width:260px;
-    height:260px;
-    margin:30px auto;
-}
-.wheel{
-    width:100%;
-    height:100%;
-    border-radius:50%;
-    background:conic-gradient(
-        #ff4d4d 0deg 120deg,
-        #ffd633 120deg 240deg,
-        #4dff88 240deg 360deg
-    );
-    transition:transform 4s ease-out;
-}
-.pointer{
-    position:absolute;
-    top:-14px;
-    left:50%;
-    transform:translateX(-50%);
-    width:0;height:0;
-    border-left:14px solid transparent;
-    border-right:14px solid transparent;
-    border-bottom:22px solid #fff;
+/* Mobile enhancement */
+@media(min-width:768px){
+    body{max-width:480px;margin:auto;}
 }
 </style>
 </head>
 
 <body>
 
-<div class="topbar">
-<div class="brand">Mind OS</div>
-<div class="toggle" onclick="toggleLang()">हिंदी / English</div>
-</div>
-
-<!-- PAGE 1 -->
+<!-- PAGE 1 : DASHBOARD -->
 <div class="page active" id="page1">
+<header>🧠 Mind OS</header>
+<div class="sub">अपने मन के tools चुनिए</div>
+
 <div class="card">
-<h1 id="t1">मन की जाँच</h1>
-<p id="t2">उत्तर दीजिए। परिणाम आपके उत्तरों पर आधारित होगा।</p>
-
-<form id="quiz">
-
-<div class="question">
-<strong id="q1">1. निर्णय लेते समय मन?</strong>
-<label><input type="radio" name="q1" value="1"> <span class="hi">बहुत भ्रमित</span><span class="en" hidden>Very confused</span></label>
-<label><input type="radio" name="q1" value="2"> <span class="hi">थोड़ा असमंजस</span><span class="en" hidden>Somewhat unsure</span></label>
-<label><input type="radio" name="q1" value="3"> <span class="hi">स्पष्ट</span><span class="en" hidden>Clear</span></label>
+<h2>🔍 Mind Check</h2>
+<p>आपकी वर्तमान मानसिक स्थिति की त्वरित जाँच।</p>
+<button onclick="openTool('Mind Check')">Open Tool</button>
 </div>
 
-<div class="question">
-<strong id="q2">2. अंतःप्रेरणा?</strong>
-<label><input type="radio" name="q2" value="1"> <span class="hi">कमज़ोर</span><span class="en" hidden>Weak</span></label>
-<label><input type="radio" name="q2" value="2"> <span class="hi">मध्यम</span><span class="en" hidden>Average</span></label>
-<label><input type="radio" name="q2" value="3"> <span class="hi">मजबूत</span><span class="en" hidden>Strong</span></label>
+<div class="card">
+<h2>🎯 Decision Lock</h2>
+<p>निर्णय लेने का यह सही समय है या नहीं – स्पष्ट उत्तर।</p>
+<button onclick="openTool('Decision Lock')">Open Tool</button>
 </div>
 
-<div class="question">
-<strong id="q3">3. वर्तमान मनोदशा?</strong>
-<label><input type="radio" name="q3" value="1"> <span class="hi">अशांत</span><span class="en" hidden>Restless</span></label>
-<label><input type="radio" name="q3" value="2"> <span class="hi">सामान्य</span><span class="en" hidden>Neutral</span></label>
-<label><input type="radio" name="q3" value="3"> <span class="hi">स्थिर</span><span class="en" hidden>Stable</span></label>
+<div class="card">
+<h2>🌪 Mind Noise Index</h2>
+<p>आपके मन में चल रहे शोर का स्तर मापिए।</p>
+<button onclick="openTool('Mind Noise Index')">Open Tool</button>
 </div>
 
-<button type="button" onclick="calculate()">Next ➜</button>
-</form>
-</div>
 </div>
 
-<!-- PAGE 2 -->
+<!-- PAGE 2 : TOOL PAGE -->
 <div class="page" id="page2">
+<div class="tool-title" id="toolName"></div>
+
 <div class="card">
-<h1 id="spinTitle">Mind Spin</h1>
-<div class="wheel-container">
-<div class="pointer"></div>
-<div class="wheel" id="wheel"></div>
+<p class="tool-text" id="toolDesc"></p>
 </div>
-<button onclick="goResult()">Reveal</button>
+
+<div class="nav">
+<button onclick="goBack()">⬅ Back</button>
+<button onclick="goNext()">Next ➜</button>
 </div>
 </div>
 
-<!-- PAGE 3 -->
+<!-- PAGE 3 : RESULT PAGE -->
 <div class="page" id="page3">
+<div class="tool-title">📘 Insight</div>
+
 <div class="card">
-<h1 id="resultTitle">Decision Insight</h1>
-<p id="finalText"></p>
-<button onclick="location.reload()">Restart</button>
+<p class="tool-text">
+Mind OS का उद्देश्य आपको रुककर सोचने, अपने मन को समझने
+और स्पष्टता के साथ अगला कदम उठाने में सहायता करना है।
+यह कोई prediction नहीं, बल्कि self-awareness का मार्ग है।
+</p>
+</div>
+
+<div class="nav">
+<button onclick="goBack2()">⬅ Back</button>
+<button onclick="location.reload()">🏠 Dashboard</button>
 </div>
 </div>
 
 <script>
-let score=0,zone="red",lang="hi";
+let currentTool="";
 
-function calculate(){
-score=0;
-for(let i=1;i<=3;i++){
-let q=document.querySelector('input[name="q'+i+'"]:checked');
-if(!q){alert("सभी उत्तर दें");return;}
-score+=parseInt(q.value);
-}
-document.getElementById("page1").classList.remove("active");
-document.getElementById("page2").classList.add("active");
+function openTool(name){
+    currentTool=name;
+    document.getElementById("page1").classList.remove("active");
+    document.getElementById("page2").classList.add("active");
 
-let wheel=document.getElementById("wheel");
-if(score<=4){zone="red";wheel.style.transform="rotate(750deg)";}
-else if(score<=6){zone="yellow";wheel.style.transform="rotate(870deg)";}
-else{zone="green";wheel.style.transform="rotate(990deg)";}
-}
+    document.getElementById("toolName").innerText=name;
 
-function goResult(){
-document.getElementById("page2").classList.remove("active");
-document.getElementById("page3").classList.add("active");
-
-let hi={
-red:"इस समय निर्णय से पहले रुकना बेहतर है। मन में अस्थिरता और दबाव दिखाई देता है।",
-yellow:"स्थिति नकारात्मक नहीं है, पर और स्पष्टता से निर्णय सुरक्षित होगा।",
-green:"मन स्थिर और स्पष्ट है। निर्णय लेने का यह अनुकूल समय है।"
-};
-let en={
-red:"Your mind shows instability. Pausing before deciding is advised.",
-yellow:"The situation is neutral. More clarity will strengthen your decision.",
-green:"Your mind is stable and clear. This is a good time to decide."
-};
-document.getElementById("finalText").innerText=(lang==="hi"?hi[zone]:en[zone]);
+    let desc={
+        "Mind Check":"यह tool आपके मन की स्थिरता, स्पष्टता और भावनात्मक स्थिति को समझने में मदद करता है।",
+        "Decision Lock":"यह tool बताता है कि अभी निर्णय लेना उचित है या कुछ समय रुकना बेहतर होगा।",
+        "Mind Noise Index":"यह tool आपके भीतर चल रहे विचारों और मानसिक शोर की तीव्रता को दर्शाता है।"
+    };
+    document.getElementById("toolDesc").innerText=desc[name];
 }
 
-function toggleLang(){
-lang=(lang==="hi")?"en":"hi";
-document.querySelectorAll(".hi").forEach(e=>e.hidden=(lang!=="hi"));
-document.querySelectorAll(".en").forEach(e=>e.hidden=(lang!=="en"));
-document.getElementById("t1").innerText=lang==="hi"?"मन की जाँच":"Mind Check";
-document.getElementById("t2").innerText=lang==="hi"?"उत्तर दीजिए। परिणाम आपके उत्तरों पर आधारित होगा।":"Answer the questions. Result is based on you.";
+function goNext(){
+    document.getElementById("page2").classList.remove("active");
+    document.getElementById("page3").classList.add("active");
+}
+
+function goBack(){
+    document.getElementById("page2").classList.remove("active");
+    document.getElementById("page1").classList.add("active");
+}
+
+function goBack2(){
+    document.getElementById("page3").classList.remove("active");
+    document.getElementById("page2").classList.add("active");
 }
 </script>
 
