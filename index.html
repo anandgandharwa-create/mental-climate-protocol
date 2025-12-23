@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Mental Pollution Index – Mind OS</title>
+<title>Mental Pollution Index – Decision Lock</title>
 
 <style>
 body{
@@ -31,9 +31,7 @@ header{
     box-shadow:0 12px 30px rgba(0,0,0,0.4);
 }
 
-p{font-size:18px;line-height:1.6;opacity:0.9;}
 strong{font-size:19px;}
-
 label{
     display:block;
     margin:8px 0;
@@ -58,7 +56,7 @@ button{
     position:relative;
     width:260px;
     height:260px;
-    margin:25px auto;
+    margin:30px auto;
 }
 .wheel{
     width:100%;
@@ -69,7 +67,7 @@ button{
         #ffd633 120deg 240deg,
         #4dff88 240deg 360deg
     );
-    transition:transform 4s ease-out;
+    transition:transform 4s cubic-bezier(.17,.67,.14,.93);
 }
 .pointer{
     position:absolute;
@@ -97,13 +95,13 @@ button{
 
 <body>
 
-<!-- PAGE 1 : QUESTIONS -->
+<!-- PAGE 1 -->
 <div class="page active" id="page1">
 <header>🌪 Mental Pollution Index</header>
 
 <form id="quiz">
 
-<div class="card"><strong>1. क्या मन बार-बार एक ही बात पर अटक जाता है?</strong>
+<div class="card"><strong>1. क्या मन बार-बार एक ही बात पर अटकता है?</strong>
 <label><input type="radio" name="q1" value="3"> हाँ, बहुत ज़्यादा</label>
 <label><input type="radio" name="q1" value="2"> कभी-कभी</label>
 <label><input type="radio" name="q1" value="1"> नहीं</label>
@@ -121,14 +119,14 @@ button{
 <label><input type="radio" name="q3" value="1"> नहीं</label>
 </div>
 
-<div class="card"><strong>4. क्या मन में स्पष्टता की कमी है?</strong>
+<div class="card"><strong>4. क्या स्पष्टता की कमी है?</strong>
 <label><input type="radio" name="q4" value="3"> हाँ</label>
 <label><input type="radio" name="q4" value="2"> आंशिक</label>
 <label><input type="radio" name="q4" value="1"> नहीं</label>
 </div>
 
-<div class="card"><strong>5. क्या निर्णय टालने की आदत है?</strong>
-<label><input type="radio" name="q5" value="3"> हाँ</label>
+<div class="card"><strong>5. क्या निर्णय टालते हैं?</strong>
+<label><input type="radio" name="q5" value="3"> अक्सर</label>
 <label><input type="radio" name="q5" value="2"> कभी-कभी</label>
 <label><input type="radio" name="q5" value="1"> नहीं</label>
 </div>
@@ -145,11 +143,11 @@ button{
 <label><input type="radio" name="q7" value="1"> शांत</label>
 </div>
 
-<button type="button" onclick="calculate()">Next ➜ Spin</button>
+<button type="button" onclick="goSpin()">Next ➜ Spin</button>
 </form>
 </div>
 
-<!-- PAGE 2 : SPIN -->
+<!-- PAGE 2 -->
 <div class="page" id="page2">
 <header>🎯 Decision Spin</header>
 
@@ -158,15 +156,15 @@ button{
 <div class="wheel" id="wheel"></div>
 </div>
 
-<button onclick="showResult()">Lock Decision</button>
+<button onclick="spinNow()">SPIN & LOCK</button>
 
 <div class="nav">
-<button onclick="goBack()">⬅ Back</button>
+<button onclick="backToQ()">⬅ Back</button>
 <button onclick="location.reload()">🏠 Home</button>
 </div>
 </div>
 
-<!-- PAGE 3 : RESULT -->
+<!-- PAGE 3 -->
 <div class="page" id="page3">
 <header>🔒 Decision Lock</header>
 
@@ -175,15 +173,15 @@ button{
 </div>
 
 <div class="nav">
-<button onclick="goBack2()">⬅ Back</button>
+<button onclick="backToSpin()">⬅ Back</button>
 <button onclick="location.reload()">🔁 Restart</button>
 </div>
 </div>
 
 <script>
-let score=0,zone="";
+let score=0,zone="",spun=false;
 
-function calculate(){
+function goSpin(){
     score=0;
     for(let i=1;i<=7;i++){
         let q=document.querySelector('input[name="q'+i+'"]:checked');
@@ -192,11 +190,22 @@ function calculate(){
     }
     document.getElementById("page1").classList.remove("active");
     document.getElementById("page2").classList.add("active");
+}
+
+function spinNow(){
+    if(spun) return;
+    spun=true;
 
     let wheel=document.getElementById("wheel");
-    if(score>=16){zone="red";wheel.style.transform="rotate(750deg)";}
-    else if(score>=11){zone="yellow";wheel.style.transform="rotate(870deg)";}
-    else{zone="green";wheel.style.transform="rotate(990deg)";}
+    let rotateValue=0;
+
+    if(score>=16){zone="red";rotateValue=360*4+40;}
+    else if(score>=11){zone="yellow";rotateValue=360*4+160;}
+    else{zone="green";rotateValue=360*4+280;}
+
+    wheel.style.transform="rotate("+rotateValue+"deg)";
+
+    setTimeout(showResult,4000); // wait till spin stops
 }
 
 function showResult(){
@@ -204,18 +213,17 @@ function showResult(){
     document.getElementById("page3").classList.add("active");
 
     let text={
-        red:"आपके उत्तर बताते हैं कि मन में अत्यधिक मानसिक प्रदूषण है। इस स्थिति में लिया गया निर्णय भ्रम और भावनात्मक दबाव से प्रभावित हो सकता है। अभी रुकना, मन को शांत करना और स्पष्टता लाना आवश्यक है।",
-        yellow:"मानसिक प्रदूषण मध्यम स्तर पर है। कुछ विचार और भावनाएँ अभी निर्णय को प्रभावित कर रही हैं। थोड़ी प्रतीक्षा, जानकारी और आत्ममंथन से बेहतर निर्णय संभव है।",
+        red:"आपके उत्तर बताते हैं कि मानसिक प्रदूषण अत्यधिक है। इस अवस्था में निर्णय लेना भ्रम और भावनात्मक दबाव बढ़ा सकता है। अभी रुकना, मन को शांत करना और स्पष्टता लाना आवश्यक है।",
+        yellow:"मानसिक प्रदूषण मध्यम है। कुछ विचार और भावनाएँ अभी निर्णय को प्रभावित कर रही हैं। थोड़ी प्रतीक्षा और आत्ममंथन से निर्णय अधिक सुरक्षित होगा।",
         green:"आपके उत्तर दर्शाते हैं कि मन अपेक्षाकृत शांत और स्पष्ट है। मानसिक प्रदूषण कम है, इसलिए इस समय लिया गया निर्णय संतुलित और सकारात्मक परिणाम दे सकता है।"
     };
     document.getElementById("resultText").innerText=text[zone];
 }
 
-function goBack(){
-    document.getElementById("page2").classList.remove("active");
-    document.getElementById("page1").classList.add("active");
+function backToQ(){
+    location.reload();
 }
-function goBack2(){
+function backToSpin(){
     document.getElementById("page3").classList.remove("active");
     document.getElementById("page2").classList.add("active");
 }
