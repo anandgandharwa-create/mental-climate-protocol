@@ -2,225 +2,232 @@
 <html lang="hi">
 <head>
 <meta charset="UTF-8">
-<title>Mind Noise Calculator</title>
+<title>Decision Lock Tool</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <style>
 body{
-    margin:0;
-    padding:0;
-    font-family: system-ui, sans-serif;
-    background: radial-gradient(circle at top, #1b1b1b, #000);
-    color:#f1f1f1;
+  margin:0;
+  font-family:system-ui,sans-serif;
+  background:#020617;
+  color:#e5e7eb;
 }
-
 .container{
-    max-width:520px;
-    margin:40px auto;
-    background: linear-gradient(180deg, #111, #0a0a0a);
-    border-radius:18px;
-    padding:28px;
-    box-shadow:0 20px 50px rgba(0,0,0,0.8);
-    border:1px solid rgba(255,255,255,0.08);
+  max-width:460px;
+  margin:auto;
+  padding:20px;
+}
+h1{text-align:center;font-size:24px}
+.hidden{display:none}
+
+/* cards */
+.card{
+  background:#0f172a;
+  border-radius:14px;
+  padding:16px;
+  margin-bottom:15px;
+}
+.question{font-size:16px;margin-bottom:10px}
+.options button{
+  width:48%;
+  margin:1%;
+  padding:10px;
+  border:none;
+  border-radius:10px;
+  background:#334155;
+  color:#fff;
+  cursor:pointer;
+}
+.options button.active{background:#22c55e;color:#022c22}
+
+/* nav buttons */
+.nav{
+  display:flex;
+  justify-content:space-between;
+  margin-top:20px;
+}
+.nav button{
+  padding:10px 18px;
+  border:none;
+  border-radius:12px;
+  background:#2563eb;
+  color:#fff;
+  cursor:pointer;
 }
 
-h1{
-    text-align:center;
-    margin-bottom:22px;
-    font-size:26px;
+/* wheel */
+.wheel-box{text-align:center}
+#wheel{
+  width:260px;
+  height:260px;
+  border-radius:50%;
+  margin:20px auto;
+  background:conic-gradient(
+    #22c55e 0deg 72deg,
+    #eab308 72deg 144deg,
+    #ef4444 144deg 216deg,
+    #a855f7 216deg 288deg,
+    #38bdf8 288deg 360deg
+  );
+  transition:transform 4s cubic-bezier(.17,.67,.83,.67);
 }
-
-.question{
-    margin-bottom:16px;
-    padding:14px;
-    background:rgba(255,255,255,0.04);
-    border-radius:12px;
+.pointer{
+  width:0;height:0;
+  border-left:10px solid transparent;
+  border-right:10px solid transparent;
+  border-bottom:20px solid #fff;
+  margin:0 auto;
 }
-
-.question label{
-    display:block;
-    margin-bottom:8px;
-    font-size:15px;
-}
-
-.option{
-    margin-right:15px;
-    font-size:14px;
-}
-
-input[type="radio"]{
-    accent-color:#ff4d4d;
-}
-
-button{
-    width:100%;
-    padding:14px;
-    margin-top:12px;
-    background:linear-gradient(90deg,#ff4d4d,#ff1a1a);
-    color:#fff;
-    font-size:16px;
-    border:none;
-    border-radius:14px;
-    cursor:pointer;
-    font-weight:600;
-    box-shadow:0 10px 30px rgba(255,0,0,0.3);
-}
-
-button.secondary{
-    margin-top:10px;
-    background:#222;
-    box-shadow:none;
-}
-
-.result{
-    margin-top:25px;
-    padding:18px;
-    border-radius:14px;
-    display:none;
-}
-
-.clear{background:#0f2e1d;}
-.distracted{background:#332a00;}
-.noisy{background:#3a1f1f;}
-.overloaded{background:#4a1515;}
-
-.score{
-    font-size:20px;
-    font-weight:700;
-    margin-bottom:8px;
-}
-
-.tip{
-    margin-top:10px;
-    font-size:14px;
-    opacity:0.9;
-}
-
-.history{
-    margin-top:20px;
-    font-size:13px;
-    opacity:0.8;
-    text-align:center;
+#result{
+  margin-top:20px;
+  padding:16px;
+  border-radius:14px;
+  background:#020617;
+  font-size:16px;
 }
 </style>
 </head>
 
 <body>
-
 <div class="container">
-<h1>🧠 Mind Noise Calculator</h1>
 
-<div class="question">
-<label>1. क्या आपके दिमाग़ में एक साथ बहुत-सी बातें चल रही हैं?</label>
-<span class="option"><input type="radio" name="q1" value="20"> हाँ</span>
-<span class="option"><input type="radio" name="q1" value="0"> नहीं</span>
+<!-- PAGE 1 -->
+<div id="page1">
+  <h1>Decision Lock Tool</h1>
+
+  <div class="card">
+    <div class="question">1️⃣ क्या आप थके हुए हैं?</div>
+    <div class="options">
+      <button onclick="ans(0,1,this)">हाँ</button>
+      <button onclick="ans(0,0,this)">नहीं</button>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="question">2️⃣ क्या आप भावनात्मक हैं?</div>
+    <div class="options">
+      <button onclick="ans(1,1,this)">हाँ</button>
+      <button onclick="ans(1,0,this)">नहीं</button>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="question">3️⃣ क्या यह बड़ा निर्णय है?</div>
+    <div class="options">
+      <button onclick="ans(2,1,this)">हाँ</button>
+      <button onclick="ans(2,0,this)">नहीं</button>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="question">4️⃣ क्या समय का दबाव है?</div>
+    <div class="options">
+      <button onclick="ans(3,1,this)">हाँ</button>
+      <button onclick="ans(3,0,this)">नहीं</button>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="question">5️⃣ क्या किसी और की उम्मीद जुड़ी है?</div>
+    <div class="options">
+      <button onclick="ans(4,1,this)">हाँ</button>
+      <button onclick="ans(4,0,this)">नहीं</button>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="question">6️⃣ क्या डर महसूस हो रहा है?</div>
+    <div class="options">
+      <button onclick="ans(5,1,this)">हाँ</button>
+      <button onclick="ans(5,0,this)">नहीं</button>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="question">7️⃣ क्या यह निर्णय बदला नहीं जा सकता?</div>
+    <div class="options">
+      <button onclick="ans(6,1,this)">हाँ</button>
+      <button onclick="ans(6,0,this)">नहीं</button>
+    </div>
+  </div>
+
+  <div class="nav">
+    <span></span>
+    <button onclick="goNext()">Next ▶</button>
+  </div>
 </div>
 
-<div class="question">
-<label>2. क्या आप बार-बार बिना कारण मोबाइल चेक कर रहे हैं?</label>
-<span class="option"><input type="radio" name="q2" value="20"> हाँ</span>
-<span class="option"><input type="radio" name="q2" value="0"> नहीं</span>
+<!-- PAGE 2 -->
+<div id="page2" class="hidden">
+  <h1>Decision Lock Result</h1>
+
+  <div class="wheel-box">
+    <div class="pointer"></div>
+    <div id="wheel"></div>
+    <button class="nav-btn" onclick="spin()">🎯 Spin Decision</button>
+  </div>
+
+  <div id="result">Spin करने के बाद निर्णय दिखेगा</div>
+
+  <div class="nav">
+    <button onclick="goBack()">◀ Back</button>
+    <span></span>
+  </div>
 </div>
-
-<div class="question">
-<label>3. क्या किसी बात को लेकर मन बेचैन है?</label>
-<span class="option"><input type="radio" name="q3" value="20"> हाँ</span>
-<span class="option"><input type="radio" name="q3" value="0"> नहीं</span>
-</div>
-
-<div class="question">
-<label>4. क्या ध्यान टिक नहीं पा रहा?</label>
-<span class="option"><input type="radio" name="q4" value="20"> हाँ</span>
-<span class="option"><input type="radio" name="q4" value="0"> नहीं</span>
-</div>
-
-<div class="question">
-<label>5. क्या आपको मानसिक थकान महसूस हो रही है?</label>
-<span class="option"><input type="radio" name="q5" value="20"> हाँ</span>
-<span class="option"><input type="radio" name="q5" value="0"> नहीं</span>
-</div>
-
-<button onclick="calculate()">स्कोर देखें</button>
-
-<div id="result" class="result"></div>
-
-<button id="shareBtn" class="secondary" style="display:none" onclick="copyResult()">📤 Result Copy करें</button>
-
-<div id="history" class="history"></div>
 
 </div>
 
 <script>
-function calculate(){
-    let score = 0;
-    for(let i=1;i<=5;i++){
-        let q = document.querySelector('input[name="q'+i+'"]:checked');
-        if(!q){
-            alert("कृपया सभी प्रश्नों का उत्तर दें");
-            return;
-        }
-        score += parseInt(q.value);
-    }
+let answers = Array(7).fill(null);
+let total = 0;
+let angle = 0;
 
-    let result = document.getElementById("result");
-    result.className="result";
+const results = [
+  "🟢 अभी निर्णय लेना सुरक्षित है",
+  "🟡 24 घंटे रुकना बेहतर होगा",
+  "🔴 अभी निर्णय न लें",
+  "🟣 किसी विश्वसनीय व्यक्ति से सलाह लें",
+  "🔵 आज नहीं, कल स्पष्टता आएगी"
+];
 
-    let message="", tip="";
-
-    if(score<=20){
-        result.classList.add("clear");
-        message="🟢 दिमाग़ काफ़ी शांत है।";
-        tip="आज इसी स्पष्टता में एक ज़रूरी काम पूरा करें।";
-    }else if(score<=50){
-        result.classList.add("distracted");
-        message="🟡 ध्यान थोड़ा भटका है।";
-        tip="10 मिनट आंख बंद करके गहरी साँस लें।";
-    }else if(score<=80){
-        result.classList.add("noisy");
-        message="🟠 दिमाग़ में काफ़ी शोर है।";
-        tip="अभी मोबाइल से दूरी बनाइए।";
-    }else{
-        result.classList.add("overloaded");
-        message="🔴 अत्यधिक मानसिक शोर।";
-        tip="अभी कोई बड़ा निर्णय न लें, विश्राम करें।";
-    }
-
-    result.innerHTML=`
-        <div class="score">Mind Noise Score: ${score}/100</div>
-        ${message}
-        <div class="tip">👉 सुझाव: ${tip}</div>
-    `;
-    result.style.display="block";
-    document.getElementById("shareBtn").style.display="block";
-
-    saveHistory(score);
-    showHistory();
+function ans(i,val,btn){
+  answers[i]=val;
+  let bs=btn.parentElement.querySelectorAll("button");
+  bs.forEach(b=>b.classList.remove("active"));
+  btn.classList.add("active");
 }
 
-function copyResult(){
-    let text=document.querySelector(".score").innerText;
-    navigator.clipboard.writeText("मेरा Mind Noise Score है: "+text);
-    alert("Result copy हो गया 🙏");
+function goNext(){
+  if(answers.includes(null)){
+    alert("कृपया सभी 7 सवालों के उत्तर दें");
+    return;
+  }
+  total = answers.reduce((a,b)=>a+b,0);
+  document.getElementById("page1").classList.add("hidden");
+  document.getElementById("page2").classList.remove("hidden");
 }
 
-function saveHistory(score){
-    let data=JSON.parse(localStorage.getItem("mncHistory"))||[];
-    let today=new Date().toLocaleDateString();
-    data.push({date:today,score:score});
-    if(data.length>5) data.shift();
-    localStorage.setItem("mncHistory",JSON.stringify(data));
+function goBack(){
+  document.getElementById("page2").classList.add("hidden");
+  document.getElementById("page1").classList.remove("hidden");
 }
 
-function showHistory(){
-    let data=JSON.parse(localStorage.getItem("mncHistory"))||[];
-    let h="पिछले स्कोर: ";
-    data.forEach(d=>{
-        h+=`[${d.date}: ${d.score}] `;
-    });
-    document.getElementById("history").innerText=h;
-}
+function spin(){
+  let wheel=document.getElementById("wheel");
+  let spins=360*5 + Math.floor(Math.random()*360);
+  angle+=spins;
+  wheel.style.transform="rotate("+angle+"deg)";
 
-showHistory();
+  setTimeout(()=>{
+    let index;
+    if(total<=1) index=0;
+    else if(total<=2) index=1;
+    else if(total<=3) index=2;
+    else if(total<=4) index=3;
+    else index=4;
+    document.getElementById("result").innerHTML=results[index];
+  },4000);
+}
 </script>
 
 </body>
