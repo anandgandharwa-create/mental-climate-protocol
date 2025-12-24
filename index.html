@@ -35,7 +35,6 @@ header{text-align:center;font-size:26px;font-weight:600;margin-bottom:6px;}
   border-radius:18px;
   padding:18px;
   margin-bottom:14px;
-  box-shadow:0 12px 30px rgba(0,0,0,0.4);
 }
 
 button{
@@ -45,21 +44,12 @@ button{
   color:#000;margin-top:14px;cursor:pointer;
 }
 
-label{display:block;margin:8px 0;font-size:17px;}
+label{display:block;margin:6px 0;font-size:17px;}
 strong{font-size:17px;}
 
-.streak-box{
-  text-align:center;
-  margin-bottom:16px;
-}
-.streak-count{
-  font-size:34px;
-  font-weight:700;
-}
-.streak-label{
-  font-size:15px;
-  opacity:.8;
-}
+.streak-box{text-align:center;margin-bottom:16px;}
+.streak-count{font-size:34px;font-weight:700;}
+.streak-label{font-size:15px;opacity:.8;}
 
 .meter-bar{height:20px;border-radius:20px;background:#1a1a1a;overflow:hidden;}
 .meter-fill{height:100%;width:0%;transition:width 1s;border-radius:20px;}
@@ -88,38 +78,27 @@ strong{font-size:17px;}
   <div class="toggle" onclick="toggleLang()">🌍 हिंदी / EN</div>
 </div>
 
-<!-- LANDING / DAILY RITUAL -->
+<!-- DAILY RITUAL -->
 <div class="page active" id="landing">
-<header class="hi">🧠 आज का मन</header>
-<header class="en" hidden>🧠 Today's Mind</header>
+<header id="ritualTitle"></header>
 
 <div class="streak-box">
   <div class="streak-count" id="streakCount">0</div>
-  <div class="streak-label" id="streakLabel">Streak</div>
+  <div class="streak-label" id="streakLabel"></div>
 </div>
 
 <div class="card">
-<p class="hi" id="dailyStatus"></p>
-<p class="en" hidden id="dailyStatusEn"></p>
+<p id="dailyStatus"></p>
 </div>
 
-<button id="startBtn" onclick="startTest()">
-<span class="hi">आज का टेस्ट करें</span>
-<span class="en" hidden>Check Today</span>
-</button>
+<button id="startBtn" onclick="startTest()"></button>
 </div>
 
 <!-- QUESTIONS -->
 <div class="page" id="page1">
-<header class="hi">🌪 मानसिक प्रदूषण सूचकांक</header>
-<header class="en" hidden>🌪 Mental Pollution Index</header>
-
+<header id="qTitle"></header>
 <div class="card" id="questions"></div>
-
-<button onclick="goMeter()">
-<span class="hi">मीटर देखें</span>
-<span class="en" hidden>Check Meter</span>
-</button>
+<button onclick="goMeter()" id="meterBtn"></button>
 </div>
 
 <!-- METER -->
@@ -144,69 +123,83 @@ strong{font-size:17px;}
 <div class="page" id="page4">
 <header>🔒 Decision Insight</header>
 <div class="card"><p id="resultText"></p></div>
-<button onclick="location.reload()">Done for Today</button>
+<button onclick="location.reload()">Done</button>
 </div>
 
 <script>
 let lang="hi",score=0,zone="",spun=false;
 
-const qs=[
-"क्या आपका मन भविष्य की चिंता में उलझता है?",
-"क्या निर्णय लेते समय डर रोकता है?",
-"क्या आप बार-बार एक ही बात सोचते हैं?",
-"क्या भावनाएँ तर्क पर हावी होती हैं?",
-"क्या निर्णय के बाद पछतावा होता है?",
-"क्या मन जल्दी थक जाता है?",
-"अभी मन की स्थिति क्या है?"
+/* ===== BILINGUAL QUESTIONS ===== */
+const questionsData=[
+{hi:"क्या आपका मन भविष्य की चिंता में उलझता है?",en:"Does your mind worry about the future?"},
+{hi:"क्या निर्णय लेते समय डर रोकता है?",en:"Does fear stop you from deciding?"},
+{hi:"क्या आप बार-बार एक ही बात सोचते हैं?",en:"Do you overthink the same thing?"},
+{hi:"क्या भावनाएँ तर्क पर हावी होती हैं?",en:"Do emotions overpower logic?"},
+{hi:"क्या निर्णय के बाद पछतावा होता है?",en:"Do you regret decisions later?"},
+{hi:"क्या मन जल्दी थक जाता है?",en:"Does your mind get tired easily?"},
+{hi:"अभी मन की स्थिति क्या है?",en:"What is your current mental state?"}
 ];
 
-// ===== DAILY RITUAL + STREAK =====
+/* ===== DAILY RITUAL + STREAK ===== */
 const today=new Date().toDateString();
 let last=localStorage.getItem("lastCheck");
 let streak=parseInt(localStorage.getItem("streak")||0);
 
 function updateRitual(){
+  ritualTitle.innerText = lang==="hi"?"🧠 आज का मन":"🧠 Today's Mind";
+  startBtn.innerText = lang==="hi"?"आज का टेस्ट करें":"Check Today";
+  qTitle.innerText = lang==="hi"?"🌪 मानसिक प्रदूषण सूचकांक":"🌪 Mental Pollution Index";
+  meterBtn.innerText = lang==="hi"?"मीटर देखें":"Check Meter";
+
   if(last===today){
     startBtn.disabled=true;
-    dailyStatus.innerText="आज का मन जाँचा जा चुका है।";
-    dailyStatusEn.innerText="Today's mind already checked.";
+    dailyStatus.innerText = lang==="hi"?"आज का मन जाँचा जा चुका है।":"Today's mind already checked.";
   }else{
-    dailyStatus.innerText="आज अपने मन की स्थिति देखें।";
-    dailyStatusEn.innerText="Check your mental state today.";
+    dailyStatus.innerText = lang==="hi"?"आज अपने मन की स्थिति देखें।":"Check your mental state today.";
   }
 
   streakCount.innerText=streak;
   streakLabel.innerText =
-    streak>=21?"Deep Calm":
-    streak>=7?"Clear":
-    streak>=3?"Stable":"Started";
+    streak>=21?(lang==="hi"?"Deep Calm":"Deep Calm"):
+    streak>=7?(lang==="hi"?"Clear":"Clear"):
+    streak>=3?(lang==="hi"?"Stable":"Stable"):
+    (lang==="hi"?"Started":"Started");
 }
 updateRitual();
 
+/* ===== QUESTIONS RENDER ===== */
 function startTest(){
-  document.querySelectorAll(".page").forEach(p=>p.classList.remove("active"));
+  landing.classList.remove("active");
   page1.classList.add("active");
   renderQuestions();
 }
 
 function renderQuestions(){
-  let h="";
-  qs.forEach((q,i)=>{
-    h+=`
-    <strong>${i+1}. ${q}</strong>
-    <label><input type="radio" name="q${i}" value="3"> अक्सर</label>
-    <label><input type="radio" name="q${i}" value="2"> कभी-कभी</label>
-    <label><input type="radio" name="q${i}" value="1"> नहीं</label>
-    <hr style="opacity:.2">`;
+  let html="";
+  questionsData.forEach((q,i)=>{
+    if(i<6){
+      html+=`
+      <strong>${i+1}. ${lang==="hi"?q.hi:q.en}</strong>
+      <label><input type="radio" name="q${i}" value="3">${lang==="hi"?"अक्सर":"Often"}</label>
+      <label><input type="radio" name="q${i}" value="2">${lang==="hi"?"कभी-कभी":"Sometimes"}</label>
+      <label><input type="radio" name="q${i}" value="1">${lang==="hi"?"नहीं":"No"}</label>
+      <hr style="opacity:.2">`;
+    }else{
+      html+=`
+      <strong>7. ${lang==="hi"?q.hi:q.en}</strong>
+      <label><input type="radio" name="q6" value="3">${lang==="hi"?"अशांत":"Disturbed"}</label>
+      <label><input type="radio" name="q6" value="2">${lang==="hi"?"सामान्य":"Neutral"}</label>
+      <label><input type="radio" name="q6" value="1">${lang==="hi"?"शांत":"Calm"}</label>`;
+    }
   });
-  questions.innerHTML=h;
+  questions.innerHTML=html;
 }
 
 function goMeter(){
   score=0;
   for(let i=0;i<7;i++){
     let q=document.querySelector(`input[name="q${i}"]:checked`);
-    if(!q){alert("सभी प्रश्नों के उत्तर दें");return;}
+    if(!q){alert(lang==="hi"?"सभी प्रश्नों के उत्तर दें":"Please answer all questions");return;}
     score+=parseInt(q.value);
   }
   page1.classList.remove("active");
@@ -214,9 +207,9 @@ function goMeter(){
 
   let p=Math.round((score/21)*100);
   meterFill.style.width=p+"%";
-  if(p>70){zone="red";meterFill.style.background="#ff4d4d";meterText.innerText="High Mental Noise";}
-  else if(p>40){zone="yellow";meterFill.style.background="#ffd400";meterText.innerText="Moderate Mental Noise";}
-  else{zone="green";meterFill.style.background="#33ff88";meterText.innerText="Low Mental Noise";}
+  if(p>70){zone="red";meterText.innerText=lang==="hi"?"High मानसिक शोर":"High Mental Noise";}
+  else if(p>40){zone="yellow";meterText.innerText=lang==="hi"?"मध्यम मानसिक शोर":"Moderate Mental Noise";}
+  else{zone="green";meterText.innerText=lang==="hi"?"कम मानसिक शोर":"Low Mental Noise";}
 }
 
 function goSpin(){page2.classList.remove("active");page3.classList.add("active");}
@@ -230,11 +223,11 @@ function showResult(){
   page3.classList.remove("active");
   page4.classList.add("active");
 
-  if(zone==="green") resultText.innerText="मन शांत है। आज निर्णय लेने का समय अनुकूल है।";
-  if(zone==="yellow") resultText.innerText="स्थिति संतुलित है। थोड़ी प्रतीक्षा बेहतर होगी।";
-  if(zone==="red") resultText.innerText="मन अशांत है। आज निर्णय टालना ही उचित है।";
+  resultText.innerText =
+    zone==="green"?(lang==="hi"?"मन शांत है। निर्णय के लिए अनुकूल समय है।":"Mind is calm. Good time to decide."):
+    zone==="yellow"?(lang==="hi"?"थोड़ी प्रतीक्षा बेहतर होगी।":"Waiting may help."):
+    (lang==="hi"?"मन अशांत है। निर्णय टालें।":"Mind is disturbed. Avoid decision.");
 
-  // STREAK UPDATE
   if(last){
     let diff=(new Date(today)-new Date(last))/(1000*60*60*24);
     if(diff===1) streak++;
@@ -247,8 +240,8 @@ function showResult(){
 
 function toggleLang(){
   lang=lang==="hi"?"en":"hi";
-  document.querySelectorAll(".hi").forEach(e=>e.hidden=(lang!=="hi"));
-  document.querySelectorAll(".en").forEach(e=>e.hidden=(lang!=="en"));
+  updateRitual();
+  if(page1.classList.contains("active")) renderQuestions();
 }
 </script>
 
