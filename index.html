@@ -2,276 +2,252 @@
 <html lang="hi">
 <head>
 <meta charset="UTF-8">
-<title>Decision Lock Tool</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mind OS – Decision Flow</title>
 
 <style>
 body{
   margin:0;
-  font-family:system-ui,sans-serif;
-  background:#020617;
-  color:#e5e7eb;
-}
-.container{max-width:460px;margin:auto;padding:20px}
-h1{text-align:center}
-.hidden{display:none}
-
-.toggle{
-  text-align:right;
-  margin-bottom:10px;
-}
-.toggle button{
-  padding:6px 12px;
-  border:none;
-  border-radius:10px;
-  background:#334155;
+  font-family:Segoe UI,Arial;
+  background:linear-gradient(180deg,#050b2e,#020617);
   color:#fff;
-  cursor:pointer;
 }
+.page{display:none;padding:22px;}
+.active{display:block;}
+
+.topbar{
+  display:flex;justify-content:space-between;align-items:center;
+  padding:16px 18px;
+}
+.brand{font-size:22px;font-weight:600;}
+.toggle{
+  padding:6px 14px;border-radius:20px;
+  background:rgba(255,255,255,0.15);
+  font-size:14px;cursor:pointer;
+}
+
+header{text-align:center;font-size:26px;font-weight:600;margin-bottom:12px;}
 
 .card{
-  background:#0f172a;
-  border-radius:14px;
-  padding:16px;
-  margin-bottom:14px;
+  background:rgba(255,255,255,0.08);
+  backdrop-filter:blur(12px);
+  border-radius:18px;
+  padding:18px;
+  margin-bottom:16px;
 }
-.question{margin-bottom:10px}
-.options button{
-  width:48%;
-  margin:1%;
-  padding:10px;
-  border:none;
-  border-radius:10px;
-  background:#334155;
-  color:#fff;
-  cursor:pointer;
-}
-.options button.active{background:#22c55e;color:#022c22}
 
-.nav{display:flex;justify-content:space-between;margin-top:20px}
-.nav button{
-  padding:10px 18px;
-  border:none;
+/* options */
+.option{
+  display:block;
+  padding:10px 12px;
+  margin:6px 0;
   border-radius:12px;
-  background:#2563eb;
-  color:#fff;
-  cursor:pointer;
+  background:rgba(255,255,255,0.06);
 }
+.option input{margin-right:10px;}
 
-.wheel-box{text-align:center}
-#wheel{
-  width:260px;height:260px;border-radius:50%;
-  margin:20px auto;
-  background:conic-gradient(
-    #16a34a 0deg 120deg,
-    #ca8a04 120deg 240deg,
-    #dc2626 240deg 360deg
-  );
-  transition:transform 4s cubic-bezier(.17,.67,.83,.67);
-}
-.pointer{
-  width:0;height:0;
-  border-left:10px solid transparent;
-  border-right:10px solid transparent;
-  border-bottom:20px solid #fff;
-  margin:0 auto;
-}
-
-.spin-btn{
+button{
   width:100%;
-  padding:15px;
+  padding:16px;
   font-size:18px;
   border:none;
-  border-radius:14px;
-  background:linear-gradient(90deg,#22c55e,#38bdf8,#a855f7);
-  color:#020617;
-  font-weight:600;
+  border-radius:30px;
+  background:linear-gradient(45deg,#00f2ff,#00ff9c);
+  color:#000;
+  margin-top:18px;
   cursor:pointer;
 }
 
-#result{
-  margin-top:20px;
-  padding:16px;
-  border-radius:14px;
-  background:#020617;
-  text-align:center;
+/* meter */
+.meter-bar{height:22px;border-radius:20px;background:#1a1a1a;overflow:hidden;}
+.meter-fill{height:100%;width:0%;transition:width 1s;border-radius:20px;}
+.meter-text{text-align:center;margin-top:8px;font-size:18px;}
+
+/* spin */
+.wheel-box{position:relative;width:260px;height:260px;margin:30px auto;}
+.wheel{
+  width:100%;height:100%;
+  border-radius:50%;
+  background:conic-gradient(#ff4d4d,#ffd633,#33ff88,#00ffd5,#0066ff,#8a00ff,#ff4d4d);
+  transition:transform 4s cubic-bezier(.17,.67,.14,.93);
+}
+.pointer{
+  position:absolute;top:-14px;left:50%;transform:translateX(-50%);
+  width:0;height:0;border-left:14px solid transparent;
+  border-right:14px solid transparent;border-bottom:22px solid #fff;
 }
 
-.cause{
-  background:#0f172a;
-  border-radius:14px;
-  padding:16px;
-  line-height:1.6;
+.suggestion{
+  margin-top:10px;
+  padding:10px 12px;
+  border-radius:12px;
+  background:rgba(255,255,255,0.1);
 }
+
+@media(min-width:768px){body{max-width:480px;margin:auto;}}
 </style>
 </head>
 
 <body>
-<div class="container">
 
-<div class="toggle">
-  <button onclick="toggleLang()">🌐 हिन्दी / English</button>
+<div class="topbar">
+  <div class="brand">Mind OS</div>
+  <div class="toggle" onclick="toggleLang()">🌍 हिंदी / EN</div>
 </div>
 
-<!-- PAGE 1 -->
-<div id="page1">
-<h1 id="title">Decision Lock</h1>
-<div id="qbox"></div>
-<div class="nav">
-<span></span>
-<button onclick="next1()" id="nextBtn">Next ▶</button>
+<!-- LANDING -->
+<div class="page active" id="landing">
+<header id="landingTitle">🧠 आज का मन</header>
+<div class="card" id="landingText">
+यह एक free daily mind check है जो बताता है कि अभी निर्णय लेना उचित है या नहीं।
 </div>
+<button onclick="startTest()" id="startBtn">आज का टेस्ट करें</button>
 </div>
 
-<!-- PAGE 2 -->
-<div id="page2" class="hidden">
-<h1 id="spinTitle">Decision Spin</h1>
+<!-- QUESTIONS -->
+<div class="page" id="page1">
+<header id="qTitle">🌪 मानसिक प्रदूषण सूचकांक</header>
+<div class="card" id="questions"></div>
+<button onclick="goMeter()" id="meterBtn">मीटर देखें</button>
+</div>
+
+<!-- ✅ UPDATED METER PAGE -->
+<div class="page" id="page2">
+<header id="meterTitle">📊 Mental Pollution Index</header>
+<div class="meter-bar"><div class="meter-fill" id="meterFill"></div></div>
+<div class="meter-text" id="meterText"></div>
+<button onclick="goSpin()">Next → Spin</button>
+</div>
+
+<!-- SPIN -->
+<div class="page" id="page3">
+<header>🎯 Decision Spin</header>
 <div class="wheel-box">
-<div class="pointer"></div>
-<div id="wheel"></div>
-<button class="spin-btn" onclick="spin()" id="spinBtn">🔒 LOCK DECISION</button>
+  <div class="pointer"></div>
+  <div class="wheel" id="wheel"></div>
 </div>
-<div id="result"></div>
-<div class="nav">
-<button onclick="back1()">◀ Back</button>
-<button onclick="next2()">Next ▶</button>
-</div>
+<button onclick="spinNow()">Spin</button>
 </div>
 
-<!-- PAGE 3 -->
-<div id="page3" class="hidden">
-<h1 id="causeTitle">Decision Cause</h1>
-<div class="cause" id="causeText"></div>
-<div class="nav">
-<button onclick="back2()">◀ Back</button>
-<span></span>
+<!-- DECISION -->
+<div class="page" id="page4">
+<header>🔒 Decision Insight</header>
+<div class="card">
+  <p id="decisionText"></p>
+  <div class="suggestion" id="suggestionText"></div>
 </div>
-</div>
-
+<button onclick="location.reload()">Done</button>
 </div>
 
 <script>
-let lang="hi";
+let lang="hi",score=0,zone="",spun=false;
 
-const data={
-hi:{
-title:"Decision Lock",
-spinTitle:"Decision Spin",
-causeTitle:"Decision का कारण",
-next:"Next ▶",
-spin:"🔒 LOCK DECISION",
-questions:[
-"क्या आप अभी थके हुए हैं?",
-"क्या आप भावनात्मक स्थिति में हैं?",
-"क्या यह बड़ा जीवन निर्णय है?",
-"क्या समय का दबाव है?",
-"क्या डर शामिल है?",
-"क्या किसी और की उम्मीद जुड़ी है?",
-"क्या यह निर्णय बदला नहीं जा सकता?"
-],
-yes:"हाँ",no:"नहीं",
-green:"🟢 निर्णय लेना सुरक्षित है",
-yellow:"🟡 24 घंटे रुकना बेहतर होगा",
-red:"🔴 अभी निर्णय न लें",
-why:"यह निर्णय क्यों आया?"
-},
-en:{
-title:"Decision Lock",
-spinTitle:"Decision Spin",
-causeTitle:"Decision Cause",
-next:"Next ▶",
-spin:"🔒 LOCK DECISION",
-questions:[
-"Are you feeling tired right now?",
-"Are you emotionally disturbed?",
-"Is this a major life decision?",
-"Is there time pressure?",
-"Is fear involved?",
-"Are others' expectations involved?",
-"Is this decision irreversible?"
-],
-yes:"Yes",no:"No",
-green:"🟢 Safe to decide now",
-yellow:"🟡 Better to wait 24 hours",
-red:"🔴 Do not decide now",
-why:"Why this decision?"
+const qs=[
+{hi:"क्या आपका मन भविष्य की चिंता में उलझता है?",en:"Does your mind worry about the future?"},
+{hi:"क्या निर्णय लेते समय डर रोकता है?",en:"Does fear stop you from deciding?"},
+{hi:"क्या आप बार-बार एक ही बात सोचते हैं?",en:"Do you overthink the same thing?"},
+{hi:"क्या भावनाएँ तर्क पर हावी होती हैं?",en:"Do emotions overpower logic?"},
+{hi:"क्या निर्णय के बाद पछतावा होता है?",en:"Do you regret decisions later?"},
+{hi:"क्या मन जल्दी थक जाता है?",en:"Does your mind get tired easily?"},
+{hi:"अभी मन की स्थिति क्या है?",en:"What is your current mental state?"}
+];
+
+function startTest(){
+  landing.classList.remove("active");
+  page1.classList.add("active");
+  renderQuestions();
 }
-};
 
-let answers=Array(7).fill(null);
-
-function render(){
-  document.getElementById("title").innerText=data[lang].title;
-  document.getElementById("spinTitle").innerText=data[lang].spinTitle;
-  document.getElementById("causeTitle").innerText=data[lang].causeTitle;
-  document.getElementById("nextBtn").innerText=data[lang].next;
-  document.getElementById("spinBtn").innerText=data[lang].spin;
-  const qbox=document.getElementById("qbox");
-  qbox.innerHTML="";
-  data[lang].questions.forEach((q,i)=>{
-    qbox.innerHTML+=`
-    <div class="card">
-      <div class="question">${i+1}️⃣ ${q}</div>
-      <div class="options">
-        <button onclick="ans(${i},1,this)">${data[lang].yes}</button>
-        <button onclick="ans(${i},0,this)">${data[lang].no}</button>
-      </div>
-    </div>`;
+function renderQuestions(){
+  let h="";
+  qs.forEach((q,i)=>{
+    h+=`<strong>${i+1}. ${lang==="hi"?q.hi:q.en}</strong>`;
+    if(i<6){
+      h+=`
+      <label class="option"><input type="radio" name="q${i}" value="3"> ${lang==="hi"?"अक्सर":"Often"}</label>
+      <label class="option"><input type="radio" name="q${i}" value="2"> ${lang==="hi"?"कभी-कभी":"Sometimes"}</label>
+      <label class="option"><input type="radio" name="q${i}" value="1"> ${lang==="hi"?"नहीं":"No"}</label>
+      <hr style="opacity:.2">`;
+    }else{
+      h+=`
+      <label class="option"><input type="radio" name="q6" value="3"> ${lang==="hi"?"अशांत":"Disturbed"}</label>
+      <label class="option"><input type="radio" name="q6" value="2"> ${lang==="hi"?"सामान्य":"Neutral"}</label>
+      <label class="option"><input type="radio" name="q6" value="1"> ${lang==="hi"?"शांत":"Calm"}</label>`;
+    }
   });
+  questions.innerHTML=h;
 }
-render();
+
+function goMeter(){
+  score=0;
+  for(let i=0;i<7;i++){
+    let q=document.querySelector(`input[name="q${i}"]:checked`);
+    if(!q){alert(lang==="hi"?"सभी प्रश्नों के उत्तर दें":"Please answer all questions");return;}
+    score+=parseInt(q.value);
+  }
+  page1.classList.remove("active");
+  page2.classList.add("active");
+
+  let p=Math.round((score/21)*100);
+  meterFill.style.width=p+"%";
+
+  if(p>70){zone="red";meterFill.style.background="#ff4d4d";meterText.innerText=lang==="hi"?"उच्च Mental Pollution":"High Mental Pollution";}
+  else if(p>40){zone="yellow";meterFill.style.background="#ffd633";meterText.innerText=lang==="hi"?"मध्यम Mental Pollution":"Moderate Mental Pollution";}
+  else{zone="green";meterFill.style.background="#33ff88";meterText.innerText=lang==="hi"?"कम Mental Pollution":"Low Mental Pollution";}
+}
+
+function goSpin(){
+  page2.classList.remove("active");
+  page3.classList.add("active");
+}
+
+function spinNow(){
+  if(spun)return;
+  spun=true;
+
+  wheel.style.transform="rotate("+(zone==="red"?1440+30:zone==="yellow"?1440+150:1440+270)+"deg)";
+  setTimeout(showDecision,4000);
+}
+
+function showDecision(){
+  page3.classList.remove("active");
+  page4.classList.add("active");
+
+  const decisionHi={
+    red:"इस समय मन में मानसिक शोर अधिक है ...",
+    yellow:"आपकी मानसिक स्थिति मध्यम है ...",
+    green:"मन शांत है ..."
+  };
+  const decisionEn={
+    red:"Your mind has high mental noise ...",
+    yellow:"Your mental state is moderate ...",
+    green:"Mind is calm ..."
+  };
+  const suggestionHi={
+    red:"👉 आज बड़े निर्णय से बचें।",
+    yellow:"👉 कल पुनः देखें।",
+    green:"👉 निर्णय आगे बढ़ाएँ।"
+  };
+  const suggestionEn={
+    red:"👉 Avoid big decisions today.",
+    yellow:"👉 Check again tomorrow.",
+    green:"👉 Proceed with decision."
+  };
+
+  decisionText.innerText = lang==="hi"?decisionHi[zone]:decisionEn[zone];
+  suggestionText.innerText = lang==="hi"?suggestionHi[zone]:suggestionEn[zone];
+}
 
 function toggleLang(){
-  lang = lang==="hi" ? "en" : "hi";
-  render();
-}
-
-function ans(i,v,btn){
-  answers[i]=v;
-  btn.parentElement.querySelectorAll("button")
-    .forEach(b=>b.classList.remove("active"));
-  btn.classList.add("active");
-}
-
-function next1(){
-  if(answers.includes(null)){alert("Please answer all questions");return;}
-  page1.classList.add("hidden");page2.classList.remove("hidden");
-}
-function back1(){page2.classList.add("hidden");page1.classList.remove("hidden")}
-function next2(){page2.classList.add("hidden");page3.classList.remove("hidden")}
-function back2(){page3.classList.add("hidden");page2.classList.remove("hidden")}
-
-/* SOUND */
-const audioCtx=new (window.AudioContext||window.webkitAudioContext)();
-function tone(f,d){
-  const o=audioCtx.createOscillator(),g=audioCtx.createGain();
-  o.connect(g);g.connect(audioCtx.destination);
-  o.frequency.value=f;o.start();
-  g.gain.setValueAtTime(0.2,audioCtx.currentTime);
-  g.gain.exponentialRampToValueAtTime(0.001,audioCtx.currentTime+d/1000);
-  o.stop(audioCtx.currentTime+d/1000);
-}
-
-/* SPIN */
-let angle=0;
-function spin(){
-  navigator.vibrate(100);tone(300,200);
-  const total=answers.reduce((a,b)=>a+b,0);
-  let stop,txt,freq,vib;
-  if(total<=2){stop=60;txt=data[lang].green;freq=700;vib=150;}
-  else if(total<=4){stop=180;txt=data[lang].yellow;freq=400;vib=300;}
-  else{stop=300;txt=data[lang].red;freq=200;vib=600;}
-
-  angle=360*4+stop;
-  wheel.style.transform=`rotate(${angle}deg)`;
-
-  setTimeout(()=>{
-    navigator.vibrate(vib);tone(freq,400);
-    result.innerText=txt;
-    let c=`<strong>${data[lang].why}</strong><br><br>`;
-    answers.forEach((v,i)=>{if(v===1)c+="• "+data[lang].questions[i]+"<br>";});
-    causeText.innerHTML=c;
-  },4000);
+  lang=lang==="hi"?"en":"hi";
+  landingTitle.innerText = lang==="hi"?"🧠 आज का मन":"🧠 Today's Mind";
+  landingText.innerText = lang==="hi"
+    ?"यह एक free daily mind check है जो बताता है कि अभी निर्णय लेना उचित है या नहीं।"
+    :"This is a free daily mind check to know whether it is the right time to decide.";
+  startBtn.innerText = lang==="hi"?"आज का टेस्ट करें":"Start Today's Check";
+  qTitle.innerText = lang==="hi"?"🌪 मानसिक प्रदूषण सूचकांक":"🌪 Mental Pollution Index";
+  meterBtn.innerText = lang==="hi"?"मीटर देखें":"Check Meter";
+  if(page1.classList.contains("active")) renderQuestions();
 }
 </script>
 
