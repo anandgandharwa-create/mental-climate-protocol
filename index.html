@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Mind OS – Mental Pollution Index</title>
+<title>Mind OS – Decision Clarity System</title>
 
 <style>
 body{
@@ -12,232 +12,235 @@ body{
   background:linear-gradient(180deg,#050b2e,#020617);
   color:#fff;
 }
-.page{display:none;padding:22px;}
+.page{display:none;padding:24px;}
 .active{display:block;}
 
-.topbar{
-  display:flex;justify-content:space-between;align-items:center;
-  padding:16px 18px;
+header{
+  text-align:center;
+  font-size:28px;
+  font-weight:700;
+  margin-bottom:14px;
 }
-.brand{font-size:22px;font-weight:600;}
-.toggle{
-  padding:6px 14px;border-radius:20px;
-  background:rgba(255,255,255,0.15);
-  font-size:14px;cursor:pointer;
+.sub{
+  text-align:center;
+  font-size:18px;
+  opacity:.85;
+  margin-bottom:24px;
 }
-
-header{text-align:center;font-size:26px;font-weight:600;margin-bottom:10px;}
 
 .card{
   background:rgba(255,255,255,0.08);
   backdrop-filter:blur(12px);
-  border-radius:18px;
-  padding:20px;
-  margin-bottom:16px;
-  box-shadow:0 12px 30px rgba(0,0,0,0.4);
+  border-radius:20px;
+  padding:22px;
+  margin-bottom:18px;
+  box-shadow:0 14px 32px rgba(0,0,0,0.45);
 }
 
-strong{font-size:18px;}
-label{display:block;margin:8px 0;font-size:17px;}
+h2{font-size:22px;margin-bottom:10px;}
+p{font-size:18px;line-height:1.6;opacity:.9;}
+
+ul{padding-left:18px;font-size:17px;}
+li{margin-bottom:6px;}
 
 button{
-  width:100%;padding:16px;font-size:18px;
-  border:none;border-radius:30px;
+  width:100%;
+  padding:16px;
+  font-size:19px;
+  border:none;
+  border-radius:30px;
   background:linear-gradient(45deg,#00f2ff,#00ff9c);
-  color:#000;margin-top:18px;cursor:pointer;
+  color:#000;
+  margin-top:16px;
+  cursor:pointer;
 }
 
-/* Meter */
-.meter-bar{height:22px;border-radius:20px;background:#1a1a1a;overflow:hidden;}
-.meter-fill{height:100%;width:0%;transition:width 1.2s ease;border-radius:20px;}
-.meter-text{text-align:center;margin-top:8px;font-size:18px;}
-
-/* Wheel */
-.wheel-box{position:relative;width:270px;height:270px;margin:30px auto;}
-.wheel{
-  width:100%;height:100%;border-radius:50%;
-  background:conic-gradient(#ff0000,#ff7a00,#ffd400,#33ff00,#00ffd5,#0066ff,#8a00ff,#ff0000);
-  box-shadow:inset 0 0 25px rgba(255,255,255,.35),0 0 25px rgba(0,255,255,.25);
-  transition:transform 4.5s cubic-bezier(.17,.67,.14,.93);
-}
-.glow{
-  position:absolute;inset:-12px;border-radius:50%;filter:blur(18px);opacity:0;
-  background:conic-gradient(rgba(255,0,0,.9),rgba(255,255,0,.9),rgba(0,255,0,.9),rgba(0,255,255,.9),rgba(0,0,255,.9),rgba(255,0,255,.9),rgba(255,0,0,.9));
-}
-.spin-active .glow{
-  opacity:1;
-  animation:glowPulse 1.2s infinite alternate,glowRotate 2s linear infinite;
-}
-@keyframes glowPulse{from{filter:blur(14px);}to{filter:blur(28px);}}
-@keyframes glowRotate{from{transform:rotate(0);}to{transform:rotate(360deg);}}
-
-.pointer{
-  position:absolute;top:-16px;left:50%;transform:translateX(-50%);
-  width:0;height:0;border-left:16px solid transparent;
-  border-right:16px solid transparent;border-bottom:26px solid #fff;
+.small{
+  text-align:center;
+  font-size:14px;
+  opacity:.7;
+  margin-top:8px;
 }
 
-@media(min-width:768px){body{max-width:480px;margin:auto;}}
+.price{
+  font-size:34px;
+  font-weight:700;
+  margin:10px 0;
+  text-align:center;
+}
+.badge{
+  display:inline-block;
+  padding:6px 14px;
+  border-radius:20px;
+  background:rgba(0,255,200,.2);
+  margin-bottom:10px;
+  font-size:14px;
+}
+
+.footer{
+  text-align:center;
+  font-size:14px;
+  opacity:.6;
+  margin-top:20px;
+}
+
+@media(min-width:768px){
+  body{max-width:480px;margin:auto;}
+}
 </style>
 </head>
 
 <body>
 
-<div class="topbar">
-  <div class="brand">Mind OS</div>
-  <div class="toggle" onclick="toggleLang()">🌍 हिंदी / EN</div>
-</div>
+<!-- PAGE 1 : LANDING -->
+<div class="page active" id="landing">
 
-<!-- PAGE 1 : QUESTIONS -->
-<div class="page active" id="page1">
-<header class="hi">🌪 मानसिक प्रदूषण सूचकांक</header>
-<header class="en" hidden>🌪 Mental Pollution Index</header>
+<header>🧠 Mind OS</header>
+<div class="sub">Decision Clarity System for Modern Minds</div>
 
-<form id="quiz">
-
-<!-- 7 LOGICAL QUESTIONS -->
 <div class="card">
-<strong class="hi">1. क्या आपका मन बार-बार भविष्य की चिंता में उलझ जाता है?</strong>
-<strong class="en" hidden>1. Does your mind keep worrying about the future?</strong>
-<label><input type="radio" name="q1" value="3"> <span class="hi">अक्सर</span><span class="en" hidden>Often</span></label>
-<label><input type="radio" name="q1" value="2"> <span class="hi">कभी-कभी</span><span class="en" hidden>Sometimes</span></label>
-<label><input type="radio" name="q1" value="1"> <span class="hi">नहीं</span><span class="en" hidden>Rarely</span></label>
+<h2>यह क्या है?</h2>
+<p>
+Mind OS एक psychology-based system है जो यह बताता है कि
+<strong>इस समय निर्णय लेना सही है या नहीं</strong> —
+बिना astrology, बिना prediction, बिना डर।
+</p>
 </div>
 
 <div class="card">
-<strong class="hi">2. निर्णय लेते समय डर आपको रोकता है?</strong>
-<strong class="en" hidden>2. Does fear stop you from deciding?</strong>
-<label><input type="radio" name="q2" value="3"> <span class="hi">हाँ</span><span class="en" hidden>Yes</span></label>
-<label><input type="radio" name="q2" value="2"> <span class="hi">थोड़ा</span><span class="en" hidden>A little</span></label>
-<label><input type="radio" name="q2" value="1"> <span class="hi">नहीं</span><span class="en" hidden>No</span></label>
+<h2>आपको क्या मिलेगा?</h2>
+<ul>
+<li>📊 Mental Pollution Index (0–100%)</li>
+<li>🌈 Visual Decision Spin</li>
+<li>🔒 Decision Lock Insight</li>
+<li>🧠 Overthinking & fear clarity</li>
+</ul>
 </div>
 
 <div class="card">
-<strong class="hi">3. क्या आप एक ही बात को बार-बार सोचते रहते हैं?</strong>
-<strong class="en" hidden>3. Do you overthink the same thing repeatedly?</strong>
-<label><input type="radio" name="q3" value="3"> <span class="hi">बहुत</span><span class="en" hidden>Very often</span></label>
-<label><input type="radio" name="q3" value="2"> <span class="hi">कभी-कभी</span><span class="en" hidden>Sometimes</span></label>
-<label><input type="radio" name="q3" value="1"> <span class="hi">नहीं</span><span class="en" hidden>No</span></label>
+<h2>किसके लिए?</h2>
+<ul>
+<li>बड़े life decisions</li>
+<li>Business / career choices</li>
+<li>Relationship clarity</li>
+<li>Overthinking control</li>
+</ul>
+</div>
+
+<button onclick="goFree()">Free Test Start करें</button>
+<div class="small">No login • No data saved • 60 seconds</div>
+
+<div class="footer">Made in India • Privacy First</div>
+</div>
+
+<!-- PAGE 2 : FREE RESULT TEASER -->
+<div class="page" id="free">
+<header>📊 Free Result</header>
+
+<div class="card">
+<p>
+आपका निर्णय <strong>पूरी तरह स्पष्ट नहीं</strong> है।  
+इस समय मन में कुछ मानसिक शोर और भावनात्मक दबाव मौजूद है।
+</p>
+<p>
+🔒 <strong>पूरा कारण + समाधान</strong> Premium में उपलब्ध है।
+</p>
+</div>
+
+<button onclick="goPremium()">Unlock Premium</button>
+<button onclick="backHome()" style="background:#333;color:#fff;">Back</button>
+</div>
+
+<!-- PAGE 3 : PRICING -->
+<div class="page" id="pricing">
+<header>🔓 Premium Access</header>
+
+<div class="card" style="text-align:center;">
+<div class="badge">Most Chosen</div>
+<div class="price">₹299 / month</div>
+<p>
+Unlimited decision tests<br>
+Detailed explanation<br>
+Decision confidence score<br>
+PDF decision certificate
+</p>
 </div>
 
 <div class="card">
-<strong class="hi">4. क्या भावनाएँ आपके तर्क पर हावी हो जाती हैं?</strong>
-<strong class="en" hidden>4. Do emotions overpower logic?</strong>
-<label><input type="radio" name="q4" value="3"> <span class="hi">अक्सर</span><span class="en" hidden>Often</span></label>
-<label><input type="radio" name="q4" value="2"> <span class="hi">कभी-कभी</span><span class="en" hidden>Sometimes</span></label>
-<label><input type="radio" name="q4" value="1"> <span class="hi">नहीं</span><span class="en" hidden>No</span></label>
+<h2>Free vs Premium</h2>
+<ul>
+<li>Free: 1 test / day</li>
+<li>Premium: Unlimited</li>
+<li>Free: Short result</li>
+<li>Premium: Deep clarity</li>
+</ul>
 </div>
+
+<button onclick="goPayment()">Pay & Unlock</button>
+<button onclick="backHome()" style="background:#333;color:#fff;">Cancel</button>
+
+<div class="small">UPI • Card • NetBanking</div>
+</div>
+
+<!-- PAGE 4 : PAYMENT MOCK -->
+<div class="page" id="payment">
+<header>💰 Payment</header>
+
+<div class="card" style="text-align:center;">
+<p>Scan UPI / Complete Payment</p>
+<p style="font-size:14px;opacity:.7;">
+(यह demo flow है – real gateway बाद में)
+</p>
+<div style="margin:14px 0;font-size:24px;">📱</div>
+<p><strong>Amount: ₹299</strong></p>
+</div>
+
+<button onclick="paymentDone()">I Have Paid</button>
+<button onclick="backHome()" style="background:#333;color:#fff;">Cancel</button>
+</div>
+
+<!-- PAGE 5 : SUCCESS -->
+<div class="page" id="success">
+<header>✅ Premium Unlocked</header>
 
 <div class="card">
-<strong class="hi">5. क्या आपको निर्णय के बाद पछतावा होता है?</strong>
-<strong class="en" hidden>5. Do you regret decisions later?</strong>
-<label><input type="radio" name="q5" value="3"> <span class="hi">अक्सर</span><span class="en" hidden>Often</span></label>
-<label><input type="radio" name="q5" value="2"> <span class="hi">कभी-कभी</span><span class="en" hidden>Sometimes</span></label>
-<label><input type="radio" name="q5" value="1"> <span class="hi">नहीं</span><span class="en" hidden>Rarely</span></label>
+<p>
+आपका Premium access सक्रिय हो गया है।
+अब आप:
+</p>
+<ul>
+<li>Unlimited decisions check कर सकते हैं</li>
+<li>PDF certificate download कर सकते हैं</li>
+<li>Mental clarity track कर सकते हैं</li>
+</ul>
 </div>
 
-<div class="card">
-<strong class="hi">6. क्या मन जल्दी थक जाता है?</strong>
-<strong class="en" hidden>6. Does your mind get tired quickly?</strong>
-<label><input type="radio" name="q6" value="3"> <span class="hi">हाँ</span><span class="en" hidden>Yes</span></label>
-<label><input type="radio" name="q6" value="2"> <span class="hi">थोड़ा</span><span class="en" hidden>Somewhat</span></label>
-<label><input type="radio" name="q6" value="1"> <span class="hi">नहीं</span><span class="en" hidden>No</span></label>
-</div>
-
-<div class="card">
-<strong class="hi">7. अभी आपके मन की स्थिति?</strong>
-<strong class="en" hidden>7. Your current mental state?</strong>
-<label><input type="radio" name="q7" value="3"> <span class="hi">अशांत</span><span class="en" hidden>Disturbed</span></label>
-<label><input type="radio" name="q7" value="2"> <span class="hi">सामान्य</span><span class="en" hidden>Neutral</span></label>
-<label><input type="radio" name="q7" value="1"> <span class="hi">शांत</span><span class="en" hidden>Calm</span></label>
-</div>
-
-<button type="button" onclick="goMeter()"><span class="hi">मीटर देखें ➜</span><span class="en" hidden>Check Meter ➜</span></button>
-</form>
-</div>
-
-<!-- PAGE 2 : METER -->
-<div class="page" id="page2">
-<header class="hi">📊 मानसिक प्रदूषण मीटर</header>
-<header class="en" hidden>📊 Mental Pollution Meter</header>
-
-<div class="meter-bar"><div class="meter-fill" id="meterFill"></div></div>
-<div class="meter-text" id="meterText"></div>
-
-<button onclick="goSpin()"><span class="hi">आगे ➜ स्पिन</span><span class="en" hidden>Next ➜ Spin</span></button>
-</div>
-
-<!-- PAGE 3 : SPIN -->
-<div class="page" id="page3">
-<header class="hi">🎯 निर्णय स्पिन</header>
-<header class="en" hidden>🎯 Decision Spin</header>
-
-<div class="wheel-box" id="wheelBox">
-  <div class="glow"></div>
-  <div class="pointer"></div>
-  <div class="wheel" id="wheel"></div>
-</div>
-
-<button onclick="spinNow()"><span class="hi">स्पिन करें</span><span class="en" hidden>Spin & Lock</span></button>
-</div>
-
-<!-- PAGE 4 : RESULT -->
-<div class="page" id="page4">
-<header class="hi">🔒 निर्णय लॉक</header>
-<header class="en" hidden>🔒 Decision Lock</header>
-
-<div class="card"><p id="resultText"></p></div>
-<button onclick="location.reload()"><span class="hi">फिर से शुरू करें</span><span class="en" hidden>Restart</span></button>
+<button onclick="goTool()">Go to Mind OS Tool</button>
 </div>
 
 <script>
-let lang="hi",score=0,zone="",spun=false;
-
-function toggleLang(){
-  lang=lang==="hi"?"en":"hi";
-  document.querySelectorAll(".hi").forEach(e=>e.hidden=(lang!=="hi"));
-  document.querySelectorAll(".en").forEach(e=>e.hidden=(lang!=="en"));
+function goFree(){
+  landing.classList.remove("active");
+  free.classList.add("active");
 }
-
-function goMeter(){
-  score=0;
-  for(let i=1;i<=7;i++){
-    let q=document.querySelector('input[name="q'+i+'"]:checked');
-    if(!q){alert(lang==="hi"?"सभी 7 प्रश्नों के उत्तर दें":"Please answer all 7 questions");return;}
-    score+=parseInt(q.value);
-  }
-  page1.classList.remove("active");page2.classList.add("active");
-
-  let percent=Math.round((score/21)*100);
-  meterFill.style.width=percent+"%";
-
-  if(percent>70){zone="red";meterFill.style.background="linear-gradient(90deg,#ff0000,#ff7a00)";meterText.innerText=lang==="hi"?"उच्च मानसिक प्रदूषण":"High Mental Pollution";}
-  else if(percent>40){zone="yellow";meterFill.style.background="linear-gradient(90deg,#ffd400,#ffb700)";meterText.innerText=lang==="hi"?"मध्यम मानसिक प्रदूषण":"Medium Mental Pollution";}
-  else{zone="green";meterFill.style.background="linear-gradient(90deg,#33ff00,#00ff9c)";meterText.innerText=lang==="hi"?"कम मानसिक प्रदूषण":"Low Mental Pollution";}
+function goPremium(){
+  free.classList.remove("active");
+  pricing.classList.add("active");
 }
-
-function goSpin(){page2.classList.remove("active");page3.classList.add("active");}
-
-function spinNow(){
-  if(spun)return;spun=true;
-  wheelBox.classList.add("spin-active");
-  wheel.style.transform="rotate("+(zone==="red"?360*4+30:zone==="yellow"?360*4+150:360*4+270)+"deg)";
-  setTimeout(()=>{wheelBox.classList.remove("spin-active");showResult();},4500);
+function goPayment(){
+  pricing.classList.remove("active");
+  payment.classList.add("active");
 }
-
-function showResult(){
-  page3.classList.remove("active");page4.classList.add("active");
-  let hi={
-    red:"आपके उत्तर दर्शाते हैं कि मन में अत्यधिक मानसिक शोर और भावनात्मक दबाव है। इस अवस्था में निर्णय लेना जोखिमपूर्ण हो सकता है। पहले मन को शांत करना और स्पष्टता लाना आवश्यक है।",
-    yellow:"मानसिक स्थिति मध्यम है। कुछ विचार अभी निर्णय को प्रभावित कर रहे हैं। थोड़ी प्रतीक्षा और आत्ममंथन के बाद लिया गया निर्णय अधिक संतुलित होगा।",
-    green:"मन अपेक्षाकृत शांत और स्पष्ट है। मानसिक प्रदूषण कम है, इसलिए इस समय लिया गया निर्णय व्यावहारिक और सकारात्मक परिणाम दे सकता है।"
-  };
-  let en={
-    red:"Your responses show high mental noise and emotional pressure. Decisions taken now may be risky. Calm and clarity are needed first.",
-    yellow:"Mental state is moderate. Some thoughts still affect your decision. Waiting and reflection will improve outcomes.",
-    green:"Your mind is calm and clear. Mental pollution is low, making this a suitable time to decide."
-  };
-  resultText.innerText=(lang==="hi"?hi[zone]:en[zone]);
+function paymentDone(){
+  payment.classList.remove("active");
+  success.classList.add("active");
+}
+function goTool(){
+  alert("Yahan aap Mind OS tool integrate kar sakte hain");
+}
+function backHome(){
+  document.querySelectorAll(".page").forEach(p=>p.classList.remove("active"));
+  landing.classList.add("active");
 }
 </script>
 
