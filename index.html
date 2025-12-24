@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Mind OS – Decision Flow</title>
+<title>Mind OS – Mental Pollution Index</title>
 
 <style>
 body{
@@ -27,7 +27,6 @@ body{
 }
 
 header{text-align:center;font-size:26px;font-weight:600;margin-bottom:12px;}
-
 .card{
   background:rgba(255,255,255,0.08);
   backdrop-filter:blur(12px);
@@ -36,7 +35,6 @@ header{text-align:center;font-size:26px;font-weight:600;margin-bottom:12px;}
   margin-bottom:16px;
 }
 
-/* options */
 .option{
   display:block;
   padding:10px 12px;
@@ -58,12 +56,12 @@ button{
   cursor:pointer;
 }
 
-/* meter */
+/* Meter */
 .meter-bar{height:22px;border-radius:20px;background:#1a1a1a;overflow:hidden;}
 .meter-fill{height:100%;width:0%;transition:width 1s;border-radius:20px;}
 .meter-text{text-align:center;margin-top:8px;font-size:18px;}
 
-/* spin */
+/* Spin */
 .wheel-box{position:relative;width:260px;height:260px;margin:30px auto;}
 .wheel{
   width:100%;height:100%;
@@ -71,10 +69,20 @@ button{
   background:conic-gradient(#ff4d4d,#ffd633,#33ff88,#00ffd5,#0066ff,#8a00ff,#ff4d4d);
   transition:transform 4s cubic-bezier(.17,.67,.14,.93);
 }
+.wheel.glow{
+  animation: glow 1.2s infinite alternate;
+  box-shadow:0 0 25px rgba(0,255,255,.7);
+}
+@keyframes glow{
+  from{box-shadow:0 0 12px rgba(0,255,255,.4);}
+  to{box-shadow:0 0 28px rgba(0,255,255,.9);}
+}
 .pointer{
   position:absolute;top:-14px;left:50%;transform:translateX(-50%);
-  width:0;height:0;border-left:14px solid transparent;
-  border-right:14px solid transparent;border-bottom:22px solid #fff;
+  width:0;height:0;
+  border-left:14px solid transparent;
+  border-right:14px solid transparent;
+  border-bottom:22px solid #fff;
 }
 
 .suggestion{
@@ -111,9 +119,9 @@ button{
 <button onclick="goMeter()" id="meterBtn">मीटर देखें</button>
 </div>
 
-<!-- ✅ UPDATED METER PAGE -->
+<!-- METER -->
 <div class="page" id="page2">
-<header id="meterTitle">📊 Mental Pollution Index</header>
+<header>📊 Mental Pollution Index</header>
 <div class="meter-bar"><div class="meter-fill" id="meterFill"></div></div>
 <div class="meter-text" id="meterText"></div>
 <button onclick="goSpin()">Next → Spin</button>
@@ -142,15 +150,38 @@ button{
 <script>
 let lang="hi",score=0,zone="",spun=false;
 
-const qs=[
-{hi:"क्या आपका मन भविष्य की चिंता में उलझता है?",en:"Does your mind worry about the future?"},
-{hi:"क्या निर्णय लेते समय डर रोकता है?",en:"Does fear stop you from deciding?"},
-{hi:"क्या आप बार-बार एक ही बात सोचते हैं?",en:"Do you overthink the same thing?"},
-{hi:"क्या भावनाएँ तर्क पर हावी होती हैं?",en:"Do emotions overpower logic?"},
-{hi:"क्या निर्णय के बाद पछतावा होता है?",en:"Do you regret decisions later?"},
-{hi:"क्या मन जल्दी थक जाता है?",en:"Does your mind get tired easily?"},
-{hi:"अभी मन की स्थिति क्या है?",en:"What is your current mental state?"}
+/* ✅ 20 QUESTION BANK */
+const questionPool=[
+{hi:"क्या आपका मन बिना वजह बेचैन रहता है?",en:"Does your mind feel restless without reason?"},
+{hi:"क्या आप छोटी बातों पर ज़्यादा सोचते हैं?",en:"Do you overthink small matters?"},
+{hi:"क्या निर्णय टालने की आदत है?",en:"Do you delay decisions?"},
+{hi:"क्या दूसरों की राय आपको प्रभावित करती है?",en:"Are you influenced by others' opinions?"},
+{hi:"क्या मन बार-बार अतीत में जाता है?",en:"Does your mind revisit the past?"},
+
+{hi:"क्या भविष्य की चिंता नींद खराब करती है?",en:"Does future worry disturb sleep?"},
+{hi:"क्या आप एक ही निर्णय पर बार-बार संशय करते हैं?",en:"Do you doubt the same decision?"},
+{hi:"क्या भावनाओं में बहकर निर्णय लेते हैं?",en:"Do emotions drive decisions?"},
+{hi:"क्या मन जल्दी थक जाता है?",en:"Does your mind tire easily?"},
+{hi:"क्या निर्णय के बाद पछतावा होता है?",en:"Do you regret decisions?"},
+
+{hi:"क्या आपका ध्यान जल्दी भटकता है?",en:"Does your focus drift easily?"},
+{hi:"क्या मन शांत रहना मुश्किल लगता है?",en:"Is staying calm difficult?"},
+{hi:"क्या आप हर चीज़ control करना चाहते हैं?",en:"Do you want control over everything?"},
+{hi:"क्या अनिश्चितता परेशान करती है?",en:"Does uncertainty bother you?"},
+{hi:"क्या आप तुलना करते रहते हैं?",en:"Do you compare yourself to others?"},
+
+{hi:"क्या निर्णय में डर हावी रहता है?",en:"Does fear dominate decisions?"},
+{hi:"क्या मन जल्दी नकारात्मक होता है?",en:"Does your mind turn negative quickly?"},
+{hi:"क्या आप एक साथ बहुत कुछ सोचते हैं?",en:"Do you think of many things at once?"},
+{hi:"क्या मन शांत करने के लिए प्रयास चाहिए?",en:"Do you need effort to calm your mind?"},
+{hi:"क्या अपने निर्णयों पर भरोसा कम है?",en:"Do you lack confidence in decisions?"}
 ];
+
+let activeQs=[];
+
+function pickRandomFive(){
+  activeQs=[...questionPool].sort(()=>0.5-Math.random()).slice(0,5);
+}
 
 function startTest(){
   landing.classList.remove("active");
@@ -159,41 +190,34 @@ function startTest(){
 }
 
 function renderQuestions(){
+  pickRandomFive();
   let h="";
-  qs.forEach((q,i)=>{
-    h+=`<strong>${i+1}. ${lang==="hi"?q.hi:q.en}</strong>`;
-    if(i<6){
-      h+=`
-      <label class="option"><input type="radio" name="q${i}" value="3"> ${lang==="hi"?"अक्सर":"Often"}</label>
-      <label class="option"><input type="radio" name="q${i}" value="2"> ${lang==="hi"?"कभी-कभी":"Sometimes"}</label>
-      <label class="option"><input type="radio" name="q${i}" value="1"> ${lang==="hi"?"नहीं":"No"}</label>
-      <hr style="opacity:.2">`;
-    }else{
-      h+=`
-      <label class="option"><input type="radio" name="q6" value="3"> ${lang==="hi"?"अशांत":"Disturbed"}</label>
-      <label class="option"><input type="radio" name="q6" value="2"> ${lang==="hi"?"सामान्य":"Neutral"}</label>
-      <label class="option"><input type="radio" name="q6" value="1"> ${lang==="hi"?"शांत":"Calm"}</label>`;
-    }
+  activeQs.forEach((q,i)=>{
+    h+=`
+    <strong>${i+1}. ${lang==="hi"?q.hi:q.en}</strong>
+    <label class="option"><input type="radio" name="q${i}" value="3"> ${lang==="hi"?"अक्सर":"Often"}</label>
+    <label class="option"><input type="radio" name="q${i}" value="2"> ${lang==="hi"?"कभी-कभी":"Sometimes"}</label>
+    <label class="option"><input type="radio" name="q${i}" value="1"> ${lang==="hi"?"नहीं":"No"}</label>
+    <hr style="opacity:.2">`;
   });
   questions.innerHTML=h;
 }
 
 function goMeter(){
   score=0;
-  for(let i=0;i<7;i++){
-    let q=document.querySelector(`input[name="q${i}"]:checked`);
-    if(!q){alert(lang==="hi"?"सभी प्रश्नों के उत्तर दें":"Please answer all questions");return;}
-    score+=parseInt(q.value);
+  for(let i=0;i<5;i++){
+    let a=document.querySelector(`input[name="q${i}"]:checked`);
+    if(!a){alert(lang==="hi"?"सभी प्रश्नों के उत्तर दें":"Answer all questions");return;}
+    score+=parseInt(a.value);
   }
   page1.classList.remove("active");
   page2.classList.add("active");
 
-  let p=Math.round((score/21)*100);
+  let p=Math.round((score/15)*100);
   meterFill.style.width=p+"%";
-
-  if(p>70){zone="red";meterFill.style.background="#ff4d4d";meterText.innerText=lang==="hi"?"उच्च Mental Pollution":"High Mental Pollution";}
-  else if(p>40){zone="yellow";meterFill.style.background="#ffd633";meterText.innerText=lang==="hi"?"मध्यम Mental Pollution":"Moderate Mental Pollution";}
-  else{zone="green";meterFill.style.background="#33ff88";meterText.innerText=lang==="hi"?"कम Mental Pollution":"Low Mental Pollution";}
+  if(p>70){zone="red";meterFill.style.background="#ff4d4d";meterText.innerText="High Mental Pollution";}
+  else if(p>40){zone="yellow";meterFill.style.background="#ffd633";meterText.innerText="Moderate Mental Pollution";}
+  else{zone="green";meterFill.style.background="#33ff88";meterText.innerText="Low Mental Pollution";}
 }
 
 function goSpin(){
@@ -202,51 +226,30 @@ function goSpin(){
 }
 
 function spinNow(){
-  if(spun)return;
-  spun=true;
-
+  if(spun)return; spun=true;
+  wheel.classList.add("glow");
   wheel.style.transform="rotate("+(zone==="red"?1440+30:zone==="yellow"?1440+150:1440+270)+"deg)";
-  setTimeout(showDecision,4000);
+  setTimeout(()=>{wheel.classList.remove("glow");showDecision();},4000);
 }
 
 function showDecision(){
   page3.classList.remove("active");
   page4.classList.add("active");
-
-  const decisionHi={
-    red:"इस समय मन में मानसिक शोर अधिक है ...",
-    yellow:"आपकी मानसिक स्थिति मध्यम है ...",
-    green:"मन शांत है ..."
+  const map={
+    red:{hi:"अभी निर्णय टालना बेहतर है।",en:"Better to delay decisions now."},
+    yellow:{hi:"थोड़ा रुककर निर्णय लें।",en:"Pause before deciding."},
+    green:{hi:"आप निर्णय ले सकते हैं।",en:"You may proceed with decisions."}
   };
-  const decisionEn={
-    red:"Your mind has high mental noise ...",
-    yellow:"Your mental state is moderate ...",
-    green:"Mind is calm ..."
-  };
-  const suggestionHi={
-    red:"👉 आज बड़े निर्णय से बचें।",
-    yellow:"👉 कल पुनः देखें।",
-    green:"👉 निर्णय आगे बढ़ाएँ।"
-  };
-  const suggestionEn={
-    red:"👉 Avoid big decisions today.",
-    yellow:"👉 Check again tomorrow.",
-    green:"👉 Proceed with decision."
-  };
-
-  decisionText.innerText = lang==="hi"?decisionHi[zone]:decisionEn[zone];
-  suggestionText.innerText = lang==="hi"?suggestionHi[zone]:suggestionEn[zone];
+  decisionText.innerText=lang==="hi"?map[zone].hi:map[zone].en;
+  suggestionText.innerText=lang==="hi"?"👉 मन शांत रखें।":"👉 Stay calm.";
 }
 
 function toggleLang(){
   lang=lang==="hi"?"en":"hi";
-  landingTitle.innerText = lang==="hi"?"🧠 आज का मन":"🧠 Today's Mind";
-  landingText.innerText = lang==="hi"
-    ?"यह एक free daily mind check है जो बताता है कि अभी निर्णय लेना उचित है या नहीं।"
-    :"This is a free daily mind check to know whether it is the right time to decide.";
-  startBtn.innerText = lang==="hi"?"आज का टेस्ट करें":"Start Today's Check";
-  qTitle.innerText = lang==="hi"?"🌪 मानसिक प्रदूषण सूचकांक":"🌪 Mental Pollution Index";
-  meterBtn.innerText = lang==="hi"?"मीटर देखें":"Check Meter";
+  landingTitle.innerText=lang==="hi"?"🧠 आज का मन":"🧠 Today's Mind";
+  startBtn.innerText=lang==="hi"?"आज का टेस्ट करें":"Start Test";
+  qTitle.innerText=lang==="hi"?"🌪 मानसिक प्रदूषण सूचकांक":"🌪 Mental Pollution Index";
+  meterBtn.innerText=lang==="hi"?"मीटर देखें":"Check Meter";
   if(page1.classList.contains("active")) renderQuestions();
 }
 </script>
