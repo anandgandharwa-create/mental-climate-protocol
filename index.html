@@ -44,27 +44,33 @@ button{
   color:#000;margin-top:14px;cursor:pointer;
 }
 
-label{display:block;margin:6px 0;font-size:17px;}
-strong{font-size:17px;}
-
 .streak-box{text-align:center;margin-bottom:16px;}
 .streak-count{font-size:34px;font-weight:700;}
 .streak-label{font-size:15px;opacity:.8;}
 
-.meter-bar{height:20px;border-radius:20px;background:#1a1a1a;overflow:hidden;}
-.meter-fill{height:100%;width:0%;transition:width 1s;border-radius:20px;}
-.meter-text{text-align:center;margin-top:6px;font-size:17px;}
+.meter-bar{height:22px;border-radius:20px;background:#1a1a1a;overflow:hidden;}
+.meter-fill{height:100%;width:0%;transition:width 1s ease;border-radius:20px;}
+.meter-text{text-align:center;margin-top:8px;font-size:18px;font-weight:500;}
 
 .wheel-box{position:relative;width:250px;height:250px;margin:24px auto;}
 .wheel{
   width:100%;height:100%;border-radius:50%;
-  background:conic-gradient(#ff0000,#ff7a00,#ffd400,#33ff00,#00ffd5,#0066ff,#8a00ff,#ff0000);
+  background:conic-gradient(#ff4d4d,#ffd633,#33ff88,#00ffd5,#0066ff,#8a00ff,#ff4d4d);
   transition:transform 4s cubic-bezier(.17,.67,.14,.93);
 }
 .pointer{
   position:absolute;top:-14px;left:50%;transform:translateX(-50%);
   width:0;height:0;border-left:14px solid transparent;
   border-right:14px solid transparent;border-bottom:22px solid #fff;
+}
+
+.suggestion{
+  margin-top:10px;
+  padding:10px 12px;
+  border-radius:12px;
+  font-size:16px;
+  background:rgba(255,255,255,0.1);
+  opacity:.95;
 }
 
 @media(min-width:768px){body{max-width:480px;margin:auto;}}
@@ -122,14 +128,19 @@ strong{font-size:17px;}
 <!-- RESULT -->
 <div class="page" id="page4">
 <header>🔒 Decision Insight</header>
-<div class="card"><p id="resultText"></p></div>
+
+<div class="card">
+  <p id="resultText"></p>
+  <div class="suggestion" id="suggestionText"></div>
+</div>
+
 <button onclick="location.reload()">Done</button>
 </div>
 
 <script>
-let lang="hi",score=0,zone="",spun=false;
+let lang="hi",score=0,zone="";
 
-/* ===== BILINGUAL QUESTIONS ===== */
+/* QUESTIONS */
 const questionsData=[
 {hi:"क्या आपका मन भविष्य की चिंता में उलझता है?",en:"Does your mind worry about the future?"},
 {hi:"क्या निर्णय लेते समय डर रोकता है?",en:"Does fear stop you from deciding?"},
@@ -140,7 +151,7 @@ const questionsData=[
 {hi:"अभी मन की स्थिति क्या है?",en:"What is your current mental state?"}
 ];
 
-/* ===== DAILY RITUAL + STREAK ===== */
+/* DAILY RITUAL */
 const today=new Date().toDateString();
 let last=localStorage.getItem("lastCheck");
 let streak=parseInt(localStorage.getItem("streak")||0);
@@ -151,23 +162,20 @@ function updateRitual(){
   qTitle.innerText = lang==="hi"?"🌪 मानसिक प्रदूषण सूचकांक":"🌪 Mental Pollution Index";
   meterBtn.innerText = lang==="hi"?"मीटर देखें":"Check Meter";
 
-  if(last===today){
-    startBtn.disabled=true;
-    dailyStatus.innerText = lang==="hi"?"आज का मन जाँचा जा चुका है।":"Today's mind already checked.";
-  }else{
-    dailyStatus.innerText = lang==="hi"?"आज अपने मन की स्थिति देखें।":"Check your mental state today.";
-  }
+  dailyStatus.innerText =
+    last===today
+    ? (lang==="hi"?"आज का मन जाँचा जा चुका है।":"Today's mind already checked.")
+    : (lang==="hi"?"आज अपने मन की स्थिति देखें।":"Check your mental state today.");
 
   streakCount.innerText=streak;
   streakLabel.innerText =
-    streak>=21?(lang==="hi"?"Deep Calm":"Deep Calm"):
-    streak>=7?(lang==="hi"?"Clear":"Clear"):
-    streak>=3?(lang==="hi"?"Stable":"Stable"):
-    (lang==="hi"?"Started":"Started");
+    streak>=21?"Deep Calm":
+    streak>=7?"Clear":
+    streak>=3?"Stable":"Started";
 }
 updateRitual();
 
-/* ===== QUESTIONS RENDER ===== */
+/* FLOW */
 function startTest(){
   landing.classList.remove("active");
   page1.classList.add("active");
@@ -202,20 +210,32 @@ function goMeter(){
     if(!q){alert(lang==="hi"?"सभी प्रश्नों के उत्तर दें":"Please answer all questions");return;}
     score+=parseInt(q.value);
   }
+
   page1.classList.remove("active");
   page2.classList.add("active");
 
-  let p=Math.round((score/21)*100);
-  meterFill.style.width=p+"%";
-  if(p>70){zone="red";meterText.innerText=lang==="hi"?"High मानसिक शोर":"High Mental Noise";}
-  else if(p>40){zone="yellow";meterText.innerText=lang==="hi"?"मध्यम मानसिक शोर":"Moderate Mental Noise";}
-  else{zone="green";meterText.innerText=lang==="hi"?"कम मानसिक शोर":"Low Mental Noise";}
+  let percent=Math.round((score/21)*100);
+  meterFill.style.width=percent+"%";
+
+  if(percent>70){
+    zone="red";
+    meterFill.style.background="linear-gradient(90deg,#ff4d4d,#ff0000)";
+    meterText.innerText=lang==="hi"?"उच्च मानसिक शोर":"High Mental Noise";
+  }else if(percent>40){
+    zone="yellow";
+    meterFill.style.background="linear-gradient(90deg,#ffd633,#ffb700)";
+    meterText.innerText=lang==="hi"?"मध्यम मानसिक शोर":"Moderate Mental Noise";
+  }else{
+    zone="green";
+    meterFill.style.background="linear-gradient(90deg,#33ff88,#00ff55)";
+    meterText.innerText=lang==="hi"?"कम मानसिक शोर":"Low Mental Noise";
+  }
 }
 
 function goSpin(){page2.classList.remove("active");page3.classList.add("active");}
 
 function spinNow(){
-  wheel.style.transform="rotate("+(zone==="red"?1440+40:zone==="yellow"?1440+140:1440+260)+"deg)";
+  wheel.style.transform="rotate("+(zone==="red"?1440+30:zone==="yellow"?1440+150:1440+270)+"deg)";
   setTimeout(showResult,4000);
 }
 
@@ -223,10 +243,32 @@ function showResult(){
   page3.classList.remove("active");
   page4.classList.add("active");
 
-  resultText.innerText =
-    zone==="green"?(lang==="hi"?"मन शांत है। निर्णय के लिए अनुकूल समय है।":"Mind is calm. Good time to decide."):
-    zone==="yellow"?(lang==="hi"?"थोड़ी प्रतीक्षा बेहतर होगी।":"Waiting may help."):
-    (lang==="hi"?"मन अशांत है। निर्णय टालें।":"Mind is disturbed. Avoid decision.");
+  const decisionHi={
+    red:"आपके उत्तर दर्शाते हैं कि इस समय मन में अत्यधिक मानसिक शोर और भावनात्मक दबाव है। ऐसी स्थिति में लिया गया निर्णय अक्सर भ्रम, तनाव या पछतावे का कारण बन सकता है। बेहतर होगा कि आप कुछ समय रुकें और स्पष्टता आने दें।",
+    yellow:"आपकी मानसिक स्थिति पूरी तरह अस्थिर नहीं है, लेकिन कुछ विचार और भावनाएँ अभी निर्णय को प्रभावित कर रही हैं। थोड़ी प्रतीक्षा, आत्ममंथन या विश्राम के बाद लिया गया निर्णय अधिक संतुलित और सुरक्षित हो सकता है।",
+    green:"आपके उत्तर बताते हैं कि इस समय मन अपेक्षाकृत शांत और स्पष्ट है। मानसिक शोर कम होने के कारण आप स्थिति को तर्कसंगत रूप से देख पा रहे हैं, इसलिए अभी लिया गया निर्णय सकारात्मक और व्यावहारिक हो सकता है।"
+  };
+
+  const decisionEn={
+    red:"Your responses indicate high mental noise and emotional pressure. Decisions taken now often lead to confusion, stress, or regret. It is wiser to pause and allow clarity before acting.",
+    yellow:"Your mental state is fairly balanced, but some emotions still influence your judgment. Waiting a little and reflecting can lead to a safer decision.",
+    green:"Your answers suggest that your mind is calm and clear. With low mental noise, you can evaluate situations logically and make a practical decision."
+  };
+
+  const suggestionHi={
+    red:"👉 आज कोई बड़ा निर्णय न लें, 10–15 मिनट शांत बैठें या टहलें।",
+    yellow:"👉 निर्णय को आज final न करें, एक बार और सोचकर कल तय करें।",
+    green:"👉 यदि आवश्यक हो, आज निर्णय लेने के लिए आगे बढ़ सकते हैं।"
+  };
+
+  const suggestionEn={
+    red:"👉 Avoid major decisions today. Sit quietly or take a short walk.",
+    yellow:"👉 Do not finalize today. Reflect once more and decide tomorrow.",
+    green:"👉 If needed, you may proceed with the decision today."
+  };
+
+  resultText.innerText = lang==="hi"?decisionHi[zone]:decisionEn[zone];
+  suggestionText.innerText = lang==="hi"?suggestionHi[zone]:suggestionEn[zone];
 
   if(last){
     let diff=(new Date(today)-new Date(last))/(1000*60*60*24);
