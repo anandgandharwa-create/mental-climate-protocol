@@ -26,7 +26,7 @@ body{
   font-size:14px;cursor:pointer;
 }
 
-header{text-align:center;font-size:26px;font-weight:600;margin-bottom:6px;}
+header{text-align:center;font-size:26px;font-weight:600;margin-bottom:10px;}
 
 .card{
   background:rgba(255,255,255,0.08);
@@ -36,7 +36,7 @@ header{text-align:center;font-size:26px;font-weight:600;margin-bottom:6px;}
   margin-bottom:14px;
 }
 
-/* 🔥 OPTION FIX */
+/* OPTIONS – vertical */
 .option{
   display:block;
   padding:10px 12px;
@@ -45,9 +45,7 @@ header{text-align:center;font-size:26px;font-weight:600;margin-bottom:6px;}
   background:rgba(255,255,255,0.06);
   font-size:17px;
 }
-.option input{
-  margin-right:10px;
-}
+.option input{margin-right:10px;}
 
 button{
   width:100%;
@@ -77,9 +75,7 @@ button{
   border-right:14px solid transparent;border-bottom:22px solid #fff;
 }
 
-@media(min-width:768px){
-  body{max-width:480px;margin:auto;}
-}
+@media(min-width:768px){body{max-width:480px;margin:auto;}}
 </style>
 </head>
 
@@ -90,13 +86,28 @@ button{
   <div class="toggle" onclick="toggleLang()">🌍 हिंदी / EN</div>
 </div>
 
-<!-- QUESTIONS PAGE -->
-<div class="page active" id="page1">
+<!-- 🔵 LANDING PAGE (RESTORED) -->
+<div class="page active" id="landing">
+<header id="landingTitle">🧠 आज का मन</header>
+
+<div class="card">
+  <p id="landingText">
+    यह एक free daily mind check है,  
+    जो आपको यह समझने में मदद करता है कि  
+    **अभी निर्णय लेना उचित है या नहीं।**
+  </p>
+</div>
+
+<button onclick="startTest()" id="startBtn">
+  आज का टेस्ट करें
+</button>
+</div>
+
+<!-- 🟡 QUESTIONS PAGE -->
+<div class="page" id="page1">
 <header id="qTitle">🌪 मानसिक प्रदूषण सूचकांक</header>
-
 <div class="card" id="questions"></div>
-
-<button onclick="goMeter()">मीटर देखें</button>
+<button onclick="goMeter()" id="meterBtn">मीटर देखें</button>
 </div>
 
 <script>
@@ -112,11 +123,16 @@ const questionsData=[
 {hi:"अभी मन की स्थिति क्या है?",en:"What is your current mental state?"}
 ];
 
+function startTest(){
+  landing.classList.remove("active");
+  page1.classList.add("active");
+  renderQuestions();
+}
+
 function renderQuestions(){
   let html="";
   questionsData.forEach((q,i)=>{
     html+=`<strong>${i+1}. ${lang==="hi"?q.hi:q.en}</strong>`;
-
     if(i<6){
       html+=`
       <label class="option"><input type="radio" name="q${i}"> ${lang==="hi"?"अक्सर":"Often"}</label>
@@ -135,11 +151,15 @@ function renderQuestions(){
 
 function toggleLang(){
   lang = lang==="hi" ? "en" : "hi";
+  landingTitle.innerText = lang==="hi"?"🧠 आज का मन":"🧠 Today's Mind";
+  landingText.innerText = lang==="hi"
+    ?"यह एक free daily mind check है, जो आपको यह समझने में मदद करता है कि अभी निर्णय लेना उचित है या नहीं।"
+    :"This is a free daily mind check to help you know whether this is the right time to decide.";
+  startBtn.innerText = lang==="hi"?"आज का टेस्ट करें":"Start Today's Check";
   qTitle.innerText = lang==="hi"?"🌪 मानसिक प्रदूषण सूचकांक":"🌪 Mental Pollution Index";
-  renderQuestions();
+  meterBtn.innerText = lang==="hi"?"मीटर देखें":"Check Meter";
+  if(page1.classList.contains("active")) renderQuestions();
 }
-
-renderQuestions();
 </script>
 
 </body>
