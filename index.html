@@ -64,16 +64,58 @@ button{
 .meter-text{text-align:center;margin-top:8px;font-size:18px;}
 
 /* spin */
-.wheel-box{position:relative;width:260px;height:260px;margin:30px auto;}
+.wheel-box{
+  position:relative;
+  width:260px;height:260px;
+  margin:30px auto;
+}
 .wheel{
-  width:100%;height:100%;border-radius:50%;
-  background:conic-gradient(#ff4d4d,#ffd633,#33ff88,#00ffd5,#0066ff,#8a00ff,#ff4d4d);
+  width:100%;height:100%;
+  border-radius:50%;
+  background:conic-gradient(
+    #ff4d4d,
+    #ffd633,
+    #33ff88,
+    #00ffd5,
+    #0066ff,
+    #8a00ff,
+    #ff4d4d
+  );
   transition:transform 4s cubic-bezier(.17,.67,.14,.93);
 }
+
+/* ✨ GLOW EFFECT */
+.wheel.glow{
+  animation: glowPulse 1.2s infinite alternate;
+  box-shadow:
+    0 0 18px rgba(0,255,255,0.6),
+    0 0 36px rgba(0,255,200,0.4),
+    0 0 60px rgba(0,200,255,0.25);
+}
+
+@keyframes glowPulse{
+  from{
+    box-shadow:
+      0 0 12px rgba(0,255,255,0.4),
+      0 0 24px rgba(0,255,200,0.3),
+      0 0 40px rgba(0,200,255,0.2);
+  }
+  to{
+    box-shadow:
+      0 0 22px rgba(0,255,255,0.8),
+      0 0 44px rgba(0,255,200,0.6),
+      0 0 70px rgba(0,200,255,0.35);
+  }
+}
+
 .pointer{
-  position:absolute;top:-14px;left:50%;transform:translateX(-50%);
-  width:0;height:0;border-left:14px solid transparent;
-  border-right:14px solid transparent;border-bottom:22px solid #fff;
+  position:absolute;
+  top:-14px;left:50%;
+  transform:translateX(-50%);
+  width:0;height:0;
+  border-left:14px solid transparent;
+  border-right:14px solid transparent;
+  border-bottom:22px solid #fff;
 }
 
 .suggestion{
@@ -203,8 +245,16 @@ function goSpin(){
 function spinNow(){
   if(spun)return;
   spun=true;
-  wheel.style.transform="rotate("+(zone==="red"?1440+30:zone==="yellow"?1440+150:1440+270)+"deg)";
-  setTimeout(showDecision,4000);
+
+  wheel.classList.add("glow");   // ✨ glow ON
+
+  wheel.style.transform =
+    "rotate("+(zone==="red"?1440+30:zone==="yellow"?1440+150:1440+270)+"deg)";
+
+  setTimeout(()=>{
+    wheel.classList.remove("glow"); // ✨ glow OFF
+    showDecision();
+  },4000);
 }
 
 function showDecision(){
