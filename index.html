@@ -64,58 +64,17 @@ button{
 .meter-text{text-align:center;margin-top:8px;font-size:18px;}
 
 /* spin */
-.wheel-box{
-  position:relative;
-  width:260px;height:260px;
-  margin:30px auto;
-}
+.wheel-box{position:relative;width:260px;height:260px;margin:30px auto;}
 .wheel{
   width:100%;height:100%;
   border-radius:50%;
-  background:conic-gradient(
-    #ff4d4d,
-    #ffd633,
-    #33ff88,
-    #00ffd5,
-    #0066ff,
-    #8a00ff,
-    #ff4d4d
-  );
+  background:conic-gradient(#ff4d4d,#ffd633,#33ff88,#00ffd5,#0066ff,#8a00ff,#ff4d4d);
   transition:transform 4s cubic-bezier(.17,.67,.14,.93);
 }
-
-/* ✨ GLOW EFFECT */
-.wheel.glow{
-  animation: glowPulse 1.2s infinite alternate;
-  box-shadow:
-    0 0 18px rgba(0,255,255,0.6),
-    0 0 36px rgba(0,255,200,0.4),
-    0 0 60px rgba(0,200,255,0.25);
-}
-
-@keyframes glowPulse{
-  from{
-    box-shadow:
-      0 0 12px rgba(0,255,255,0.4),
-      0 0 24px rgba(0,255,200,0.3),
-      0 0 40px rgba(0,200,255,0.2);
-  }
-  to{
-    box-shadow:
-      0 0 22px rgba(0,255,255,0.8),
-      0 0 44px rgba(0,255,200,0.6),
-      0 0 70px rgba(0,200,255,0.35);
-  }
-}
-
 .pointer{
-  position:absolute;
-  top:-14px;left:50%;
-  transform:translateX(-50%);
-  width:0;height:0;
-  border-left:14px solid transparent;
-  border-right:14px solid transparent;
-  border-bottom:22px solid #fff;
+  position:absolute;top:-14px;left:50%;transform:translateX(-50%);
+  width:0;height:0;border-left:14px solid transparent;
+  border-right:14px solid transparent;border-bottom:22px solid #fff;
 }
 
 .suggestion{
@@ -152,9 +111,9 @@ button{
 <button onclick="goMeter()" id="meterBtn">मीटर देखें</button>
 </div>
 
-<!-- METER -->
+<!-- ✅ UPDATED METER PAGE -->
 <div class="page" id="page2">
-<header>📊 Meter</header>
+<header id="meterTitle">📊 Mental Pollution Index</header>
 <div class="meter-bar"><div class="meter-fill" id="meterFill"></div></div>
 <div class="meter-text" id="meterText"></div>
 <button onclick="goSpin()">Next → Spin</button>
@@ -232,9 +191,9 @@ function goMeter(){
   let p=Math.round((score/21)*100);
   meterFill.style.width=p+"%";
 
-  if(p>70){zone="red";meterFill.style.background="#ff4d4d";meterText.innerText=lang==="hi"?"उच्च मानसिक शोर":"High Mental Noise";}
-  else if(p>40){zone="yellow";meterFill.style.background="#ffd633";meterText.innerText=lang==="hi"?"मध्यम मानसिक शोर":"Moderate Mental Noise";}
-  else{zone="green";meterFill.style.background="#33ff88";meterText.innerText=lang==="hi"?"कम मानसिक शोर":"Low Mental Noise";}
+  if(p>70){zone="red";meterFill.style.background="#ff4d4d";meterText.innerText=lang==="hi"?"उच्च Mental Pollution":"High Mental Pollution";}
+  else if(p>40){zone="yellow";meterFill.style.background="#ffd633";meterText.innerText=lang==="hi"?"मध्यम Mental Pollution":"Moderate Mental Pollution";}
+  else{zone="green";meterFill.style.background="#33ff88";meterText.innerText=lang==="hi"?"कम Mental Pollution":"Low Mental Pollution";}
 }
 
 function goSpin(){
@@ -246,15 +205,8 @@ function spinNow(){
   if(spun)return;
   spun=true;
 
-  wheel.classList.add("glow");   // ✨ glow ON
-
-  wheel.style.transform =
-    "rotate("+(zone==="red"?1440+30:zone==="yellow"?1440+150:1440+270)+"deg)";
-
-  setTimeout(()=>{
-    wheel.classList.remove("glow"); // ✨ glow OFF
-    showDecision();
-  },4000);
+  wheel.style.transform="rotate("+(zone==="red"?1440+30:zone==="yellow"?1440+150:1440+270)+"deg)";
+  setTimeout(showDecision,4000);
 }
 
 function showDecision(){
@@ -262,24 +214,24 @@ function showDecision(){
   page4.classList.add("active");
 
   const decisionHi={
-    red:"इस समय मन में मानसिक शोर और भावनात्मक दबाव अधिक है। ऐसी अवस्था में निर्णय लेने से भ्रम या पछतावा हो सकता है। कुछ समय रुकना और स्थिति को शांत मन से देखना अधिक सुरक्षित रहेगा।",
-    yellow:"आपकी मानसिक स्थिति पूरी तरह अस्थिर नहीं है, लेकिन कुछ विचार निर्णय को प्रभावित कर रहे हैं। थोड़ी प्रतीक्षा और आत्ममंथन के बाद लिया गया निर्णय अधिक संतुलित होगा।",
-    green:"इस समय मन अपेक्षाकृत शांत और स्पष्ट है। आप परिस्थितियों को तर्कसंगत रूप से देख पा रहे हैं, इसलिए अभी लिया गया निर्णय व्यावहारिक और सकारात्मक हो सकता है।"
+    red:"इस समय मन में मानसिक शोर अधिक है ...",
+    yellow:"आपकी मानसिक स्थिति मध्यम है ...",
+    green:"मन शांत है ..."
   };
   const decisionEn={
-    red:"Your mind is under high mental noise and emotional pressure. Decisions taken now may lead to confusion or regret. Pausing and allowing clarity to return would be safer.",
-    yellow:"Your mental state is not unstable, but some thoughts still influence your judgment. Waiting and reflecting can lead to a more balanced decision.",
-    green:"Your mind is calm and clear. You can assess the situation logically, making this a suitable time for a practical decision."
+    red:"Your mind has high mental noise ...",
+    yellow:"Your mental state is moderate ...",
+    green:"Mind is calm ..."
   };
   const suggestionHi={
-    red:"👉 आज कोई बड़ा निर्णय न लें, थोड़ी देर शांत रहें।",
-    yellow:"👉 निर्णय को आज अंतिम न करें, कल दोबारा देखें।",
-    green:"👉 यदि आवश्यक हो, आज निर्णय लेकर आगे बढ़ सकते हैं।"
+    red:"👉 आज बड़े निर्णय से बचें।",
+    yellow:"👉 कल पुनः देखें।",
+    green:"👉 निर्णय आगे बढ़ाएँ।"
   };
   const suggestionEn={
-    red:"👉 Avoid major decisions today. Pause and calm your mind.",
-    yellow:"👉 Do not finalize today. Review again tomorrow.",
-    green:"👉 If needed, you may proceed with the decision today."
+    red:"👉 Avoid big decisions today.",
+    yellow:"👉 Check again tomorrow.",
+    green:"👉 Proceed with decision."
   };
 
   decisionText.innerText = lang==="hi"?decisionHi[zone]:decisionEn[zone];
