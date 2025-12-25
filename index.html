@@ -65,13 +65,22 @@ button{
   <div class="card" id="landingDesc">
     यह एक free daily mind check है जो बताता है कि अभी निर्णय लेना उचित है या नहीं।
   </div>
-  <button id="startBtn">आज का टेस्ट करें</button>
+  <!-- ✅ FIX: onclick added -->
+  <button id="startBtn" onclick="startTest()">आज का टेस्ट करें</button>
+</div>
+
+<!-- NEXT PAGE (Dummy – replace with your real page1) -->
+<div class="page" id="page1">
+  <header>✅ Test Started</header>
+  <div class="card">
+    यहाँ से आपका actual Mind OS flow (questions / meter / spin) चलता है।
+  </div>
 </div>
 
 <script>
 let lang = "hi";
 
-/* ✅ FIXED LANDING CONTENT */
+/* Landing content */
 const landingContent = {
   hi: {
     title: "🧠 आज का मन",
@@ -85,17 +94,18 @@ const landingContent = {
   }
 };
 
+/* ✅ FIXED FUNCTION */
+function startTest(){
+  document.getElementById("landing").classList.remove("active");
+  document.getElementById("page1").classList.add("active");
+}
+
+/* Language toggle */
 function toggleLang(){
   lang = lang === "hi" ? "en" : "hi";
-
-  document.getElementById("landingTitle").innerText =
-    landingContent[lang].title;
-
-  document.getElementById("landingDesc").innerText =
-    landingContent[lang].desc;
-
-  document.getElementById("startBtn").innerText =
-    landingContent[lang].btn;
+  document.getElementById("landingTitle").innerText = landingContent[lang].title;
+  document.getElementById("landingDesc").innerText = landingContent[lang].desc;
+  document.getElementById("startBtn").innerText = landingContent[lang].btn;
 }
 </script>
 
