@@ -56,10 +56,31 @@ button{
   cursor:pointer;
 }
 
-.meter-bar{height:22px;border-radius:20px;background:#1a1a1a;overflow:hidden;}
-.meter-fill{height:100%;width:0%;transition:width 1s;border-radius:20px;}
+/* ===== METER ===== */
+.meter-bar{
+  height:22px;border-radius:20px;
+  background:#1a1a1a;overflow:hidden;
+}
+.meter-fill{
+  height:100%;width:0%;
+  transition:width 1s;
+  border-radius:20px;
+}
+.meter-fill.red{
+  background:#ff4d4d;
+  box-shadow:0 0 14px rgba(255,77,77,.9);
+}
+.meter-fill.yellow{
+  background:#ffd633;
+  box-shadow:0 0 14px rgba(255,214,51,.9);
+}
+.meter-fill.green{
+  background:#33ff88;
+  box-shadow:0 0 14px rgba(51,255,136,.9);
+}
 .meter-text{text-align:center;margin-top:8px;font-size:18px;}
 
+/* ===== SPIN ===== */
 .wheel-box{position:relative;width:260px;height:260px;margin:30px auto;}
 .wheel{
   width:100%;height:100%;
@@ -68,7 +89,8 @@ button{
   transition:transform 4s cubic-bezier(.17,.67,.14,.93);
 }
 .pointer{
-  position:absolute;top:-14px;left:50%;transform:translateX(-50%);
+  position:absolute;top:-14px;left:50%;
+  transform:translateX(-50%);
   width:0;height:0;
   border-left:14px solid transparent;
   border-right:14px solid transparent;
@@ -83,7 +105,9 @@ button{
   line-height:1.5;
 }
 
-@media(min-width:768px){body{max-width:480px;margin:auto;}}
+@media(min-width:768px){
+  body{max-width:480px;margin:auto;}
+}
 </style>
 </head>
 
@@ -94,6 +118,7 @@ button{
   <div class="toggle" onclick="toggleLang()">🌍 हिंदी / EN</div>
 </div>
 
+<!-- LANDING -->
 <div class="page active" id="landing">
 <header id="landingTitle">🧠 आज का मन</header>
 <div class="card" id="landingText">
@@ -102,30 +127,36 @@ button{
 <button onclick="startTest()" id="startBtn">आज का टेस्ट करें</button>
 </div>
 
+<!-- QUESTIONS -->
 <div class="page" id="page1">
 <header id="qTitle">🌪 मानसिक प्रदूषण सूचकांक</header>
 <div class="card" id="questions"></div>
 <button onclick="goMeter()" id="meterBtn">मीटर देखें</button>
 </div>
 
+<!-- METER -->
 <div class="page" id="page2">
-<header id="meterTitle">📊 Mental Pollution Index</header>
-<div class="meter-bar"><div class="meter-fill" id="meterFill"></div></div>
+<header>📊 Mental Pollution Index</header>
+<div class="meter-bar">
+  <div class="meter-fill" id="meterFill"></div>
+</div>
 <div class="meter-text" id="meterText"></div>
-<button onclick="goSpin()" id="spinBtn">Next → Spin</button>
+<button onclick="goSpin()">Next → Spin</button>
 </div>
 
+<!-- SPIN -->
 <div class="page" id="page3">
-<header id="spinTitle">🎯 Decision Spin</header>
+<header>🎯 Decision Spin</header>
 <div class="wheel-box">
   <div class="pointer"></div>
   <div class="wheel" id="wheel"></div>
 </div>
-<button onclick="spinNow()" id="spinNowBtn">Spin</button>
+<button onclick="spinNow()">Spin</button>
 </div>
 
+<!-- DECISION -->
 <div class="page" id="page4">
-<header id="decisionTitle">🔒 Decision Insight</header>
+<header>🔒 Decision Insight</header>
 <div class="card">
   <p id="decisionText"></p>
   <div class="suggestion" id="suggestionText"></div>
@@ -167,20 +198,41 @@ function goMeter(){
   score=0;
   for(let i=0;i<5;i++){
     let a=document.querySelector(`input[name="q${i}"]:checked`);
-    if(!a){alert(lang==="hi"?"सभी प्रश्नों के उत्तर दें":"Answer all questions");return;}
+    if(!a){
+      alert(lang==="hi"?"सभी प्रश्नों के उत्तर दें":"Answer all questions");
+      return;
+    }
     score+=parseInt(a.value);
   }
+
   page1.classList.remove("active");
   page2.classList.add("active");
 
   let p=Math.round((score/15)*100);
   meterFill.style.width=p+"%";
-  if(p>70){zone="red";meterText.innerText=lang==="hi"?"अत्यधिक मानसिक प्रदूषण":"High Mental Pollution";}
-  else if(p>40){zone="yellow";meterText.innerText=lang==="hi"?"मध्यम मानसिक प्रदूषण":"Moderate Mental Pollution";}
-  else{zone="green";meterText.innerText=lang==="hi"?"कम मानसिक प्रदूषण":"Low Mental Pollution";}
+  meterFill.className="meter-fill";
+
+  if(p>70){
+    zone="red";
+    meterFill.classList.add("red");
+    meterText.innerText=lang==="hi"?"अधिक मानसिक प्रदूषण":"High Mental Pollution";
+  }
+  else if(p>40){
+    zone="yellow";
+    meterFill.classList.add("yellow");
+    meterText.innerText=lang==="hi"?"मध्यम मानसिक प्रदूषण":"Moderate Mental Pollution";
+  }
+  else{
+    zone="green";
+    meterFill.classList.add("green");
+    meterText.innerText=lang==="hi"?"कम मानसिक प्रदूषण":"Low Mental Pollution";
+  }
 }
 
-function goSpin(){page2.classList.remove("active");page3.classList.add("active");}
+function goSpin(){
+  page2.classList.remove("active");
+  page3.classList.add("active");
+}
 
 function spinNow(){
   if(spun)return;spun=true;
@@ -194,14 +246,14 @@ function showDecision(){
 
   const decision={
     hi:{
-      red:"इस समय आपका मन अत्यधिक दबाव और भ्रम से भरा है। अभी लिया गया निर्णय आगे चलकर मानसिक बोझ बन सकता है। रुकना, शांत होना और परिस्थिति को स्थिर होने देना ही इस समय सबसे समझदारी भरा कदम है।",
-      yellow:"आपका मन आंशिक रूप से स्पष्ट है, लेकिन अभी भी भावनात्मक हस्तक्षेप मौजूद है। निर्णय लेने से पहले थोड़ा रुकें, स्थिति को शांत मन से दोबारा देखें।",
-      green:"आपका मन संतुलित और स्पष्ट है। आप तथ्यों को सही ढंग से देख पा रहे हैं। यह समय निर्णय लेने के लिए अनुकूल है। आत्मविश्वास के साथ आगे बढ़ें।"
+      red:"इस समय आपका मन अत्यधिक दबाव और भ्रम से भरा है। अभी लिया गया निर्णय आगे चलकर मानसिक बोझ बन सकता है। रुकना और शांत होना ही सबसे समझदारी है।",
+      yellow:"आपका मन आंशिक रूप से स्पष्ट है। बेहतर होगा कि आप थोड़ी देर रुककर शांत मन से स्थिति को देखें।",
+      green:"आपका मन संतुलित और स्पष्ट है। यह समय निर्णय लेने के लिए अनुकूल है। आत्मविश्वास के साथ आगे बढ़ें।"
     },
     en:{
-      red:"Your mind is currently under heavy pressure and confusion. Decisions taken now may lead to regret later. Pausing, calming yourself, and allowing clarity to return is the wisest choice at this moment.",
-      yellow:"Your mind is partially clear, but emotional interference still exists. It is better to pause, reassess calmly, and then decide.",
-      green:"Your mind is calm, balanced, and clear. You can see situations objectively. This is a favourable time to make decisions with confidence."
+      red:"Your mind is under heavy pressure and confusion. Decisions now may cause regret. Pausing and calming yourself is the wisest choice.",
+      yellow:"Your mind is partly clear. It is better to pause and reassess calmly before deciding.",
+      green:"Your mind is calm and clear. This is a favourable time to take decisions with confidence."
     }
   };
 
@@ -212,9 +264,9 @@ function showDecision(){
       green:"🧘 शांत बैठकर कृतज्ञता का अनुभव करें।"
     },
     en:{
-      red:"🧘 Close your eyes and focus on your breath for 3 minutes.",
+      red:"🧘 Close your eyes and focus on breathing for 3 minutes.",
       yellow:"🧘 Take deep breaths in and out — 5 cycles.",
-      green:"🧘 Sit calmly and experience gratitude."
+      green:"🧘 Sit calmly and feel gratitude."
     }
   };
 
@@ -227,13 +279,10 @@ function toggleLang(){
   landingTitle.innerText=lang==="hi"?"🧠 आज का मन":"🧠 Today's Mind";
   landingText.innerText=lang==="hi"
     ?"यह एक free daily mind check है जो बताता है कि अभी निर्णय लेना उचित है या नहीं।"
-    :"This is a free daily mind check to know whether this is the right time to decide.";
+    :"This is a free daily mind check to know if it’s the right time to decide.";
   startBtn.innerText=lang==="hi"?"आज का टेस्ट करें":"Start Test";
   qTitle.innerText=lang==="hi"?"🌪 मानसिक प्रदूषण सूचकांक":"🌪 Mental Pollution Index";
   meterBtn.innerText=lang==="hi"?"मीटर देखें":"Check Meter";
-  spinBtn.innerText=lang==="hi"?"Next → Spin":"Next → Spin";
-  spinNowBtn.innerText=lang==="hi"?"Spin":"Spin";
-  decisionTitle.innerText=lang==="hi"?"🔒 Decision Insight":"🔒 Decision Insight";
   if(page1.classList.contains("active")) renderQuestions();
 }
 </script>
