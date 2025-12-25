@@ -57,27 +57,11 @@ button{
 }
 
 /* ===== METER ===== */
-.meter-bar{
-  height:22px;border-radius:20px;
-  background:#1a1a1a;overflow:hidden;
-}
-.meter-fill{
-  height:100%;width:0%;
-  transition:width 1s;
-  border-radius:20px;
-}
-.meter-fill.red{
-  background:#ff4d4d;
-  box-shadow:0 0 14px rgba(255,77,77,.9);
-}
-.meter-fill.yellow{
-  background:#ffd633;
-  box-shadow:0 0 14px rgba(255,214,51,.9);
-}
-.meter-fill.green{
-  background:#33ff88;
-  box-shadow:0 0 14px rgba(51,255,136,.9);
-}
+.meter-bar{height:22px;border-radius:20px;background:#1a1a1a;overflow:hidden;}
+.meter-fill{height:100%;width:0%;transition:width 1s;border-radius:20px;}
+.meter-fill.red{background:#ff4d4d;box-shadow:0 0 14px rgba(255,77,77,.9);}
+.meter-fill.yellow{background:#ffd633;box-shadow:0 0 14px rgba(255,214,51,.9);}
+.meter-fill.green{background:#33ff88;box-shadow:0 0 14px rgba(51,255,136,.9);}
 .meter-text{text-align:center;margin-top:8px;font-size:18px;}
 
 /* ===== SPIN ===== */
@@ -88,6 +72,16 @@ button{
   background:conic-gradient(#ff4d4d,#ffd633,#33ff88,#00ffd5,#0066ff,#8a00ff,#ff4d4d);
   transition:transform 4s cubic-bezier(.17,.67,.14,.93);
 }
+
+/* 🔥 GLOW EFFECT */
+.wheel.glow{
+  animation: wheelGlow 1.2s infinite alternate;
+}
+@keyframes wheelGlow{
+  from{box-shadow:0 0 14px rgba(0,255,255,.5);}
+  to{box-shadow:0 0 30px rgba(0,255,255,.95);}
+}
+
 .pointer{
   position:absolute;top:-14px;left:50%;
   transform:translateX(-50%);
@@ -137,9 +131,7 @@ button{
 <!-- METER -->
 <div class="page" id="page2">
 <header>📊 Mental Pollution Index</header>
-<div class="meter-bar">
-  <div class="meter-fill" id="meterFill"></div>
-</div>
+<div class="meter-bar"><div class="meter-fill" id="meterFill"></div></div>
 <div class="meter-text" id="meterText"></div>
 <button onclick="goSpin()">Next → Spin</button>
 </div>
@@ -198,10 +190,7 @@ function goMeter(){
   score=0;
   for(let i=0;i<5;i++){
     let a=document.querySelector(`input[name="q${i}"]:checked`);
-    if(!a){
-      alert(lang==="hi"?"सभी प्रश्नों के उत्तर दें":"Answer all questions");
-      return;
-    }
+    if(!a){alert(lang==="hi"?"सभी प्रश्नों के उत्तर दें":"Answer all questions");return;}
     score+=parseInt(a.value);
   }
 
@@ -212,21 +201,9 @@ function goMeter(){
   meterFill.style.width=p+"%";
   meterFill.className="meter-fill";
 
-  if(p>70){
-    zone="red";
-    meterFill.classList.add("red");
-    meterText.innerText=lang==="hi"?"अधिक मानसिक प्रदूषण":"High Mental Pollution";
-  }
-  else if(p>40){
-    zone="yellow";
-    meterFill.classList.add("yellow");
-    meterText.innerText=lang==="hi"?"मध्यम मानसिक प्रदूषण":"Moderate Mental Pollution";
-  }
-  else{
-    zone="green";
-    meterFill.classList.add("green");
-    meterText.innerText=lang==="hi"?"कम मानसिक प्रदूषण":"Low Mental Pollution";
-  }
+  if(p>70){zone="red";meterFill.classList.add("red");meterText.innerText=lang==="hi"?"अधिक मानसिक प्रदूषण":"High Mental Pollution";}
+  else if(p>40){zone="yellow";meterFill.classList.add("yellow");meterText.innerText=lang==="hi"?"मध्यम मानसिक प्रदूषण":"Moderate Mental Pollution";}
+  else{zone="green";meterFill.classList.add("green");meterText.innerText=lang==="hi"?"कम मानसिक प्रदूषण":"Low Mental Pollution";}
 }
 
 function goSpin(){
@@ -235,9 +212,16 @@ function goSpin(){
 }
 
 function spinNow(){
-  if(spun)return;spun=true;
+  if(spun)return;
+  spun=true;
+
+  wheel.classList.add("glow");           // 🔥 glow ON
   wheel.style.transform="rotate("+(zone==="red"?1470:zone==="yellow"?1590:1710)+"deg)";
-  setTimeout(showDecision,4000);
+
+  setTimeout(()=>{
+    wheel.classList.remove("glow");      // 🔥 glow OFF
+    showDecision();
+  },4000);
 }
 
 function showDecision(){
@@ -246,26 +230,26 @@ function showDecision(){
 
   const decision={
     hi:{
-      red:"इस समय आपका मन अत्यधिक दबाव और भ्रम से भरा है। अभी लिया गया निर्णय आगे चलकर मानसिक बोझ बन सकता है। रुकना और शांत होना ही सबसे समझदारी है।",
-      yellow:"आपका मन आंशिक रूप से स्पष्ट है। बेहतर होगा कि आप थोड़ी देर रुककर शांत मन से स्थिति को देखें।",
-      green:"आपका मन संतुलित और स्पष्ट है। यह समय निर्णय लेने के लिए अनुकूल है। आत्मविश्वास के साथ आगे बढ़ें।"
+      red:"इस समय आपका मन अत्यधिक दबाव और भ्रम से भरा है। रुकना और शांत होना ही सबसे समझदारी है।",
+      yellow:"आपका मन आंशिक रूप से स्पष्ट है। बेहतर होगा कि आप थोड़ी देर रुकें।",
+      green:"आपका मन संतुलित और स्पष्ट है। यह समय निर्णय लेने के लिए अनुकूल है।"
     },
     en:{
-      red:"Your mind is under heavy pressure and confusion. Decisions now may cause regret. Pausing and calming yourself is the wisest choice.",
-      yellow:"Your mind is partly clear. It is better to pause and reassess calmly before deciding.",
-      green:"Your mind is calm and clear. This is a favourable time to take decisions with confidence."
+      red:"Your mind is under heavy pressure. Pausing and calming yourself is wise.",
+      yellow:"Your mind is partly clear. It is better to pause briefly.",
+      green:"Your mind is calm and clear. This is a good time to decide."
     }
   };
 
   const meditation={
     hi:{
-      red:"🧘 3 मिनट आँख बंद कर केवल श्वास पर ध्यान दें।",
-      yellow:"🧘 गहरी साँस लें और छोड़ें — 5 चक्र।",
-      green:"🧘 शांत बैठकर कृतज्ञता का अनुभव करें।"
+      red:"🧘 3 मिनट श्वास पर ध्यान दें।",
+      yellow:"🧘 5 गहरी साँस लें।",
+      green:"🧘 शांत बैठकर कृतज्ञता महसूस करें।"
     },
     en:{
-      red:"🧘 Close your eyes and focus on breathing for 3 minutes.",
-      yellow:"🧘 Take deep breaths in and out — 5 cycles.",
+      red:"🧘 Focus on breathing for 3 minutes.",
+      yellow:"🧘 Take 5 deep breaths.",
       green:"🧘 Sit calmly and feel gratitude."
     }
   };
