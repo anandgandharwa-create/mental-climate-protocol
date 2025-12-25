@@ -35,6 +35,20 @@ header{text-align:center;font-size:26px;font-weight:600;margin-bottom:12px;}
   margin-bottom:16px;
 }
 
+/* 🔥 Fade-in base */
+.fade-in{
+  animation: fadeIn 0.8s ease forwards;
+}
+@keyframes fadeIn{
+  from{opacity:0;}
+  to{opacity:1;}
+}
+
+/* 🎯 Zone-wise highlight */
+.highlight.red{color:#ff6b6b;font-weight:600;}
+.highlight.yellow{color:#ffd966;font-weight:600;}
+.highlight.green{color:#4dffb3;font-weight:600;}
+
 .option{
   display:block;
   padding:10px 12px;
@@ -56,7 +70,7 @@ button{
   cursor:pointer;
 }
 
-/* ===== Meter ===== */
+/* Meter */
 .meter-bar{height:22px;border-radius:20px;background:#1a1a1a;overflow:hidden;}
 .meter-fill{height:100%;width:0%;transition:width 1s;border-radius:20px;}
 .meter-fill.red{background:#ff4d4d;box-shadow:0 0 14px rgba(255,77,77,.9);}
@@ -64,7 +78,7 @@ button{
 .meter-fill.green{background:#33ff88;box-shadow:0 0 14px rgba(51,255,136,.9);}
 .meter-text{text-align:center;margin-top:8px;font-size:18px;}
 
-/* ===== Spin ===== */
+/* Spin */
 .wheel-box{position:relative;width:260px;height:260px;margin:30px auto;}
 .wheel{
   width:100%;height:100%;
@@ -93,7 +107,8 @@ button{
   padding:12px 14px;
   border-radius:14px;
   background:rgba(255,255,255,0.12);
-  line-height:1.5;
+  line-height:1.6;
+  font-size:15px;
 }
 
 @media(min-width:768px){
@@ -156,7 +171,7 @@ button{
 <script>
 let lang="hi",score=0,zone="",spun=false;
 
-/* ✅ 20 QUESTION BANK */
+/* 20 Questions */
 const questionPool=[
 {hi:"क्या आपका मन बिना वजह बेचैन रहता है?",en:"Does your mind feel restless without reason?"},
 {hi:"क्या आप छोटी बातों पर ज़्यादा सोचते हैं?",en:"Do you overthink small matters?"},
@@ -181,12 +196,8 @@ const questionPool=[
 ];
 
 let activeQuestions=[];
-
-/* 🎯 RANDOM 5 PICK */
 function pickRandomFive(){
-  activeQuestions=[...questionPool]
-    .sort(()=>0.5-Math.random())
-    .slice(0,5);
+  activeQuestions=[...questionPool].sort(()=>0.5-Math.random()).slice(0,5);
 }
 
 function startTest(){
@@ -213,13 +224,9 @@ function goMeter(){
   score=0;
   for(let i=0;i<5;i++){
     let a=document.querySelector(`input[name="q${i}"]:checked`);
-    if(!a){
-      alert(lang==="hi"?"सभी प्रश्नों के उत्तर दें":"Answer all questions");
-      return;
-    }
+    if(!a){alert(lang==="hi"?"सभी प्रश्नों के उत्तर दें":"Answer all questions");return;}
     score+=parseInt(a.value);
   }
-
   page1.classList.remove("active");
   page2.classList.add("active");
 
@@ -227,25 +234,12 @@ function goMeter(){
   meterFill.style.width=p+"%";
   meterFill.className="meter-fill";
 
-  if(p>70){
-    zone="red";
-    meterFill.classList.add("red");
-    meterText.innerText=lang==="hi"?"अधिक मानसिक प्रदूषण":"High Mental Pollution";
-  }else if(p>40){
-    zone="yellow";
-    meterFill.classList.add("yellow");
-    meterText.innerText=lang==="hi"?"मध्यम मानसिक प्रदूषण":"Moderate Mental Pollution";
-  }else{
-    zone="green";
-    meterFill.classList.add("green");
-    meterText.innerText=lang==="hi"?"कम मानसिक प्रदूषण":"Low Mental Pollution";
-  }
+  if(p>70){zone="red";meterFill.classList.add("red");meterText.innerText=lang==="hi"?"अधिक मानसिक प्रदूषण":"High Mental Pollution";}
+  else if(p>40){zone="yellow";meterFill.classList.add("yellow");meterText.innerText=lang==="hi"?"मध्यम मानसिक प्रदूषण":"Moderate Mental Pollution";}
+  else{zone="green";meterFill.classList.add("green");meterText.innerText=lang==="hi"?"कम मानसिक प्रदूषण":"Low Mental Pollution";}
 }
 
-function goSpin(){
-  page2.classList.remove("active");
-  page3.classList.add("active");
-}
+function goSpin(){page2.classList.remove("active");page3.classList.add("active");}
 
 function spinNow(){
   if(spun)return;
@@ -258,37 +252,52 @@ function spinNow(){
   },4000);
 }
 
+/* 🔑 highlight + typing */
+function highlightText(text){
+  const words=["मन","निर्णय","शांत","रुकें","स्पष्ट","आत्मविश्वास","mind","decision","calm","pause","clarity","confidence"];
+  let r=text;
+  words.forEach(w=>{
+    const reg=new RegExp(w,"gi");
+    r=r.replace(reg,`<span class="highlight ${zone}">${w}</span>`);
+  });
+  return r;
+}
+
+function typeText(el,html,speed=25){
+  el.innerHTML="";
+  el.classList.add("fade-in");
+  let i=0;
+  const plain=html.replace(/<[^>]+>/g,"");
+  const timer=setInterval(()=>{
+    el.innerHTML=highlightText(plain.slice(0,i));
+    i++;
+    if(i>plain.length) clearInterval(timer);
+  },speed);
+}
+
 function showDecision(){
   page3.classList.remove("active");
   page4.classList.add("active");
 
   const decision={
     hi:{
-      red:"इस समय निर्णय टालना ही समझदारी है। मन को पहले शांत होने दें।",
-      yellow:"थोड़ा रुककर शांत मन से निर्णय लें।",
-      green:"आप निर्णय लेने की स्थिति में हैं।"
+      red:"इस समय आपका मन दबाव और उलझन से भरा है। ऐसे समय में लिया गया निर्णय आगे चलकर मानसिक बोझ बन सकता है। बेहतर होगा कि आप थोड़ा रुकें, शांत रहें और स्पष्टता लौटने दें।",
+      yellow:"आपका मन पूरी तरह अशांत नहीं है, लेकिन अभी स्पष्टता अधूरी है। यदि आप थोड़ा रुककर शांत मन से स्थिति देखें, तो निर्णय अधिक संतुलित होगा।",
+      green:"आपका मन शांत, स्थिर और स्पष्ट है। आप परिस्थितियों को सही रूप से देख पा रहे हैं। यह समय आत्मविश्वास के साथ निर्णय लेने के लिए अनुकूल है।"
     },
     en:{
-      red:"It is wiser to delay decisions right now.",
-      yellow:"Pause briefly before deciding.",
-      green:"You are in a good state to decide."
+      red:"Your mind is under pressure and confusion. Decisions taken now may create mental burden. It is better to pause, stay calm, and allow clarity to return.",
+      yellow:"Your mind is not fully disturbed, but clarity is incomplete. Pausing calmly will lead to a more balanced decision.",
+      green:"Your mind is calm, stable, and clear. This is a favourable time to take decisions with confidence."
     }
   };
 
   const meditation={
-    hi:{
-      red:"🧘 3 मिनट श्वास पर ध्यान दें।",
-      yellow:"🧘 5 गहरी साँस लें।",
-      green:"🧘 शांत बैठकर कृतज्ञता महसूस करें।"
-    },
-    en:{
-      red:"🧘 Focus on breathing for 3 minutes.",
-      yellow:"🧘 Take 5 deep breaths.",
-      green:"🧘 Sit calmly and feel gratitude."
-    }
+    hi:{red:"🧘 3 मिनट श्वास पर ध्यान दें।",yellow:"🧘 5 गहरी साँस लें।",green:"🧘 शांत बैठकर कृतज्ञता अनुभव करें।"},
+    en:{red:"🧘 Focus on breathing for 3 minutes.",yellow:"🧘 Take 5 deep breaths.",green:"🧘 Sit calmly and feel gratitude."}
   };
 
-  decisionText.innerText=decision[lang][zone];
+  typeText(decisionText,decision[lang][zone]);
   suggestionText.innerText=meditation[lang][zone];
 }
 
