@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Mind OS – Mental Pollution Index</title>
+<title>Mind OS</title>
 
 <style>
 body{
@@ -36,15 +36,6 @@ header{text-align:center;font-size:26px;font-weight:600;margin-bottom:12px;}
   margin-bottom:16px;
 }
 
-.option{
-  display:block;
-  padding:10px 12px;
-  margin:6px 0;
-  border-radius:12px;
-  background:rgba(255,255,255,0.06);
-}
-.option input{margin-right:10px;}
-
 button{
   width:100%;
   padding:16px;
@@ -55,34 +46,6 @@ button{
   color:#000;
   margin-top:18px;
   cursor:pointer;
-}
-
-/* meter */
-.meter-bar{height:22px;border-radius:20px;background:#1a1a1a;overflow:hidden;}
-.meter-fill{height:100%;width:0%;transition:width 1s;border-radius:20px;}
-.meter-text{text-align:center;margin-top:8px;font-size:18px;}
-
-/* spin */
-.wheel-box{position:relative;width:260px;height:260px;margin:30px auto;}
-.wheel{
-  width:100%;height:100%;
-  border-radius:50%;
-  background:conic-gradient(#ff4d4d,#ffd633,#33ff88,#00ffd5,#0066ff,#8a00ff,#ff4d4d);
-  transition:transform 4s cubic-bezier(.17,.67,.14,.93);
-}
-.pointer{
-  position:absolute;top:-14px;left:50%;transform:translateX(-50%);
-  width:0;height:0;
-  border-left:14px solid transparent;
-  border-right:14px solid transparent;
-  border-bottom:22px solid #fff;
-}
-
-.suggestion{
-  margin-top:10px;
-  padding:10px 12px;
-  border-radius:12px;
-  background:rgba(255,255,255,0.1);
 }
 
 @media(min-width:768px){body{max-width:480px;margin:auto;}}
@@ -96,146 +59,43 @@ button{
   <div class="toggle" onclick="toggleLang()">🌍 हिंदी / EN</div>
 </div>
 
-<!-- LANDING -->
+<!-- LANDING PAGE -->
 <div class="page active" id="landing">
-<header id="landingTitle">🧠 आज का मन</header>
-<div class="card" id="landingText">
-यह एक free daily mind check है जो बताता है कि अभी निर्णय लेना उचित है या नहीं।
-</div>
-<button onclick="startTest()" id="startBtn">आज का टेस्ट करें</button>
-</div>
-
-<!-- QUESTIONS -->
-<div class="page" id="page1">
-<header id="qTitle">🌪 मानसिक प्रदूषण सूचकांक</header>
-<div class="card" id="questions"></div>
-<button onclick="goMeter()" id="meterBtn">मीटर देखें</button>
-</div>
-
-<!-- METER -->
-<div class="page" id="page2">
-<header>📊 Mental Pollution Index</header>
-<div class="meter-bar"><div class="meter-fill" id="meterFill"></div></div>
-<div class="meter-text" id="meterText"></div>
-<button onclick="goSpin()">Next → Spin</button>
-</div>
-
-<!-- SPIN -->
-<div class="page" id="page3">
-<header>🎯 Decision Spin</header>
-<div class="wheel-box">
-  <div class="pointer"></div>
-  <div class="wheel" id="wheel"></div>
-</div>
-<button onclick="spinNow()">Spin</button>
-</div>
-
-<!-- DECISION -->
-<div class="page" id="page4">
-<header>🔒 Decision Insight</header>
-<div class="card">
-  <p id="decisionText"></p>
-  <div class="suggestion" id="suggestionText"></div>
-</div>
-<button onclick="location.reload()">Done</button>
+  <header id="landingTitle">🧠 आज का मन</header>
+  <div class="card" id="landingDesc">
+    यह एक free daily mind check है जो बताता है कि अभी निर्णय लेना उचित है या नहीं।
+  </div>
+  <button id="startBtn">आज का टेस्ट करें</button>
 </div>
 
 <script>
-let lang="hi",score=0,zone="",spun=false;
+let lang = "hi";
 
-const qs=[
-{hi:"क्या आपका मन भविष्य की चिंता में उलझता है?",en:"Does your mind worry about the future?"},
-{hi:"क्या निर्णय लेते समय डर रोकता है?",en:"Does fear stop you from deciding?"},
-{hi:"क्या आप बार-बार एक ही बात सोचते हैं?",en:"Do you overthink the same thing?"},
-{hi:"क्या भावनाएँ तर्क पर हावी होती हैं?",en:"Do emotions overpower logic?"},
-{hi:"क्या निर्णय के बाद पछतावा होता है?",en:"Do you regret decisions later?"},
-{hi:"क्या मन जल्दी थक जाता है?",en:"Does your mind get tired easily?"},
-{hi:"अभी मन की स्थिति क्या है?",en:"What is your current mental state?"}
-];
-
-function startTest(){
-  landing.classList.remove("active");
-  page1.classList.add("active");
-  renderQuestions();
-}
-
-function renderQuestions(){
-  let h="";
-  qs.forEach((q,i)=>{
-    h+=`
-    <strong>${i+1}. ${lang==="hi"?q.hi:q.en}</strong>
-    <label class="option"><input type="radio" name="q${i}" value="3"> ${lang==="hi"?"अक्सर":"Often"}</label>
-    <label class="option"><input type="radio" name="q${i}" value="2"> ${lang==="hi"?"कभी-कभी":"Sometimes"}</label>
-    <label class="option"><input type="radio" name="q${i}" value="1"> ${lang==="hi"?"नहीं":"No"}</label>
-    <hr style="opacity:.2">`;
-  });
-  questions.innerHTML=h;
-}
-
-function goMeter(){
-  score=0;
-  for(let i=0;i<7;i++){
-    let a=document.querySelector(`input[name="q${i}"]:checked`);
-    if(!a){alert(lang==="hi"?"सभी प्रश्नों के उत्तर दें":"Answer all questions");return;}
-    score+=parseInt(a.value);
+/* ✅ FIXED LANDING CONTENT */
+const landingContent = {
+  hi: {
+    title: "🧠 आज का मन",
+    desc: "यह एक free daily mind check है जो बताता है कि अभी निर्णय लेना उचित है या नहीं।",
+    btn: "आज का टेस्ट करें"
+  },
+  en: {
+    title: "🧠 Today's Mind",
+    desc: "This is a free daily mind check that helps you understand whether this is the right time to make a decision.",
+    btn: "Start Test"
   }
-  page1.classList.remove("active");
-  page2.classList.add("active");
-
-  let p=Math.round((score/21)*100);
-  meterFill.style.width=p+"%";
-  if(p>70){zone="red";meterFill.style.background="#ff4d4d";meterText.innerText="High Mental Pollution";}
-  else if(p>40){zone="yellow";meterFill.style.background="#ffd633";meterText.innerText="Moderate Mental Pollution";}
-  else{zone="green";meterFill.style.background="#33ff88";meterText.innerText="Low Mental Pollution";}
-}
-
-function goSpin(){
-  page2.classList.remove("active");
-  page3.classList.add("active");
-}
-
-function spinNow(){
-  if(spun)return; spun=true;
-  wheel.style.transform="rotate("+(zone==="red"?1440+30:zone==="yellow"?1440+150:1440+270)+"deg)";
-  setTimeout(showDecision,4000);
-}
-
-function showDecision(){
-  page3.classList.remove("active");
-  page4.classList.add("active");
-
-  const decisionMap={
-    red:{
-      hi:"इस समय मन में तनाव, भ्रम और भावनात्मक शोर अधिक है। ऐसी स्थिति में लिया गया निर्णय अक्सर जल्दबाज़ी या पछतावे का कारण बन सकता है। बेहतर होगा कि आप कुछ समय रुकें, मन को शांत करें और स्पष्टता आने के बाद ही निर्णय लें।",
-      en:"Your mind is currently affected by high mental noise and emotional pressure. Decisions taken in this state may lead to confusion or regret. It is wiser to pause, calm your thoughts, and wait for mental clarity before making an important decision."
-    },
-    yellow:{
-      hi:"आपकी मानसिक स्थिति पूरी तरह अस्थिर नहीं है, लेकिन कुछ विचार और भावनाएँ अभी निर्णय को प्रभावित कर रही हैं। यदि संभव हो, तो थोड़ी प्रतीक्षा करें, स्थिति पर पुनः विचार करें और फिर संतुलित मन से निर्णय लें।",
-      en:"Your mental state is relatively stable, but some thoughts and emotions are still influencing your judgment. If possible, take a short pause, reflect once more on the situation, and then make a more balanced and thoughtful decision."
-    },
-    green:{
-      hi:"इस समय आपका मन अपेक्षाकृत शांत और स्पष्ट है। आप परिस्थितियों को तर्क और समझ के साथ देख पा रहे हैं। यदि आवश्यक हो, तो अभी लिया गया निर्णय व्यावहारिक, संतुलित और सकारात्मक परिणाम देने वाला हो सकता है।",
-      en:"Your mind is currently calm and clear. You are able to evaluate the situation logically and without excessive emotional interference. If required, this is a suitable moment to make a practical and well-considered decision."
-    }
-  };
-
-  const suggestionMap={
-    red:{hi:"👉 मन शांत रखें",en:"👉 Stay calm"},
-    yellow:{hi:"👉 थोड़ा रुकें",en:"👉 Pause briefly"},
-    green:{hi:"👉 आगे बढ़ सकते हैं",en:"👉 You may proceed"}
-  };
-
-  decisionText.innerText=lang==="hi"?decisionMap[zone].hi:decisionMap[zone].en;
-  suggestionText.innerText=lang==="hi"?suggestionMap[zone].hi:suggestionMap[zone].en;
-}
+};
 
 function toggleLang(){
-  lang=lang==="hi"?"en":"hi";
-  landingTitle.innerText=lang==="hi"?"🧠 आज का मन":"🧠 Today's Mind";
-  startBtn.innerText=lang==="hi"?"आज का टेस्ट करें":"Start Test";
-  qTitle.innerText=lang==="hi"?"🌪 मानसिक प्रदूषण सूचकांक":"🌪 Mental Pollution Index";
-  meterBtn.innerText=lang==="hi"?"मीटर देखें":"Check Meter";
-  if(page1.classList.contains("active")) renderQuestions();
+  lang = lang === "hi" ? "en" : "hi";
+
+  document.getElementById("landingTitle").innerText =
+    landingContent[lang].title;
+
+  document.getElementById("landingDesc").innerText =
+    landingContent[lang].desc;
+
+  document.getElementById("startBtn").innerText =
+    landingContent[lang].btn;
 }
 </script>
 
