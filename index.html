@@ -27,6 +27,7 @@ body{
 }
 
 header{text-align:center;font-size:26px;font-weight:600;margin-bottom:12px;}
+
 .card{
   background:rgba(255,255,255,0.08);
   backdrop-filter:blur(12px);
@@ -56,26 +57,18 @@ button{
   cursor:pointer;
 }
 
-/* Meter */
+/* meter */
 .meter-bar{height:22px;border-radius:20px;background:#1a1a1a;overflow:hidden;}
 .meter-fill{height:100%;width:0%;transition:width 1s;border-radius:20px;}
 .meter-text{text-align:center;margin-top:8px;font-size:18px;}
 
-/* Spin */
+/* spin */
 .wheel-box{position:relative;width:260px;height:260px;margin:30px auto;}
 .wheel{
   width:100%;height:100%;
   border-radius:50%;
   background:conic-gradient(#ff4d4d,#ffd633,#33ff88,#00ffd5,#0066ff,#8a00ff,#ff4d4d);
   transition:transform 4s cubic-bezier(.17,.67,.14,.93);
-}
-.wheel.glow{
-  animation: glow 1.2s infinite alternate;
-  box-shadow:0 0 25px rgba(0,255,255,.7);
-}
-@keyframes glow{
-  from{box-shadow:0 0 12px rgba(0,255,255,.4);}
-  to{box-shadow:0 0 28px rgba(0,255,255,.9);}
 }
 .pointer{
   position:absolute;top:-14px;left:50%;transform:translateX(-50%);
@@ -150,38 +143,15 @@ button{
 <script>
 let lang="hi",score=0,zone="",spun=false;
 
-/* ✅ 20 QUESTION BANK */
-const questionPool=[
-{hi:"क्या आपका मन बिना वजह बेचैन रहता है?",en:"Does your mind feel restless without reason?"},
-{hi:"क्या आप छोटी बातों पर ज़्यादा सोचते हैं?",en:"Do you overthink small matters?"},
-{hi:"क्या निर्णय टालने की आदत है?",en:"Do you delay decisions?"},
-{hi:"क्या दूसरों की राय आपको प्रभावित करती है?",en:"Are you influenced by others' opinions?"},
-{hi:"क्या मन बार-बार अतीत में जाता है?",en:"Does your mind revisit the past?"},
-
-{hi:"क्या भविष्य की चिंता नींद खराब करती है?",en:"Does future worry disturb sleep?"},
-{hi:"क्या आप एक ही निर्णय पर बार-बार संशय करते हैं?",en:"Do you doubt the same decision?"},
-{hi:"क्या भावनाओं में बहकर निर्णय लेते हैं?",en:"Do emotions drive decisions?"},
-{hi:"क्या मन जल्दी थक जाता है?",en:"Does your mind tire easily?"},
-{hi:"क्या निर्णय के बाद पछतावा होता है?",en:"Do you regret decisions?"},
-
-{hi:"क्या आपका ध्यान जल्दी भटकता है?",en:"Does your focus drift easily?"},
-{hi:"क्या मन शांत रहना मुश्किल लगता है?",en:"Is staying calm difficult?"},
-{hi:"क्या आप हर चीज़ control करना चाहते हैं?",en:"Do you want control over everything?"},
-{hi:"क्या अनिश्चितता परेशान करती है?",en:"Does uncertainty bother you?"},
-{hi:"क्या आप तुलना करते रहते हैं?",en:"Do you compare yourself to others?"},
-
-{hi:"क्या निर्णय में डर हावी रहता है?",en:"Does fear dominate decisions?"},
-{hi:"क्या मन जल्दी नकारात्मक होता है?",en:"Does your mind turn negative quickly?"},
-{hi:"क्या आप एक साथ बहुत कुछ सोचते हैं?",en:"Do you think of many things at once?"},
-{hi:"क्या मन शांत करने के लिए प्रयास चाहिए?",en:"Do you need effort to calm your mind?"},
-{hi:"क्या अपने निर्णयों पर भरोसा कम है?",en:"Do you lack confidence in decisions?"}
+const qs=[
+{hi:"क्या आपका मन भविष्य की चिंता में उलझता है?",en:"Does your mind worry about the future?"},
+{hi:"क्या निर्णय लेते समय डर रोकता है?",en:"Does fear stop you from deciding?"},
+{hi:"क्या आप बार-बार एक ही बात सोचते हैं?",en:"Do you overthink the same thing?"},
+{hi:"क्या भावनाएँ तर्क पर हावी होती हैं?",en:"Do emotions overpower logic?"},
+{hi:"क्या निर्णय के बाद पछतावा होता है?",en:"Do you regret decisions later?"},
+{hi:"क्या मन जल्दी थक जाता है?",en:"Does your mind get tired easily?"},
+{hi:"अभी मन की स्थिति क्या है?",en:"What is your current mental state?"}
 ];
-
-let activeQs=[];
-
-function pickRandomFive(){
-  activeQs=[...questionPool].sort(()=>0.5-Math.random()).slice(0,5);
-}
 
 function startTest(){
   landing.classList.remove("active");
@@ -190,9 +160,8 @@ function startTest(){
 }
 
 function renderQuestions(){
-  pickRandomFive();
   let h="";
-  activeQs.forEach((q,i)=>{
+  qs.forEach((q,i)=>{
     h+=`
     <strong>${i+1}. ${lang==="hi"?q.hi:q.en}</strong>
     <label class="option"><input type="radio" name="q${i}" value="3"> ${lang==="hi"?"अक्सर":"Often"}</label>
@@ -205,7 +174,7 @@ function renderQuestions(){
 
 function goMeter(){
   score=0;
-  for(let i=0;i<5;i++){
+  for(let i=0;i<7;i++){
     let a=document.querySelector(`input[name="q${i}"]:checked`);
     if(!a){alert(lang==="hi"?"सभी प्रश्नों के उत्तर दें":"Answer all questions");return;}
     score+=parseInt(a.value);
@@ -213,7 +182,7 @@ function goMeter(){
   page1.classList.remove("active");
   page2.classList.add("active");
 
-  let p=Math.round((score/15)*100);
+  let p=Math.round((score/21)*100);
   meterFill.style.width=p+"%";
   if(p>70){zone="red";meterFill.style.background="#ff4d4d";meterText.innerText="High Mental Pollution";}
   else if(p>40){zone="yellow";meterFill.style.background="#ffd633";meterText.innerText="Moderate Mental Pollution";}
@@ -227,21 +196,37 @@ function goSpin(){
 
 function spinNow(){
   if(spun)return; spun=true;
-  wheel.classList.add("glow");
   wheel.style.transform="rotate("+(zone==="red"?1440+30:zone==="yellow"?1440+150:1440+270)+"deg)";
-  setTimeout(()=>{wheel.classList.remove("glow");showDecision();},4000);
+  setTimeout(showDecision,4000);
 }
 
 function showDecision(){
   page3.classList.remove("active");
   page4.classList.add("active");
-  const map={
-    red:{hi:"अभी निर्णय टालना बेहतर है।",en:"Better to delay decisions now."},
-    yellow:{hi:"थोड़ा रुककर निर्णय लें।",en:"Pause before deciding."},
-    green:{hi:"आप निर्णय ले सकते हैं।",en:"You may proceed with decisions."}
+
+  const decisionMap={
+    red:{
+      hi:"इस समय मन में तनाव, भ्रम और भावनात्मक शोर अधिक है। ऐसी स्थिति में लिया गया निर्णय अक्सर जल्दबाज़ी या पछतावे का कारण बन सकता है। बेहतर होगा कि आप कुछ समय रुकें, मन को शांत करें और स्पष्टता आने के बाद ही निर्णय लें।",
+      en:"Your mind is currently affected by high mental noise and emotional pressure. Decisions taken in this state may lead to confusion or regret. It is wiser to pause, calm your thoughts, and wait for mental clarity before making an important decision."
+    },
+    yellow:{
+      hi:"आपकी मानसिक स्थिति पूरी तरह अस्थिर नहीं है, लेकिन कुछ विचार और भावनाएँ अभी निर्णय को प्रभावित कर रही हैं। यदि संभव हो, तो थोड़ी प्रतीक्षा करें, स्थिति पर पुनः विचार करें और फिर संतुलित मन से निर्णय लें।",
+      en:"Your mental state is relatively stable, but some thoughts and emotions are still influencing your judgment. If possible, take a short pause, reflect once more on the situation, and then make a more balanced and thoughtful decision."
+    },
+    green:{
+      hi:"इस समय आपका मन अपेक्षाकृत शांत और स्पष्ट है। आप परिस्थितियों को तर्क और समझ के साथ देख पा रहे हैं। यदि आवश्यक हो, तो अभी लिया गया निर्णय व्यावहारिक, संतुलित और सकारात्मक परिणाम देने वाला हो सकता है।",
+      en:"Your mind is currently calm and clear. You are able to evaluate the situation logically and without excessive emotional interference. If required, this is a suitable moment to make a practical and well-considered decision."
+    }
   };
-  decisionText.innerText=lang==="hi"?map[zone].hi:map[zone].en;
-  suggestionText.innerText=lang==="hi"?"👉 मन शांत रखें।":"👉 Stay calm.";
+
+  const suggestionMap={
+    red:{hi:"👉 मन शांत रखें",en:"👉 Stay calm"},
+    yellow:{hi:"👉 थोड़ा रुकें",en:"👉 Pause briefly"},
+    green:{hi:"👉 आगे बढ़ सकते हैं",en:"👉 You may proceed"}
+  };
+
+  decisionText.innerText=lang==="hi"?decisionMap[zone].hi:decisionMap[zone].en;
+  suggestionText.innerText=lang==="hi"?suggestionMap[zone].hi:suggestionMap[zone].en;
 }
 
 function toggleLang(){
