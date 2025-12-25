@@ -56,7 +56,7 @@ button{
   cursor:pointer;
 }
 
-/* ===== METER ===== */
+/* ===== Meter ===== */
 .meter-bar{height:22px;border-radius:20px;background:#1a1a1a;overflow:hidden;}
 .meter-fill{height:100%;width:0%;transition:width 1s;border-radius:20px;}
 .meter-fill.red{background:#ff4d4d;box-shadow:0 0 14px rgba(255,77,77,.9);}
@@ -64,7 +64,7 @@ button{
 .meter-fill.green{background:#33ff88;box-shadow:0 0 14px rgba(51,255,136,.9);}
 .meter-text{text-align:center;margin-top:8px;font-size:18px;}
 
-/* ===== SPIN ===== */
+/* ===== Spin ===== */
 .wheel-box{position:relative;width:260px;height:260px;margin:30px auto;}
 .wheel{
   width:100%;height:100%;
@@ -72,16 +72,13 @@ button{
   background:conic-gradient(#ff4d4d,#ffd633,#33ff88,#00ffd5,#0066ff,#8a00ff,#ff4d4d);
   transition:transform 4s cubic-bezier(.17,.67,.14,.93);
 }
-
-/* 🔥 GLOW EFFECT */
 .wheel.glow{
-  animation: wheelGlow 1.2s infinite alternate;
+  animation: glow 1.2s infinite alternate;
 }
-@keyframes wheelGlow{
+@keyframes glow{
   from{box-shadow:0 0 14px rgba(0,255,255,.5);}
   to{box-shadow:0 0 30px rgba(0,255,255,.95);}
 }
-
 .pointer{
   position:absolute;top:-14px;left:50%;
   transform:translateX(-50%);
@@ -159,13 +156,38 @@ button{
 <script>
 let lang="hi",score=0,zone="",spun=false;
 
+/* ✅ 20 QUESTION BANK */
 const questionPool=[
 {hi:"क्या आपका मन बिना वजह बेचैन रहता है?",en:"Does your mind feel restless without reason?"},
 {hi:"क्या आप छोटी बातों पर ज़्यादा सोचते हैं?",en:"Do you overthink small matters?"},
 {hi:"क्या निर्णय टालने की आदत है?",en:"Do you delay decisions?"},
 {hi:"क्या दूसरों की राय आपको प्रभावित करती है?",en:"Are you influenced by others' opinions?"},
-{hi:"क्या मन बार-बार अतीत में जाता है?",en:"Does your mind revisit the past?"}
+{hi:"क्या मन बार-बार अतीत में जाता है?",en:"Does your mind revisit the past?"},
+{hi:"क्या भविष्य की चिंता नींद खराब करती है?",en:"Does future worry disturb sleep?"},
+{hi:"क्या आप एक ही निर्णय पर बार-बार संशय करते हैं?",en:"Do you doubt the same decision?"},
+{hi:"क्या भावनाओं में बहकर निर्णय लेते हैं?",en:"Do emotions drive decisions?"},
+{hi:"क्या मन जल्दी थक जाता है?",en:"Does your mind tire easily?"},
+{hi:"क्या निर्णय के बाद पछतावा होता है?",en:"Do you regret decisions?"},
+{hi:"क्या आपका ध्यान जल्दी भटकता है?",en:"Does your focus drift easily?"},
+{hi:"क्या मन शांत रहना मुश्किल लगता है?",en:"Is staying calm difficult?"},
+{hi:"क्या आप हर चीज़ नियंत्रित करना चाहते हैं?",en:"Do you want to control everything?"},
+{hi:"क्या अनिश्चितता परेशान करती है?",en:"Does uncertainty bother you?"},
+{hi:"क्या आप तुलना करते रहते हैं?",en:"Do you compare yourself to others?"},
+{hi:"क्या निर्णय में डर हावी रहता है?",en:"Does fear dominate decisions?"},
+{hi:"क्या मन जल्दी नकारात्मक होता है?",en:"Does your mind turn negative quickly?"},
+{hi:"क्या आप एक साथ बहुत कुछ सोचते हैं?",en:"Do you think of many things at once?"},
+{hi:"क्या मन शांत करने के लिए प्रयास चाहिए?",en:"Do you need effort to calm your mind?"},
+{hi:"क्या अपने निर्णयों पर भरोसा कम है?",en:"Do you lack confidence in decisions?"}
 ];
+
+let activeQuestions=[];
+
+/* 🎯 RANDOM 5 PICK */
+function pickRandomFive(){
+  activeQuestions=[...questionPool]
+    .sort(()=>0.5-Math.random())
+    .slice(0,5);
+}
 
 function startTest(){
   landing.classList.remove("active");
@@ -174,8 +196,9 @@ function startTest(){
 }
 
 function renderQuestions(){
+  pickRandomFive();
   let h="";
-  questionPool.forEach((q,i)=>{
+  activeQuestions.forEach((q,i)=>{
     h+=`
     <strong>${i+1}. ${lang==="hi"?q.hi:q.en}</strong>
     <label class="option"><input type="radio" name="q${i}" value="3"> ${lang==="hi"?"अक्सर":"Often"}</label>
@@ -190,7 +213,10 @@ function goMeter(){
   score=0;
   for(let i=0;i<5;i++){
     let a=document.querySelector(`input[name="q${i}"]:checked`);
-    if(!a){alert(lang==="hi"?"सभी प्रश्नों के उत्तर दें":"Answer all questions");return;}
+    if(!a){
+      alert(lang==="hi"?"सभी प्रश्नों के उत्तर दें":"Answer all questions");
+      return;
+    }
     score+=parseInt(a.value);
   }
 
@@ -201,9 +227,19 @@ function goMeter(){
   meterFill.style.width=p+"%";
   meterFill.className="meter-fill";
 
-  if(p>70){zone="red";meterFill.classList.add("red");meterText.innerText=lang==="hi"?"अधिक मानसिक प्रदूषण":"High Mental Pollution";}
-  else if(p>40){zone="yellow";meterFill.classList.add("yellow");meterText.innerText=lang==="hi"?"मध्यम मानसिक प्रदूषण":"Moderate Mental Pollution";}
-  else{zone="green";meterFill.classList.add("green");meterText.innerText=lang==="hi"?"कम मानसिक प्रदूषण":"Low Mental Pollution";}
+  if(p>70){
+    zone="red";
+    meterFill.classList.add("red");
+    meterText.innerText=lang==="hi"?"अधिक मानसिक प्रदूषण":"High Mental Pollution";
+  }else if(p>40){
+    zone="yellow";
+    meterFill.classList.add("yellow");
+    meterText.innerText=lang==="hi"?"मध्यम मानसिक प्रदूषण":"Moderate Mental Pollution";
+  }else{
+    zone="green";
+    meterFill.classList.add("green");
+    meterText.innerText=lang==="hi"?"कम मानसिक प्रदूषण":"Low Mental Pollution";
+  }
 }
 
 function goSpin(){
@@ -214,12 +250,10 @@ function goSpin(){
 function spinNow(){
   if(spun)return;
   spun=true;
-
-  wheel.classList.add("glow");           // 🔥 glow ON
+  wheel.classList.add("glow");
   wheel.style.transform="rotate("+(zone==="red"?1470:zone==="yellow"?1590:1710)+"deg)";
-
   setTimeout(()=>{
-    wheel.classList.remove("glow");      // 🔥 glow OFF
+    wheel.classList.remove("glow");
     showDecision();
   },4000);
 }
@@ -230,14 +264,14 @@ function showDecision(){
 
   const decision={
     hi:{
-      red:"इस समय आपका मन अत्यधिक दबाव और भ्रम से भरा है। रुकना और शांत होना ही सबसे समझदारी है।",
-      yellow:"आपका मन आंशिक रूप से स्पष्ट है। बेहतर होगा कि आप थोड़ी देर रुकें।",
-      green:"आपका मन संतुलित और स्पष्ट है। यह समय निर्णय लेने के लिए अनुकूल है।"
+      red:"इस समय निर्णय टालना ही समझदारी है। मन को पहले शांत होने दें।",
+      yellow:"थोड़ा रुककर शांत मन से निर्णय लें।",
+      green:"आप निर्णय लेने की स्थिति में हैं।"
     },
     en:{
-      red:"Your mind is under heavy pressure. Pausing and calming yourself is wise.",
-      yellow:"Your mind is partly clear. It is better to pause briefly.",
-      green:"Your mind is calm and clear. This is a good time to decide."
+      red:"It is wiser to delay decisions right now.",
+      yellow:"Pause briefly before deciding.",
+      green:"You are in a good state to decide."
     }
   };
 
