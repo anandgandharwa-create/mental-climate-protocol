@@ -16,6 +16,8 @@
   --muted:#9ca3af;
 }
 
+*{box-sizing:border-box;}
+
 body{
   margin:0;
   background:#020617;
@@ -24,109 +26,106 @@ body{
   min-height:100vh;
 }
 
-/* ✅ MAIN FIX AREA */
+/* 🔥 FULL SCREEN FILL */
+.wrapper{
+  min-height:100vh;
+  display:flex;
+  align-items:flex-start;
+  justify-content:center;
+  padding-top:60px;          /* red mark से नीचे */
+}
+
+/* 🔥 DOUBLE SCALE ZONE */
 .container{
-  max-width:520px;              /* UI चौड़ा */
-  margin:0 auto;
-  padding:40px 20px 80px;       /* ऊपर space + नीचे fill */
-  transform:scale(1.05);        /* Mobile पर overall zoom */
+  width:100%;
+  max-width:420px;
+  transform:scale(1.9);      /* ← यही MAIN change है */
   transform-origin: top center;
 }
 
+/* CARD */
 .card{
   background:var(--card);
-  border-radius:24px;           /* थोड़ा बड़ा feel */
-  padding:28px;                 /* अंदर spacing बढ़ी */
+  border-radius:26px;
+  padding:30px;
   border:1px solid var(--border);
-  box-shadow:0 25px 50px rgba(0,0,0,0.65);
+  box-shadow:0 30px 70px rgba(0,0,0,0.75);
 }
 
+/* TYPOGRAPHY */
 h1{
   text-align:center;
-  font-size:28px;               /* heading बड़ा */
-  margin-bottom:8px;
+  font-size:26px;
+  margin:0 0 10px;
 }
 
 .subtitle{
   text-align:center;
+  font-size:15px;
   color:var(--muted);
-  font-size:16px;
-  margin-bottom:26px;
+  margin-bottom:22px;
 }
 
 label{
   display:block;
-  margin-top:16px;
+  margin-top:14px;
   font-weight:600;
-  font-size:16px;
+  font-size:15px;
   color:#c7d2fe;
 }
 
 select{
   width:100%;
-  padding:16px;
-  font-size:18px;               /* dropdown text बड़ा */
-  border-radius:16px;
+  padding:14px;
+  font-size:16px;
+  border-radius:14px;
   background:#020617;
   color:var(--text);
   border:1px solid var(--border);
-  margin-top:8px;
+  margin-top:6px;
 }
 
+/* BUTTONS */
 button{
   width:100%;
-  padding:18px;                 /* button बड़ा */
-  font-size:19px;
+  padding:16px;
+  font-size:17px;
   font-weight:800;
   border:none;
-  border-radius:18px;
-  margin-top:22px;
+  border-radius:16px;
+  margin-top:20px;
   background:linear-gradient(135deg,var(--primary),var(--secondary));
   color:#020617;
 }
 
-.result{
-  display:none;
-  margin-top:26px;
-}
+/* RESULT */
+.result{display:none;margin-top:22px;}
 
 .result-card{
   background:#020617;
   border:1px solid var(--border);
   border-radius:18px;
-  padding:22px;
+  padding:20px;
   text-align:center;
 }
 
-.score{
-  font-size:44px;               /* score बड़ा */
-  font-weight:900;
-}
-
-.level{
-  font-size:20px;
-  margin:10px 0;
-}
-
-.tips{
-  font-size:16px;
-  color:#dbeafe;
-  line-height:1.7;
-}
+.score{font-size:38px;font-weight:900;}
+.level{font-size:18px;margin:8px 0;}
+.tips{font-size:15px;line-height:1.6;color:#dbeafe;}
 
 .watermark{
-  font-size:14px;
+  font-size:13px;
   color:#38bdf8;
-  margin-top:14px;
+  margin-top:12px;
 }
 
 .lock{
   background:#111827;
   color:#facc15;
-  padding:14px;
-  border-radius:16px;
-  margin-top:16px;
-  font-size:15px;
+  padding:12px;
+  border-radius:14px;
+  margin-top:14px;
+  font-size:14px;
   text-align:center;
 }
 
@@ -137,9 +136,9 @@ button{
 
 .footer{
   text-align:center;
-  font-size:14px;
+  font-size:13px;
   color:var(--muted);
-  margin-top:28px;
+  margin-top:16px;
 }
 
 canvas{display:none;}
@@ -148,72 +147,74 @@ canvas{display:none;}
 
 <body>
 
-<div class="container">
-<div class="card">
+<div class="wrapper">
+  <div class="container">
+    <div class="card">
 
-<h1>📊 Reel Performance Predictor</h1>
-<div class="subtitle">Reel डालने से पहले smart analysis करें</div>
+      <h1>📊 Reel Performance Predictor</h1>
+      <div class="subtitle">Reel डालने से पहले smart analysis करें</div>
 
-<label>Reel Category</label>
-<select id="category">
-  <option value="12">Motivation</option>
-  <option value="15">Business</option>
-  <option value="14">Funny</option>
-  <option value="10">General</option>
-</select>
+      <label>Reel Category</label>
+      <select id="category">
+        <option value="12">Motivation</option>
+        <option value="15">Business</option>
+        <option value="14">Funny</option>
+        <option value="10">General</option>
+      </select>
 
-<label>Reel Duration</label>
-<select id="duration">
-  <option value="22">7–10 सेकंड</option>
-  <option value="15">11–20 सेकंड</option>
-  <option value="8">21–30 सेकंड</option>
-</select>
+      <label>Reel Duration</label>
+      <select id="duration">
+        <option value="22">7–10 सेकंड</option>
+        <option value="15">11–20 सेकंड</option>
+        <option value="8">21–30 सेकंड</option>
+      </select>
 
-<label>Music Type</label>
-<select id="music">
-  <option value="22">Trending Music</option>
-  <option value="12">Normal Music</option>
-  <option value="5">No Music</option>
-</select>
+      <label>Music Type</label>
+      <select id="music">
+        <option value="22">Trending Music</option>
+        <option value="12">Normal Music</option>
+        <option value="5">No Music</option>
+      </select>
 
-<label>Posting Time</label>
-<select id="time">
-  <option value="22">शाम (6–9)</option>
-  <option value="14">सुबह</option>
-  <option value="12">दोपहर</option>
-  <option value="10">रात</option>
-</select>
+      <label>Posting Time</label>
+      <select id="time">
+        <option value="22">शाम (6–9)</option>
+        <option value="14">सुबह</option>
+        <option value="12">दोपहर</option>
+        <option value="10">रात</option>
+      </select>
 
-<button onclick="predict()">🚀 Reel Check करें</button>
+      <button onclick="predict()">🚀 Reel Check करें</button>
 
-<div class="result" id="resultBox">
-  <div class="result-card" id="resultCard">
-    <div class="score" id="scoreText"></div>
-    <div class="level" id="levelText"></div>
-    <div class="tips" id="tipsText"></div>
-    <div class="watermark">Powered by Reel Performance Predictor</div>
+      <div class="result" id="resultBox">
+        <div class="result-card" id="resultCard">
+          <div class="score" id="scoreText"></div>
+          <div class="level" id="levelText"></div>
+          <div class="tips" id="tipsText"></div>
+          <div class="watermark">Powered by Reel Performance Predictor</div>
+        </div>
+
+        <div id="lockBox" class="lock" style="display:none">
+          🔒 Image Share Pro Users के लिए है
+        </div>
+
+        <button id="shareBtn" class="share" onclick="shareImage()">📸 Image बनाकर Share करें</button>
+      </div>
+
+      <button onclick="unlockPro()" style="margin-top:16px">⭐ Pro Unlock (Demo)</button>
+
+      <div class="footer">
+        Free: 3 checks/day • Pro: Unlimited + Share
+      </div>
+
+    </div>
   </div>
-
-  <div id="lockBox" class="lock" style="display:none">
-    🔒 Image Share Pro Users के लिए है
-  </div>
-
-  <button id="shareBtn" class="share" onclick="shareImage()">📸 Image बनाकर Share करें</button>
-</div>
-
-<button onclick="unlockPro()" style="margin-top:18px">⭐ Pro Unlock (Demo)</button>
-
-</div>
-
-<div class="footer">
-Free: 3 checks/day • Pro: Unlimited + Share
-</div>
 </div>
 
 <canvas id="canvas"></canvas>
 
 <script>
-/* 🔒 JS LOGIC — UNCHANGED */
+/* 🔒 LOGIC — UNCHANGED */
 const LIMIT=3;
 let count=localStorage.getItem("count")||0;
 let pro=localStorage.getItem("pro")==="yes";
